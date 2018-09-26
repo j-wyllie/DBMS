@@ -162,9 +162,8 @@ public class HospitalMap extends CommonView implements Initializable,
      */
     @Override
     public void mapInitialized() {
-        LatLong centreNZLatLng = new LatLong(-41, 172.6362);
-
         if (hasConnection) {
+            LatLong centreNZLatLng = new LatLong(-41, 172.6362);
             //Set the initial properties of the map.
             MapOptions mapOptions = new MapOptions();
 
@@ -307,8 +306,7 @@ public class HospitalMap extends CommonView implements Initializable,
                     markersTable.getSelectionModel().getSelectedItem() != null) {
 
                 Hospital selectedLocation;
-                selectedLocation = (Hospital)
-                        markersTable.getSelectionModel().getSelectedItem();
+                selectedLocation = markersTable.getSelectionModel().getSelectedItem();
 
                 // Center on selected marker
                 map.setCenter(new LatLong(selectedLocation.getLatitude(),
