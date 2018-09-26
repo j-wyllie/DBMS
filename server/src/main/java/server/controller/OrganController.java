@@ -132,16 +132,16 @@ public class OrganController {
         OrganDAO database = DAOFactory.getOrganDao();
         Gson gson = new Gson();
 
-        if (req.queryParams(DONATED) != null) {
+        if (req.queryParams(DONATED) != null && Boolean.valueOf(req.queryParams(DONATED))) {
             return gson.toJson(database.getDonations(profile));
         }
-        if (req.queryParams(DONATING) != null) {
+        if (req.queryParams(DONATING) != null && Boolean.valueOf(req.queryParams(DONATING))) {
             return gson.toJson(database.getDonating(profile));
         }
-        if (req.queryParams(RECEIVED) != null) {
+        if (req.queryParams(RECEIVED) != null && Boolean.valueOf(req.queryParams(RECEIVED))) {
             return gson.toJson(database.getReceived(profile));
         }
-        if (req.queryParams(REQUIRED) != null) {
+        if (req.queryParams(REQUIRED) != null && Boolean.valueOf(req.queryParams(REQUIRED))) {
             return gson.toJson(database.getRequired(profile));
         }
         res.status(400);
@@ -184,24 +184,40 @@ public class OrganController {
         OrganEnum organEnum = OrganEnum.valueOf(organ);
         OrganDAO database = DAOFactory.getOrganDao();
 
-        if (req.queryMap().hasKey(DONATED)) {
+        if (req.queryParams(DONATED) != null && Boolean.valueOf(req.queryParams(DONATED))) {
             database.removeDonation(profile, organEnum);
         }
-        if (req.queryMap().hasKey(DONATING)) {
+        if (req.queryParams(DONATING) != null && Boolean.valueOf(req.queryParams(DONATING))) {
             database.removeDonating(profile, organEnum);
         }
-        if (req.queryMap().hasKey(REQUIRED)) {
+        if (req.queryParams(REQUIRED) != null && Boolean.valueOf(req.queryParams(REQUIRED))) {
             database.removeRequired(profile, organEnum);
         }
-        if (req.queryMap().hasKey(RECEIVED)) {
+        if (req.queryParams(RECEIVED) != null && Boolean.valueOf(req.queryParams(RECEIVED))) {
             database.removeReceived(profile, organEnum);
         }
     }
 
+    /**
+     * Handles the endpoint to get expired organs for a profile.
+     * @param req from the client.
+     * @param res sent to the client.
+     * @return the response from the server.
+     */
     public static String getExpired(Request req, Response res) {
         OrganDAO database = DAOFactory.getOrganDao();
-        int profileId = Integer.parseInt(req.params(KeyEnum.ID.toString()));
+        int profileId;
         List<ExpiredOrgan> organs;
+
+        try {
+            if (req.params(KeyEnum.ID.toString()) == null) {
+                throw new IllegalArgumentException("Missing required fields.");
+            }
+            profileId = Integer.parseInt(req.params(KeyEnum.ID.toString()));
+        } catch (IllegalArgumentException e) {
+            res.status(400);
+            return ResponseMsgEnum.BAD_REQUEST.toString();
+        }
 
         try {
             organs = database.getExpired(new Profile(profileId));
@@ -220,12 +236,21 @@ public class OrganController {
     }
 
 
+    /**
+     * Handles the endpoint to set organs to expired for a profile.
+     * @param req from the client.
+     * @param res sent to the client.
+     * @return the response sent from the server.
+     */
     public static String setExpired(Request req, Response res) {
         OrganDAO database = DAOFactory.getOrganDao();
-        int profileId = Integer.parseInt(req.params(KeyEnum.ID.toString()));
-        OrganEnum organ = OrganEnum.valueOf(req.queryParams("organ"));
+        int profileId;
+        OrganEnum organ;
 
         try {
+            profileId = Integer.parseInt(req.params(KeyEnum.ID.toString()));
+            organ = OrganEnum.valueOf(req.queryParams("organ"));
+
             if (Integer.valueOf(req.queryParams("expired")) == 1) {
                 String note = req.queryParams("note");
                 int userId = Integer.parseInt(req.queryParams("userId"));
@@ -233,6 +258,7 @@ public class OrganController {
             } else {
                 database.revertExpired(profileId, organ);
             }
+
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
             res.status(500);

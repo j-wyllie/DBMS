@@ -198,6 +198,9 @@ public class Server {
 
             // hospitals api endpoints.
             path("/hospitals", () -> {
+                before("/*", Middleware::isAdminAuthenticated);
+                before("", Middleware::isAdminAuthenticated);
+
                 get("/all", HospitalController::getAll);
                 get("", HospitalController::get);
                 post("", HospitalController::create);
