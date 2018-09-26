@@ -192,7 +192,6 @@ public class AvailableOrgans {
         return getTimeToExpiryFormatted(organ, profile, true);
     }
 
-
     /**
      * Gets the expiry time for an organ.
      *

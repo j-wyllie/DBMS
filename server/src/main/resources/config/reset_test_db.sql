@@ -66,8 +66,8 @@ CREATE TABLE IF NOT EXISTS `countries` (
 
 DROP TABLE IF EXISTS `drugs`;
 CREATE TABLE IF NOT EXISTS `drugs` (
-  `Id` int(11) DEFAULT NULL,
-  `ProfileId` int(11) DEFAULT NULL,
+  `Id` int(11) NOT NULL,
+  `ProfileId` int(11) NOT NULL,
   `Drug` varchar(50) DEFAULT NULL,
   `Current` BOOLEAN DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -97,10 +97,11 @@ CREATE TABLE IF NOT EXISTS `history` (
 
 DROP TABLE IF EXISTS `hla_type`;
 CREATE TABLE IF NOT EXISTS `hla_type` (
-  `groupX` text NOT NULL,
-  `groupY` text NOT NULL,
-  `secondary` mediumtext NOT NULL,
-  `profileId` int(11) NOT NULL
+  `ProfileId` int(11) NOT NULL,
+  `AlphaValue` varchar(20),
+  `NumericValue` int(11) NOT NULL,
+  `GroupX` BOOLEAN NOT NULL,
+  `GroupY` BOOLEAN NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -116,36 +117,6 @@ CREATE TABLE IF NOT EXISTS `hospitals` (
   `Address` varchar(100) DEFAULT NULL,
   `Latitude` double DEFAULT NULL,
   `Longitude` double DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `locale`
---
-
-DROP TABLE IF EXISTS `locale`;
-CREATE TABLE IF NOT EXISTS `locale` (
-  `LocaleId` int(11) NOT NULL,
-  `UserId` int(11) DEFAULT NULL,
-  `ProfileId` int(11) DEFAULT NULL,
-  `DateTimeFormat` varchar(50) DEFAULT NULL,
-  `NumberFormat` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `hla_type`
---
-
-DROP TABLE IF EXISTS `hla_type`;
-CREATE TABLE IF NOT EXISTS `hla_type` (
-  `ProfileId` int(11) NOT NULL,
-  `AlphaValue` varchar(20),
-  `NumericValue` int(11) NOT NULL,
-  `GroupX` BOOLEAN NOT NULL,
-  `GroupY` BOOLEAN NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -271,37 +242,9 @@ CREATE TABLE IF NOT EXISTS `users` (
   `Country` varchar(50) DEFAULT NULL,
   `Created` datetime DEFAULT CURRENT_TIMESTAMP,
   `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
-  `IsDefault` tinyint(1) DEFAULT '0',
+  `IsDefault` BOOLEAN DEFAULT FALSE,
   `ImageName` varchar(50) DEFAULT NULL,
   `Token` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `hospitals`
---
-
-DROP TABLE IF EXISTS `hospitals`;
-CREATE TABLE IF NOT EXISTS `hospitals` (
-  `Id` INT(11),
-  `Name` VARCHAR(50) UNIQUE DEFAULT NULL,
-  `Address` VARCHAR(100) DEFAULT NULL,
-  `Latitude` DOUBLE DEFAULT NULL,
-  `Longitude` DOUBLE DEFAULT NULL,
-  `Bone` BOOLEAN DEFAULT FALSE,
-  `Bone-marrow` BOOLEAN DEFAULT FALSE,
-  `Connective-tissue` BOOLEAN DEFAULT FALSE,
-  `Cornea` BOOLEAN DEFAULT FALSE,
-  `Heart` BOOLEAN DEFAULT FALSE,
-  `Intestine` BOOLEAN DEFAULT FALSE,
-  `Kidney` BOOLEAN DEFAULT FALSE,
-  `Liver` BOOLEAN DEFAULT FALSE,
-  `Lung` BOOLEAN DEFAULT FALSE,
-  `Middle-ear` BOOLEAN DEFAULT FALSE,
-  `Pancreas` BOOLEAN DEFAULT FALSE,
-  `Skin` BOOLEAN DEFAULT FALSE,
-  INDEX (Name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -346,25 +289,6 @@ ALTER TABLE `history`
 -- Indexes for table `hla_type`
 --
 ALTER TABLE `hla_type`
-  ADD PRIMARY KEY (`profileId`);
-
---
--- Indexes for table `hospitals`
---
-ALTER TABLE `hospitals`
-  ADD PRIMARY KEY (`Id`),
-  ADD UNIQUE KEY `Id` (`Id`);
-
---
--- Indexes for table `medical_interactions`
---
-ALTER TABLE `locale`
-  ADD PRIMARY KEY (`LocaleId`);
-
---
--- Indexes for table `hla_type`
---
-ALTER TABLE `hla_type`
   ADD KEY `ProfileId` (`ProfileId`);
 
 --
@@ -372,8 +296,6 @@ ALTER TABLE `hla_type`
 --
 ALTER TABLE `hospitals`
   ADD PRIMARY KEY (`Id`),
-  ADD KEY `Name` (`Name`),
-  ADD KEY `Id` (`Id`),
   ADD UNIQUE KEY `Id` (`Id`);
 
 --
@@ -395,7 +317,7 @@ ALTER TABLE `organs`
 ALTER TABLE `procedures`
   ADD PRIMARY KEY (`Id`),
   ADD KEY `ProfileId` (`ProfileId`),
-  ADD KEY `Hospital` (`Hospital`);
+  ADD KEY `Hospitals` (`Hospital`);
 
 --
 -- Indexes for table `profiles`
@@ -409,8 +331,7 @@ ALTER TABLE `profiles`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`UserId`),
-  ADD KEY (`UserId`),
-  ADD KEY (`Username`);
+  ADD KEY (`UserId`);
 
 --
 -- AUTO_INCREMENT for table `affected_organs`
@@ -431,22 +352,12 @@ ALTER TABLE `countries`
 -- AUTO_INCREMENT for table `drugs`
 --
 ALTER TABLE `drugs`
-  MODIFY `Id` int(11) NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
   MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `hospitals`
---
-ALTER TABLE `hospitals`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `locale`
---
-ALTER TABLE `locale`
-  MODIFY `LocaleId` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hospitals`
 --
@@ -521,20 +432,6 @@ ALTER TABLE `locale`
   ADD CONSTRAINT `locale_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`) ON DELETE CASCADE;
 
 --
--- Constraints for table `hla_type`
---
-ALTER TABLE `hla_type`
-  ADD CONSTRAINT `hla_type_profile` FOREIGN KEY (`profileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
-
---
--- Constraints for table `locale`
---
-ALTER TABLE `locale`
-  ADD CONSTRAINT `locale_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`);
-ALTER TABLE `locale`
-  ADD CONSTRAINT `locale_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`);
-
---
 -- Constraints for table `organs`
 --
 ALTER TABLE `organs`
@@ -548,7 +445,7 @@ ALTER TABLE `organs`
 ALTER TABLE `procedures`
   ADD CONSTRAINT `procedures_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
 ALTER TABLE `procedures`
-  ADD CONSTRAINT `procedures_ibfk_2` FOREIGN KEY (`Hospital`) REFERENCES `hospitals` (`Id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `procedures_ibfk_2` FOREIGN KEY (`Hospital`) REFERENCES `Hospitals` (`Id`);
 
 INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (1, 'NZ', 1),
@@ -752,3 +649,6 @@ INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (199, 'YE', 1),
   (200, 'ZM', 1),
   (201, 'ZW', 1);
+
+
+

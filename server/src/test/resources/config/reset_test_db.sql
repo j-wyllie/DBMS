@@ -97,50 +97,6 @@ CREATE TABLE IF NOT EXISTS `history` (
 
 DROP TABLE IF EXISTS `hla_type`;
 CREATE TABLE IF NOT EXISTS `hla_type` (
-  `groupX` text NOT NULL,
-  `groupY` text NOT NULL,
-  `secondary` mediumtext NOT NULL,
-  `profileId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `hospitals`
---
-
-DROP TABLE IF EXISTS `hospitals`;
-CREATE TABLE IF NOT EXISTS `hospitals` (
-  `Id` int(11) NOT NULL,
-  `Name` varchar(50) DEFAULT NULL,
-  `Address` varchar(100) DEFAULT NULL,
-  `Latitude` double DEFAULT NULL,
-  `Longitude` double DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `locale`
---
-
-DROP TABLE IF EXISTS `locale`;
-CREATE TABLE IF NOT EXISTS `locale` (
-  `LocaleId` int(11) NOT NULL,
-  `UserId` int(11) DEFAULT NULL,
-  `ProfileId` int(11) DEFAULT NULL,
-  `DateTimeFormat` varchar(50) DEFAULT NULL,
-  `NumberFormat` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `hla_type`
---
-
-DROP TABLE IF EXISTS `hla_type`;
-CREATE TABLE IF NOT EXISTS `hla_type` (
   `ProfileId` int(11) NOT NULL,
   `AlphaValue` varchar(20),
   `NumericValue` int(11) NOT NULL,
@@ -333,25 +289,6 @@ ALTER TABLE `history`
 -- Indexes for table `hla_type`
 --
 ALTER TABLE `hla_type`
-  ADD PRIMARY KEY (`profileId`);
-
---
--- Indexes for table `hospitals`
---
-ALTER TABLE `hospitals`
-  ADD PRIMARY KEY (`Id`),
-  ADD UNIQUE KEY `Id` (`Id`);
-
---
--- Indexes for table `medical_interactions`
---
-ALTER TABLE `locale`
-  ADD PRIMARY KEY (`LocaleId`);
-
---
--- Indexes for table `hla_type`
---
-ALTER TABLE `hla_type`
   ADD KEY `ProfileId` (`ProfileId`);
 
 --
@@ -379,7 +316,7 @@ ALTER TABLE `organs`
 --
 ALTER TABLE `procedures`
   ADD PRIMARY KEY (`Id`),
-  ADD KEY `ProfileId` (`ProfileId`);
+  ADD KEY `ProfileId` (`ProfileId`),
   ADD KEY `Hospitals` (`Hospital`);
 
 --
@@ -421,16 +358,6 @@ ALTER TABLE `drugs`
 --
 ALTER TABLE `history`
   MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `hospitals`
---
-ALTER TABLE `hospitals`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `locale`
---
-ALTER TABLE `locale`
-  MODIFY `LocaleId` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hospitals`
 --
@@ -505,20 +432,6 @@ ALTER TABLE `locale`
   ADD CONSTRAINT `locale_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`) ON DELETE CASCADE;
 
 --
--- Constraints for table `hla_type`
---
-ALTER TABLE `hla_type`
-  ADD CONSTRAINT `hla_type_profile` FOREIGN KEY (`profileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
-
---
--- Constraints for table `locale`
---
-ALTER TABLE `locale`
-  ADD CONSTRAINT `locale_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`);
-ALTER TABLE `locale`
-  ADD CONSTRAINT `locale_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`);
-
---
 -- Constraints for table `organs`
 --
 ALTER TABLE `organs`
@@ -533,7 +446,6 @@ ALTER TABLE `procedures`
   ADD CONSTRAINT `procedures_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
 ALTER TABLE `procedures`
   ADD CONSTRAINT `procedures_ibfk_2` FOREIGN KEY (`Hospital`) REFERENCES `Hospitals` (`Id`);
-
 
 INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (1, 'NZ', 1),
