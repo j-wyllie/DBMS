@@ -25,7 +25,6 @@ public class UserController {
 
     /**
      * Gets all users stored.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body, a list of all profiles.
@@ -51,7 +50,6 @@ public class UserController {
 
     /**
      * Gets a single user from storage.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -60,15 +58,14 @@ public class UserController {
         UserDAO database = DAOFactory.getUserDao();
         User user;
         try {
-
-            if (req.queryMap().hasKey("id")) {
+            if (req.queryParams("id") != null) {
                 user = database.get(Integer.valueOf(req.queryParams("id")));
             } else {
                 user = database.get(req.queryParams("username"));
             }
         } catch (UserNotFoundException e) {
             res.status(400);
-            return e.getMessage();
+            return "User not found";
         } catch (SQLException e) {
             res.status(500);
             return e.getMessage();
@@ -84,7 +81,6 @@ public class UserController {
 
     /**
      * Creates and stores a new user.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -114,12 +110,11 @@ public class UserController {
         }
 
         res.status(201);
-        return "user Created";
+        return "User Created";
     }
 
     /**
      * Edits a stored user.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -150,12 +145,11 @@ public class UserController {
         }
 
         res.status(200);
-        return "user Updated";
+        return "User Updated";
     }
 
     /**
      * Deletes a user from storage.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -181,7 +175,7 @@ public class UserController {
         }
 
         res.status(200);
-        return "user Deleted";
+        return "User Deleted";
     }
 
     /**

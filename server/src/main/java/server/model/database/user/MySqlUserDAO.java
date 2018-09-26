@@ -51,7 +51,6 @@ public class MySqlUserDAO implements UserDAO {
 
     /**
      * Gets a single user from the database by id.
-     *
      * @param userId of the user.
      * @return the specified user.
      * @throws UserNotFoundException error.
