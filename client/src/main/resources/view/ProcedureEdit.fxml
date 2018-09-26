@@ -70,11 +70,6 @@
                   <Insets bottom="20.0" right="20.0" top="20.0" />
                </GridPane.margin>
             </DatePicker>
-                  <Label fx:id="warningLabel" text="Invalid Date" textAlignment="CENTER" textFill="RED" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="TOP">
-               <GridPane.margin>
-                  <Insets top="10.0" />
-               </GridPane.margin>
-            </Label>
             <Button fx:id="editButton" mnemonicParsing="false" onAction="#handleEditButtonClicked" prefHeight="35.0" prefWidth="105.0" text="Edit" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets bottom="20.0" right="20.0" />

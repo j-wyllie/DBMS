@@ -24,6 +24,7 @@ import odms.commons.model.enums.OrganSelectEnum;
 import odms.commons.model.locations.Hospital;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
+import odms.controller.AlertController;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.locations.HospitalDAO;
 import odms.controller.profile.ProcedureEdit;
@@ -63,8 +64,6 @@ public class ProcedureDetailed extends CommonView {
     @FXML
     private Button editButton;
     @FXML
-    private Label warningLabel;
-    @FXML
     private Label hospitalLabel;
     @FXML
     private ChoiceBox<Hospital> hospitalChoiceBox;
@@ -89,7 +88,6 @@ public class ProcedureDetailed extends CommonView {
             ProceduresDisplay p, Boolean isOpenedByClinician) {
         parent = p;
         profile = currentProfile;
-        warningLabel.setVisible(false);
         currentProcedure = selectedProcedure;
         procedureSummaryLabel.setText(currentProcedure.getSummary());
         procedureDateLabel.setText(currentProcedure.getDate().toString());
@@ -139,7 +137,6 @@ public class ProcedureDetailed extends CommonView {
      * Button handler for edit button.
      */
     public void handleEditButtonClicked() {
-        warningLabel.setVisible(false);
         descEntry.setDisable(false);
         descEntry.setVisible(true);
         dateOfProcedureDatePicker.setDisable(false);
@@ -192,8 +189,6 @@ public class ProcedureDetailed extends CommonView {
             editButton.setVisible(true);
             editButton.setDisable(false);
 
-            warningLabel.setVisible(false);
-
             procedureSummaryLabel.setText(currentProcedure.getSummary());
             procedureDateLabel.setText(currentProcedure.getDate().toString());
             procedureDescriptionLabel.setText(currentProcedure.getLongDescription());
@@ -201,7 +196,7 @@ public class ProcedureDetailed extends CommonView {
 
             parent.refreshProcedureTable();
         } catch (IllegalArgumentException e) {
-            warningLabel.setVisible(true);
+            AlertController.invalidEntry("Invalid Date");
         }
     }
 
