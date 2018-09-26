@@ -30,6 +30,7 @@ public class MySqlHospitalDAO implements HospitalDAO {
         String query = "SELECT * FROM hospitals";
         List<Hospital> result = new ArrayList<>();
 
+
         try (Connection conn = DatabaseConnection.getConnection();
                 Statement stmt = conn.createStatement()) {
 
@@ -93,6 +94,7 @@ public class MySqlHospitalDAO implements HospitalDAO {
                     result = parseHospital(allHospitals);
                 }
             }
+
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
             throw e;
@@ -159,9 +161,8 @@ public class MySqlHospitalDAO implements HospitalDAO {
         }
     }
 
-    private void setDouble(int index, PreparedStatement preparedStatement, Double val)
-            throws SQLException {
-        if (val == null) {
+    private void setDouble(int index, PreparedStatement preparedStatement, Double val) throws SQLException {
+        if (val == null ) {
             preparedStatement.setNull(index, java.sql.Types.NULL);
         } else {
             preparedStatement.setDouble(index, val);

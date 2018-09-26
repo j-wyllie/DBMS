@@ -307,7 +307,10 @@ ALTER TABLE `hla_type`
 -- Indexes for table `hospitals`
 --
 ALTER TABLE `hospitals`
-  ADD PRIMARY KEY (`Id`);
+  ADD PRIMARY KEY (`Id`),
+  ADD KEY `Name` (`Name`),
+  ADD KEY `Id` (`Id`),
+  ADD UNIQUE KEY `Id` (`Id`);
 
 --
 -- Indexes for table `locale`
