@@ -8,8 +8,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.commons.model.enums.OrganEnum;
@@ -28,7 +28,7 @@ public class HospitalCreate {
     private TextField addressField;
 
     @FXML
-    private ListView<RadioButton> programList;
+    private ListView<CheckBox> programList;
 
     private odms.controller.user.HospitalCreate controller =
             new odms.controller.user.HospitalCreate();
@@ -44,7 +44,7 @@ public class HospitalCreate {
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         String address;
         String name;
-        List<RadioButton> organPrograms = programList.getItems();
+        List<CheckBox> organPrograms = programList.getItems();
 
         try {
             address = addressField.getText();
@@ -99,8 +99,8 @@ public class HospitalCreate {
         addressField.setText(hospital.getAddress());
 
         int i = 0;
-        for (RadioButton radioButton : programList.getItems()) {
-            radioButton.setSelected(hospital.getPrograms().get(i));
+        for (CheckBox checkBox : programList.getItems()) {
+            checkBox.setSelected(hospital.getPrograms().get(i));
             i++;
         }
 
@@ -110,9 +110,9 @@ public class HospitalCreate {
      * Populates the transplant program list view with all of the possible organs transplants.
      */
     private void initListView() {
-        ObservableList<RadioButton> programs = FXCollections.observableArrayList();
+        ObservableList<CheckBox> programs = FXCollections.observableArrayList();
         for (OrganEnum organEnum : OrganEnum.values()) {
-            programs.add(new RadioButton(organEnum.getNamePlain()));
+            programs.add(new CheckBox(organEnum.getNamePlain()));
         }
 
         programList.setItems(programs);

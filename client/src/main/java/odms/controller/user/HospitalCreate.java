@@ -4,11 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import javafx.scene.control.RadioButton;
-import odms.commons.model.locations.Hospital;
-import odms.controller.database.DAOFactory;
-import odms.controller.database.locations.HospitalDAO;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,6 +12,10 @@ import java.net.URLConnection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.control.CheckBox;
+import odms.commons.model.locations.Hospital;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.locations.HospitalDAO;
 
 /**
  * Controller class for create hospital scene.
@@ -35,10 +34,10 @@ public class HospitalCreate {
      * @throws IOException thrown if there is an error validating the address
      * @throws SQLException thrown if there is a database error
      */
-    public void addHospital(String name, String address, List<RadioButton> organPrograms)
+    public void addHospital(String name, String address, List<CheckBox> organPrograms)
             throws IOException, SQLException {
         List<Boolean> organProgramBools = new ArrayList<>();
-        for (RadioButton organProgram : organPrograms) {
+        for (CheckBox organProgram : organPrograms) {
             organProgramBools.add(organProgram.isSelected());
         }
         List<Double> latlong = getGeoLocation(address);
@@ -58,10 +57,10 @@ public class HospitalCreate {
      * @throws IOException thrown if there is an error validating the address
      * @throws SQLException thrown if there is a database error
      */
-    public void editHospital(String name, String address, List<RadioButton> organPrograms,
+    public void editHospital(String name, String address, List<CheckBox> organPrograms,
             Integer hospitalId) throws SQLException, IOException {
         List<Boolean> organProgramBools = new ArrayList<>();
-        for (RadioButton organProgram : organPrograms) {
+        for (CheckBox organProgram : organPrograms) {
             organProgramBools.add(organProgram.isSelected());
         }
         List<Double> latlong = getGeoLocation(address);
