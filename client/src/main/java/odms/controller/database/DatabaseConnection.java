@@ -177,9 +177,9 @@ public final class DatabaseConnection {
      * @throws SQLException If statement cannot be created.
      */
     private Statement parseSql(Connection conn, String filepath) throws IOException, SQLException {
-        InputStream inputStream = getClass().getResourceAsStream(filepath);
-        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-        try (Statement statement = conn.createStatement()) {
+        try (InputStream inputStream = getClass().getResourceAsStream(filepath);
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+                Statement statement = conn.createStatement()) {
             String line;
             StringBuilder sb = new StringBuilder();
 

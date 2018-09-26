@@ -235,7 +235,8 @@ public class Profile implements Comparable<Profile> {
             String alcoholConsumption, Integer bpSystolic, Integer bpDiastolic, String address,
             String region, String phone, String email, String country, String city,
             String countryOfDeath, String regionOfDeath, String cityOfDeath, LocalDateTime created,
-            LocalDateTime updated, String preferredName, String preferredGender, String imageName, LocalDateTime lastBloodDonation, int bloodDonationPoints) {
+            LocalDateTime updated, String preferredName, String preferredGender, String imageName,
+            LocalDateTime lastBloodDonation, int bloodDonationPoints) {
         this.id = id;
         this.nhi = nhi;
         this.username = username;
@@ -346,11 +347,11 @@ public class Profile implements Comparable<Profile> {
             throw new IllegalArgumentException("No values given.");
         }
 
-        if (attrName.equals(Attribute.GIVENNAMES.getText())) {
+        if (attrName.equals(Attribute.GIVEN_NAMES.getText())) {
             setGivenNames(value);
-        } else if (attrName.equals(Attribute.LASTNAMES.getText())) {
+        } else if (attrName.equals(Attribute.LAST_NAMES.getText())) {
             setLastNames(value);
-        } else if (attrName.equals(Attribute.DATEOFBIRTH.getText())) {
+        } else if (attrName.equals(Attribute.DATE_OF_BIRTH.getText())) {
             String[] dates = value.split(HYPHEN);
             LocalDate date = LocalDate.of(
                     Integer.valueOf(dates[2]),
@@ -363,7 +364,7 @@ public class Profile implements Comparable<Profile> {
                 );
             }
             setDateOfBirth(date);
-        } else if (attrName.equals(Attribute.DATEOFDEATH.getText())) {
+        } else if (attrName.equals(Attribute.DATE_OF_DEATH.getText())) {
             if (NULL_STRING.equals(value)) {
                 setDateOfDeath(null);
             } else {
@@ -398,7 +399,7 @@ public class Profile implements Comparable<Profile> {
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException("Invalid weight entered");
             }
-        } else if (attrName.equals(Attribute.BLOODTYPE.getText())) {
+        } else if (attrName.equals(Attribute.BLOOD_TYPE.getText())) {
             if (NULL_STRING.equals(value) || "".equals(value)) {
                 value = null;
             }
@@ -590,10 +591,7 @@ public class Profile implements Comparable<Profile> {
      * @param organ to be added
      */
     public void addOrganReceived(OrganEnum organ) {
-        if (this.organsRequired.contains(organ)) {
-            this.organsRequired.remove(organ);
-        }
-
+        this.organsRequired.remove(organ);
         this.organsReceived.add(organ);
     }
 
@@ -625,10 +623,7 @@ public class Profile implements Comparable<Profile> {
      * @param organ the organ to be added
      */
     public void addOrganDonated(OrganEnum organ) {
-        if (this.organsDonating.contains(organ)) {
-            this.organsDonating.remove(organ);
-        }
-
+        this.organsDonating.remove(organ);
         this.organsDonated.add(organ);
     }
 
@@ -659,9 +654,7 @@ public class Profile implements Comparable<Profile> {
      * @param organ the organ to remove
      */
     public void removeOrganReceived(OrganEnum organ) {
-        if (this.organsReceived.contains(organ)) {
-            this.organsReceived.remove(organ);
-        }
+        this.organsReceived.remove(organ);
     }
 
     /**
@@ -669,9 +662,7 @@ public class Profile implements Comparable<Profile> {
      * @param organ the organ to be removed
      */
     public void removeOrganRequired(OrganEnum organ) {
-        if (this.organsRequired.contains(organ)) {
-            this.organsRequired.remove(organ);
-        }
+        this.organsRequired.remove(organ);
     }
 
     /**
@@ -679,9 +670,7 @@ public class Profile implements Comparable<Profile> {
      * @param organ the organ to be removed
      */
     public void removeOrganDonated(OrganEnum organ) {
-        if (this.organsDonated.contains(organ)) {
-            this.organsDonated.remove(organ);
-        }
+        this.organsDonated.remove(organ);
     }
 
     /**
@@ -689,9 +678,7 @@ public class Profile implements Comparable<Profile> {
      * @param organ the organ to be removed
      */
     public void removeOrganDonating(OrganEnum organ) {
-        if (this.organsDonating.contains(organ)) {
-            this.organsDonating.remove(organ);
-        }
+        this.organsDonating.remove(organ);
     }
 
     public void setReceiver(boolean receiver) {
@@ -1205,8 +1192,7 @@ public class Profile implements Comparable<Profile> {
     }
 
     public void setLastUpdated() {
-        LocalDateTime currentTime = LocalDateTime.now();
-        lastUpdated = currentTime;
+        lastUpdated = LocalDateTime.now();
     }
 
     /**

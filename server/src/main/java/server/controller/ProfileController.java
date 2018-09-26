@@ -101,8 +101,8 @@ public class ProfileController {
         Gson gson = new Gson();
         String profiles;
         try {
-            if (req.queryMap().hasKey("searchString")) {
-                String searchString = req.queryParams("searchString");
+            if (req.queryMap().hasKey(KEY_SEARCH)) {
+                String searchString = req.queryParams(KEY_SEARCH);
                 List<Profile> result = database.getDeadFiltered(searchString);
                 profiles = gson.toJson(result);
             } else {

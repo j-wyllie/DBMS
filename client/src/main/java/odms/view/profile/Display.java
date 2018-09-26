@@ -1,5 +1,8 @@
 package odms.view.profile;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,14 +18,8 @@ import odms.commons.model.user.User;
 import odms.controller.AlertController;
 import odms.controller.data.ImageDataIO;
 import odms.view.CommonView;
-import odms.view.user.TransplantWaitingList;
-
 import odms.view.SocialFeedTab;
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-
-import static odms.controller.AlertController.invalidUsername;
+import odms.view.user.TransplantWaitingList;
 
 /**
  * The profile display view.
@@ -114,8 +111,8 @@ public class Display extends CommonView {
             donorStatusLabel.setText(donorStatusLabel.getText() + "Unregistered");
             receiverStatusLabel.setText(receiverStatusLabel.getText() + "Unregistered");
 
-            if (currentProfile.getDonor() != null && currentProfile.getDonor() && !currentProfile
-                    .getOrgansDonated().isEmpty()) {
+            if (!currentProfile.getOrgansDonated().isEmpty() || !currentProfile.getOrgansDonating()
+                    .isEmpty()) {
                 donorStatusLabel.setText("Donor Status: Registered");
             }
 
@@ -125,7 +122,7 @@ public class Display extends CommonView {
                 currentProfile.setReceiver(true);
             }
 
-            if (currentProfile.isReceiver()) {
+            if (!currentProfile.getOrgansReceived().isEmpty() || !currentProfile.getOrgansRequired().isEmpty()) {
                 receiverStatusLabel.setText("Receiver Status: Registered");
             }
 
