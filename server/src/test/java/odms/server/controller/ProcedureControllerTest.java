@@ -33,9 +33,9 @@ import static org.mockito.Mockito.when;
 public class ProcedureControllerTest extends CommonTestUtils {
 
     // Data access object variables.
-    ProfileDAO profileDAO = DAOFactory.getProfileDao();
-    ProcedureDAO procedureDAO = DAOFactory.getProcedureDao();
-    OrganDAO organDAO = DAOFactory.getOrganDao();
+    private ProfileDAO profileDAO = DAOFactory.getProfileDao();
+    private ProcedureDAO procedureDAO = DAOFactory.getProcedureDao();
+    private OrganDAO organDAO = DAOFactory.getOrganDao();
 
     // Profile variables.
     private Profile profileA;
