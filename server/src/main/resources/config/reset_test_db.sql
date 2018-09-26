@@ -107,6 +107,33 @@ CREATE TABLE IF NOT EXISTS `hla_type` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `hospitals`
+--
+
+DROP TABLE IF EXISTS `hospitals`;
+CREATE TABLE IF NOT EXISTS `hospitals` (
+  `Id` INT(11),
+  `Name` VARCHAR(50) UNIQUE DEFAULT NULL,
+  `Address` VARCHAR(100) DEFAULT NULL,
+  `Latitude` DOUBLE DEFAULT NULL,
+  `Longitude` DOUBLE DEFAULT NULL,
+  `Bone` BOOLEAN DEFAULT FALSE,
+  `BoneMarrow` BOOLEAN DEFAULT FALSE,
+  `ConnectiveTissue` BOOLEAN DEFAULT FALSE,
+  `Cornea` BOOLEAN DEFAULT FALSE,
+  `Heart` BOOLEAN DEFAULT FALSE,
+  `Intestine` BOOLEAN DEFAULT FALSE,
+  `Kidney` BOOLEAN DEFAULT FALSE,
+  `Liver` BOOLEAN DEFAULT FALSE,
+  `Lung` BOOLEAN DEFAULT FALSE,
+  `MiddleEar` BOOLEAN DEFAULT FALSE,
+  `Pancreas` BOOLEAN DEFAULT FALSE,
+  `Skin` BOOLEAN DEFAULT FALSE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `locale`
 --
 
@@ -139,33 +166,6 @@ CREATE TABLE IF NOT EXISTS `organs` (
   `ExpiryDate` datetime DEFAULT NULL,
   `Note` varchar(200) DEFAULT NULL,
   `DateRegistered` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `hospitals`
---
-
-DROP TABLE IF EXISTS `hospitals`;
-CREATE TABLE IF NOT EXISTS `hospitals` (
-  `Id` INT(11),
-  `Name` VARCHAR(50) UNIQUE DEFAULT NULL,
-  `Address` VARCHAR(100) DEFAULT NULL,
-  `Latitude` DOUBLE DEFAULT NULL,
-  `Longitude` DOUBLE DEFAULT NULL,
-  `Bone` BOOLEAN DEFAULT FALSE,
-  `Bone-marrow` BOOLEAN DEFAULT FALSE,
-  `Connective-tissue` BOOLEAN DEFAULT FALSE,
-  `Cornea` BOOLEAN DEFAULT FALSE,
-  `Heart` BOOLEAN DEFAULT FALSE,
-  `Intestine` BOOLEAN DEFAULT FALSE,
-  `Kidney` BOOLEAN DEFAULT FALSE,
-  `Liver` BOOLEAN DEFAULT FALSE,
-  `Lung` BOOLEAN DEFAULT FALSE,
-  `Middle-ear` BOOLEAN DEFAULT FALSE,
-  `Pancreas` BOOLEAN DEFAULT FALSE,
-  `Skin` BOOLEAN DEFAULT FALSE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -254,7 +254,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `Country` varchar(50) DEFAULT NULL,
   `Created` datetime DEFAULT CURRENT_TIMESTAMP,
   `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
-  `IsDefault` tinyint(1) DEFAULT '0',
+  `IsDefault` BOOLEAN DEFAULT FALSE,
   `ImageName` varchar(50) DEFAULT NULL,
   `Token` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -342,9 +342,7 @@ ALTER TABLE `profiles`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`UserId`),
-  ADD KEY (`UserId`),
-  ADD KEY (`Username`);
-
+  ADD KEY (`UserId`);
 --
 -- AUTO_INCREMENT for table `affected_organs`
 --
@@ -661,5 +659,3 @@ INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (199, 'YE', 1),
   (200, 'ZM', 1),
   (201, 'ZW', 1);
-
-

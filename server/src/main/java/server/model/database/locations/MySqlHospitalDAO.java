@@ -1,5 +1,6 @@
 package server.model.database.locations;
 
+import com.google.common.base.CaseFormat;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -114,7 +115,13 @@ public class MySqlHospitalDAO implements HospitalDAO {
 
         List<Boolean> organPrograms = new ArrayList<>();
         for (OrganEnum organ : OrganEnum.values()) {
-            organPrograms.add(resultSet.getBoolean(organ.getName()));
+            organPrograms.add(
+                    resultSet.getBoolean(
+                            CaseFormat.UPPER_UNDERSCORE.to(
+                                    CaseFormat.UPPER_CAMEL, organ.toString()
+                            )
+                    )
+            );
         }
 
         return new Hospital(name, latitude, longitude, address, organPrograms, id);
@@ -126,11 +133,10 @@ public class MySqlHospitalDAO implements HospitalDAO {
      * @param hospital hospital object to add
      * @throws SQLException thrown when there is a server error.
      */
-    @Override
     public void add(Hospital hospital) throws SQLException {
         String query = "INSERT INTO hospitals (Name, Address, Latitude, Longitude, Bone," +
-                "`Bone-marrow`, `Connective-tissue`, Cornea, Heart, Intestine, Kidney, Liver, " +
-                "Lung, `Middle-ear`, Pancreas, Skin) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                "`BoneMarrow`, `ConnectiveTissue`, Cornea, Heart, Intestine, Kidney, Liver, " +
+                "Lung, `MiddleEar`, Pancreas, Skin) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -168,11 +174,10 @@ public class MySqlHospitalDAO implements HospitalDAO {
      * @param hospital edited hospital object
      * @throws SQLException thrown when there is a server error.
      */
-    @Override
     public void edit(Hospital hospital) throws SQLException {
         String query = "UPDATE hospitals SET Name = ?, Address = ?, Latitude = ?, Longitude = ?," +
-                "Bone = ?, `Bone-marrow` = ?, `Connective-tissue` = ?, Cornea = ?, Heart = ?, " +
-                "Intestine = ?, Kidney = ?, Liver = ?, Lung = ?, `Middle-ear` = ?, Pancreas = ?," +
+                "Bone = ?, `BoneMarrow` = ?, `ConnectiveTissue` = ?, Cornea = ?, Heart = ?, " +
+                "Intestine = ?, Kidney = ?, Liver = ?, Lung = ?, `MiddleEar` = ?, Pancreas = ?," +
                 "Skin = ? WHERE Id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -204,7 +209,6 @@ public class MySqlHospitalDAO implements HospitalDAO {
      * @param name the name of the hospital object to remove
      * @throws SQLException thrown when there is a server error.
      */
-    @Override
     public void remove(String name) throws SQLException {
         String query = "DELETE FROM hospitals WHERE Name = ?";
 
@@ -215,7 +219,27 @@ public class MySqlHospitalDAO implements HospitalDAO {
             stmt.executeUpdate();
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
-            throw new SQLException(e);
+            throw e;
         }
     }
+
+    /**
+     * Remove a hospital from the database by ID.
+     *
+     * @param id the ID of the hospital to remove
+     * @throws SQLException thrown when there is a server error.
+     */
+    public void remove(Integer id)  throws SQLException {
+        String query = "DELETE FROM hospitals WHERE Id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, id);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+            throw e;
+        }
+    };
 }

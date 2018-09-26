@@ -2,6 +2,16 @@ package odms.controller.database.locations;
 
 import odms.commons.model.locations.Hospital;
 import odms.commons.model.profile.Profile;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+import odms.commons.model.locations.Hospital;
+import odms.commons.model.locations.Hospital;
+import odms.commons.model.profile.Profile;
 import odms.controller.http.Request;
 import odms.controller.http.Response;
 import org.sonar.api.internal.google.gson.Gson;
@@ -9,15 +19,14 @@ import org.sonar.api.internal.google.gson.JsonArray;
 import org.sonar.api.internal.google.gson.JsonElement;
 import org.sonar.api.internal.google.gson.JsonParser;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+/**
+ * Hospital DAO that communicates with the server.
+ */
+@Slf4j
 public class HttpHospitalDAO implements HospitalDAO {
+
     private static final Integer PORTNUMBER = 6969;
+    private static final String URL = "http://localhost:%s/api/v1/hospitals/all";
 
     /**
      * Get all hospitals in database.
@@ -26,7 +35,7 @@ public class HttpHospitalDAO implements HospitalDAO {
      */
     @Override
     public List<Hospital> getAll() throws SQLException {
-        String url = String.format("http://localhost:%s/api/v1/hospitals/all", PORTNUMBER);
+        String url = String.format(URL, PORTNUMBER);
         Map<String, Object> queryParams = new HashMap<>();
         JsonParser parser = new JsonParser();
         Gson gson = new Gson();
@@ -35,7 +44,7 @@ public class HttpHospitalDAO implements HospitalDAO {
         try {
             response = request.get();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         List<Hospital> hospitals = new ArrayList<>();
         if (response.getStatus() == 200) {
@@ -57,7 +66,7 @@ public class HttpHospitalDAO implements HospitalDAO {
      */
     @Override
     public Hospital get(String name) throws SQLException {
-        String url = String.format("http://localhost:%s/api/v1/hospitals", PORTNUMBER);
+        String url = String.format(URL, PORTNUMBER);
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("name", name);
         Gson parser = new Gson();
@@ -66,7 +75,7 @@ public class HttpHospitalDAO implements HospitalDAO {
         try {
             response = request.get();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         if (response.getStatus() == 200) {
             return parser.fromJson(response.getBody(), Hospital.class);
@@ -84,7 +93,7 @@ public class HttpHospitalDAO implements HospitalDAO {
      */
     @Override
     public Hospital get(int id) throws SQLException {
-        String url = String.format("http://localhost:%s/api/v1/hospitals", PORTNUMBER);
+        String url = String.format(URL, PORTNUMBER);
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("id", id);
         Gson parser = new Gson();
@@ -93,7 +102,7 @@ public class HttpHospitalDAO implements HospitalDAO {
         try {
             response = request.get();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         if (response.getStatus() == 200) {
             return parser.fromJson(response.getBody(), Hospital.class);
@@ -111,7 +120,7 @@ public class HttpHospitalDAO implements HospitalDAO {
     @Override
     public void add(Hospital hospital) throws SQLException {
         Gson gson = new Gson();
-        String url = String.format("http://localhost:%s/api/v1/hospitals", PORTNUMBER);
+        String url = String.format(URL, PORTNUMBER);
         Map<String, Object> queryParams = new HashMap<>();
         Response response = null;
 
@@ -120,7 +129,7 @@ public class HttpHospitalDAO implements HospitalDAO {
         try {
             response = request.post();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         if (response.getStatus() == 500) {
             throw new SQLException(response.getBody());
@@ -135,7 +144,7 @@ public class HttpHospitalDAO implements HospitalDAO {
     @Override
     public void edit(Hospital hospital) throws SQLException {
         Gson gson = new Gson();
-        String url = String.format("http://localhost:%s/api/v1/hospitals", PORTNUMBER);
+        String url = String.format(URL, PORTNUMBER);
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("id", hospital.getId());
         String body = gson.toJson(hospital);
@@ -145,7 +154,7 @@ public class HttpHospitalDAO implements HospitalDAO {
         try {
             response = request.patch();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         if (response.getStatus() == 500) {
@@ -160,7 +169,7 @@ public class HttpHospitalDAO implements HospitalDAO {
      */
     @Override
     public void remove(String name) throws SQLException {
-        String url = String.format("http://localhost:%s/api/v1/hospitals", PORTNUMBER);
+        String url = String.format(URL, PORTNUMBER);
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("name", name);
         Request request = new Request(url, 0, queryParams);
@@ -169,7 +178,7 @@ public class HttpHospitalDAO implements HospitalDAO {
         try {
             response = request.delete();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         if (response.getStatus() == 500) {
