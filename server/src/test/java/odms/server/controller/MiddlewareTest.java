@@ -16,7 +16,11 @@ import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.sonar.api.server.authentication.UnauthorizedException;
 import server.controller.Middleware;
 import server.model.database.DAOFactory;
@@ -28,7 +32,9 @@ import spark.HaltException;
 import spark.Request;
 import spark.Response;
 
-
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(PasswordUtilities.class)
+@PowerMockIgnore("javax.management.*")
 public class MiddlewareTest extends CommonTestUtils {
 
     // Data access objects required.
@@ -62,6 +68,11 @@ public class MiddlewareTest extends CommonTestUtils {
 
     @Before
     public void setup() throws SQLException, UserNotFoundException {
+
+        PowerMockito.stub(
+                PowerMockito.method(PasswordUtilities.class, "getSaltedHash")
+        ).toReturn("test");
+
         profileA = new Profile("Alice", "Smith",
                 genericDate, "LPO7236");
         profileDAO.add(profileA);
@@ -110,10 +121,6 @@ public class MiddlewareTest extends CommonTestUtils {
         responseA = mock(Response.class);
         responseB = mock(Response.class);
         responseC = mock(Response.class);
-
-        PowerMockito.stub(
-                PowerMockito.method(PasswordUtilities.class, "getSaltedHash")
-        ).toReturn("test");
     }
 
     @Test
