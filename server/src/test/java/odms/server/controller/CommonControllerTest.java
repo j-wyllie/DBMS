@@ -9,12 +9,18 @@ import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import server.controller.CommonController;
 import server.controller.Middleware;
 import server.model.database.DAOFactory;
 import server.model.database.PasswordUtilities;
+import server.model.database.profile.MySqlProfileDAO;
 import server.model.database.profile.ProfileDAO;
+import server.model.database.user.MySqlUserDAO;
 import server.model.database.user.UserDAO;
 import server.model.enums.KeyEnum;
 import server.model.enums.ResponseMsgEnum;
@@ -31,6 +37,9 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({PasswordUtilities.class, MySqlUserDAO.class, MySqlProfileDAO.class})
+@PowerMockIgnore("javax.management.*")
 public class CommonControllerTest extends CommonTestUtils {
 
     // Data access objects required.
@@ -65,12 +74,16 @@ public class CommonControllerTest extends CommonTestUtils {
 
     @Before
     public void setup() throws UserNotFoundException, SQLException {
+        PowerMockito.stub(
+                PowerMockito.method(PasswordUtilities.class, "getSaltedHash")
+        ).toReturn("test");
+
         profileA = new Profile("Alice", "Smith",
                 genericDate, "LPO7236");
         profileA.setUsername("alices");
         profileDAO.add(profileA);
         profileA = profileDAO.get(profileA.getNhi());
-        profileA.setPassword("12345");
+        profileA.setPassword("test");
         profileDAO.savePassword(profileA.getUsername(), profileA.getPassword());
 
         // Default admin.
@@ -80,12 +93,12 @@ public class CommonControllerTest extends CommonTestUtils {
         userA.setDefault(true);
         userDAO.add(userA);
         userA = userDAO.get(userA.getUsername());
-        userA.setPassword("admin");
+        userA.setPassword("test");
 
         // Default clinician.
         userB = new User(UserType.CLINICIAN, "Default", "Canterbury");
         userB.setUsername("0");
-        userB.setPassword("password");
+        userB.setPassword("test");
         userB.setDefault(true);
         userDAO.add(userB);
         userB = userDAO.get(userB.getUsername());
@@ -116,10 +129,6 @@ public class CommonControllerTest extends CommonTestUtils {
         responseC = mock(Response.class);
         responseD = mock(Response.class);
         responseE = mock(Response.class);
-
-        PowerMockito.stub(
-                PowerMockito.method(PasswordUtilities.class, "getSaltedHash")
-        ).toReturn("test");
     }
 
     @Test
@@ -141,6 +150,9 @@ public class CommonControllerTest extends CommonTestUtils {
 
     @Test
     public void testCheckCredentialsUserValid() {
+        PowerMockito.stub(
+                PowerMockito.method(MySqlUserDAO.class, "checkCredentials")
+        ).toReturn(true);
         String response = CommonController.checkCredentials(requestA, responseA);
         int id = parser.parse(response).getAsJsonObject().get(KeyEnum.ID.toString()).getAsInt();
         assertEquals(userA.getStaffID().toString(), String.valueOf(id));
@@ -148,6 +160,9 @@ public class CommonControllerTest extends CommonTestUtils {
 
     @Test
     public void testCheckCredentialsUserInvalid() {
+        PowerMockito.stub(
+                PowerMockito.method(MySqlUserDAO.class, "checkCredentials")
+        ).toReturn(false);
         // Overwrite mock with invalid password.
         when(requestA.queryParams("password")).thenReturn("invalid");
         assertEquals("Unauthorized", CommonController.checkCredentials(requestA, responseA));
@@ -155,13 +170,19 @@ public class CommonControllerTest extends CommonTestUtils {
 
     @Test
     public void testCheckCredentialsUserInvalidUsername() {
+        PowerMockito.stub(
+                PowerMockito.method(MySqlUserDAO.class, "checkCredentials")
+        ).toReturn(false);
         // Overwrite mock with invalid username.
         when(requestA.queryParams("username")).thenReturn("invalid");
-        assertEquals("User not found", CommonController.checkCredentials(requestA, responseA));
+        assertEquals("Unauthorized", CommonController.checkCredentials(requestA, responseA));
     }
 
     @Test
     public void testCheckCredentialsProfileValid() {
+        PowerMockito.stub(
+                PowerMockito.method(MySqlProfileDAO.class, "checkCredentials")
+        ).toReturn(true);
         String response = CommonController.checkCredentials(requestB, responseB);
         int id = parser.parse(response).getAsJsonObject().get(KeyEnum.ID.toString()).getAsInt();
         assertEquals(profileA.getId().toString(), String.valueOf(id));
@@ -169,6 +190,9 @@ public class CommonControllerTest extends CommonTestUtils {
 
     @Test
     public void testCheckCredentialsProfileInvalid() {
+        PowerMockito.stub(
+                PowerMockito.method(MySqlProfileDAO.class, "checkCredentials")
+        ).toReturn(false);
         // Overwrite mock with invalid password.
         when(requestB.queryParams("password")).thenReturn("invalid");
         assertEquals("Unauthorized", CommonController.checkCredentials(requestB, responseB));

@@ -1,19 +1,17 @@
 package odms.controller.user;
 
+import static org.junit.Assert.assertEquals;
+
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
-
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import static java.lang.StrictMath.abs;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 
 @Slf4j
 public class AvailableOrgansTest {
@@ -50,13 +48,6 @@ public class AvailableOrgansTest {
     }
 
     @Test
-    public void testGetwaitTime() {
-        OrganEnum.BONE.setDate(LocalDateTime.now(), profile1);
-        String waittime = AvailableOrgans.getWaitTime(OrganEnum.BONE, profile1.getOrgansRequired(), profile1);
-        assertEquals("Registered today", waittime);
-    }
-
-    @Test
     public void testGetwaitTimeInvalid() {
         String waittime = AvailableOrgans.getWaitTime(OrganEnum.BONE, profile1.getOrgansRequired(), profile1);
         assertEquals("Insufficient data", waittime);
@@ -86,14 +77,6 @@ public class AvailableOrgansTest {
         profile1.setDateOfDeath(LocalDateTime.MIN.plusYears(1));
         LocalDateTime expiryTime = AvailableOrgans.getExpiryTime(OrganEnum.BONE, profile1);
         assertEquals(LocalDateTime.MIN.plusYears(6), expiryTime);
-    }
-
-    @Test
-    public void testGetTimeRemaining() {
-        profile1.setDateOfBirth(LocalDate.MIN);
-        profile1.setDateOfDeath(LocalDateTime.MIN.plusYears(1000000000));
-        assert(AvailableOrgans.getTimeRemaining(OrganEnum.BONE, profile1) == Duration.between(LocalDateTime.now(), AvailableOrgans.getExpiryTime(OrganEnum.BONE, profile1))
-                .toMillis());
     }
 
     @Test

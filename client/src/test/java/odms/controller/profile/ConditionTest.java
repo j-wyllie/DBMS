@@ -9,16 +9,13 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import odms.commons.model.profile.Condition;
 import odms.commons.model.profile.Profile;
 import odms.controller.database.condition.HttpConditionDAO;
 import odms.view.profile.ProfileMedicalHistory;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -36,6 +33,11 @@ public class ConditionTest {
         PowerMockito.stub(PowerMockito.method(HttpConditionDAO.class, "remove"))
                 .toReturn(null);
 
+        PowerMockito.stub(PowerMockito.method(HttpConditionDAO.class, "add"))
+                .toReturn(null);
+
+        PowerMockito.stub(PowerMockito.method(HttpConditionDAO.class, "update"))
+                .toReturn(null);
         List<String> profileOneAttr = new ArrayList<>();
         profileOneAttr.add("given-names=\"John\"");
         profileOneAttr.add("last-names=\"Wayne\"");
@@ -48,44 +50,44 @@ public class ConditionTest {
 
     @Test
     public void testGetCuredConditionsEmptyList() {
-        Assert.assertEquals(controller.getCuredConditions(currentProfile).size(), 0);
+        Assert.assertEquals(0, controller.getCuredConditions(currentProfile).size());
     }
 
     @Test
     public void testGetCuredConditions() {
         controller.addCondition(new odms.commons.model.profile.Condition("", LocalDate.now(), LocalDate.now(),false), currentProfile);
         controller.addCondition(new odms.commons.model.profile.Condition("", LocalDate.now(),false), currentProfile);
-        Assert.assertEquals(controller.getCuredConditions(currentProfile).size(), 1);
+        Assert.assertEquals(1, controller.getCuredConditions(currentProfile).size());
     }
 
     @Test
     public void testGetCurrentConditionsEmptyList() {
-        Assert.assertEquals(controller.getCurrentConditions(currentProfile).size(), 0);
+        Assert.assertEquals(0, controller.getCurrentConditions(currentProfile).size());
     }
 
     @Test
     public void testGetCurrentConditions() {
         controller.addCondition(new odms.commons.model.profile.Condition("", LocalDate.now(), LocalDate.now(),false), currentProfile);
         controller.addCondition(new odms.commons.model.profile.Condition("", LocalDate.now(),false), currentProfile);
-        Assert.assertEquals(controller.getCurrentConditions(currentProfile).size(), 1);
+        Assert.assertEquals(1, controller.getCurrentConditions(currentProfile).size());
     }
 
     @Test
     public void testAddValidCondition() {
         controller.addCondition(new odms.commons.model.profile.Condition("", LocalDate.now(),false), currentProfile);
-        assertEquals(currentProfile.getAllConditions().size(), 1);
+        assertEquals(1, currentProfile.getAllConditions().size());
     }
 
     @Test
     public void testAddValidChronicCondition() {
         controller.addCondition(new odms.commons.model.profile.Condition("", LocalDate.now(),true), currentProfile);
-        assertEquals(currentProfile.getAllConditions().get(0).getChronic(), true);
+        assertEquals(true, currentProfile.getAllConditions().get(0).getChronic());
     }
 
     @Test
     public void testAddValidCuredCondition() {
         controller.addCondition(new odms.commons.model.profile.Condition("", LocalDate.now(), LocalDate.now(),false), currentProfile);
-        Assert.assertEquals(controller.getCuredConditions(currentProfile).size(), 1);
+        Assert.assertEquals(1, controller.getCuredConditions(currentProfile).size());
     }
 
     @Test
@@ -133,7 +135,7 @@ public class ConditionTest {
             controller.toggleCured(currentProfile, currentProfile.getAllConditions());
             fail();
         } catch (IllegalArgumentException e) {
-            assertEquals(e.getMessage(),"Can not cure if Chronic");
+            assertEquals("Can not cure if Chronic", e.getMessage());
         }
     }
 
@@ -150,7 +152,7 @@ public class ConditionTest {
         controller.addCondition(condition2, currentProfile);
         controller.addCondition(condition3, currentProfile);
         controller.delete(currentProfile, conditionList);
-        assertEquals(currentProfile.getAllConditions().size(), 0);
+        assertEquals(0, currentProfile.getAllConditions().size());
     }
 
 }

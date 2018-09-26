@@ -1,15 +1,23 @@
 package odms.controller.profile;
 
-import odms.commons.model.profile.Condition;
-import odms.commons.model.profile.Profile;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import odms.commons.model.profile.Condition;
+import odms.commons.model.profile.Profile;
+import odms.controller.database.condition.HttpConditionDAO;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(HttpConditionDAO.class)
 public class ConditionAddTest {
     public ConditionAdd controller;
     public Profile currentProfile;
@@ -24,13 +32,16 @@ public class ConditionAddTest {
         currentProfile = new Profile(profileOneAttr);
         currentProfile.setId(9999);
         controller = new ConditionAdd();
+
+        PowerMockito.stub(PowerMockito.method(HttpConditionDAO.class, "add"))
+                .toReturn(null);
     }
 
     @Test
     public void testAddCondition() {
         Condition condition = new Condition("test", LocalDate.now(), false);
         controller.add(currentProfile, condition);
-        assertEquals(currentProfile.getAllConditions().size(), 1);
+        assertEquals(1, currentProfile.getAllConditions().size());
     }
 
     @Test
@@ -39,7 +50,7 @@ public class ConditionAddTest {
         Condition condition2 = new Condition("test", LocalDate.now(), LocalDate.now(), false);
         controller.add(currentProfile, condition1);
         controller.add(currentProfile, condition2);
-        assertEquals(controller.getCurrentConditions(currentProfile).size(), 1);
+        assertEquals(1, controller.getCurrentConditions(currentProfile).size());
     }
 
     @Test
@@ -53,7 +64,7 @@ public class ConditionAddTest {
     public void testParseConditionCured() {
         Condition condition = controller.parseCondition("test", LocalDate.now(), false, true, currentProfile, LocalDate.now());
         controller.add(currentProfile, condition);
-        assertEquals(currentProfile.getCuredConditions().size(), 1);
+        assertEquals(1, currentProfile.getCuredConditions().size());
     }
 
     @Test
