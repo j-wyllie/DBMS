@@ -167,7 +167,6 @@ public class AlertController {
         helpAlert.setHeaderText("");
         helpAlert.setContentText(message);
         helpAlert.showAndWait();
-
     }
 
     /**

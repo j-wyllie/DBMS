@@ -123,11 +123,11 @@ public class HospitalMap {
                         Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
 
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double distance = EARTH_RADIUS * c * ONE_KM; // convert to meters
+        double distanceInMeters = EARTH_RADIUS * c * ONE_KM; // convert to meters
 
-        distance = Math.pow(distance, 2);
+        distanceInMeters = Math.pow(distanceInMeters, 2);
 
-        return Math.sqrt(distance) / ONE_KM;
+        return Math.sqrt(distanceInMeters) / ONE_KM;
     }
 
     /**
