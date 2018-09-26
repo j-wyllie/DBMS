@@ -77,16 +77,19 @@ public class MiddlewareTest extends CommonTestUtils {
 
         userA = new User(UserType.ADMIN, "Brooke", "Canterbury");
         userA.setUsername("brooker");
+        userA.setPassword("yeet");
         userDAO.add(userA);
         userA = userDAO.get(userA.getUsername());
 
         userB = new User(UserType.CLINICIAN, "Tim", "Hamblin");
         userB.setUsername("timh");
+        userB.setPassword("yeet");
         userDAO.add(userB);
         userB = userDAO.get(userB.getUsername());
 
         userC = new User(UserType.CLINICIAN, "Josh", "Wyllie");
         userC.setUsername("joshw");
+        userC.setPassword("yeet");
         userDAO.add(userC);
         userC = userDAO.get(userC.getUsername());
 
