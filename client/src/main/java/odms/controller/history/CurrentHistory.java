@@ -39,7 +39,7 @@ public final class CurrentHistory {
     }
 
     public static List<History> getHistory() {
-        return currentSessionHistory;
+        return getCurrentSessionHistory();
     }
 
 }

@@ -45,9 +45,9 @@ public class MySqlProfileDAO implements ProfileDAO {
     @Override
     public List<Profile> getAll() throws SQLException {
         String query = "select * from profiles;";
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         List<Profile> result = new ArrayList<>();
-        try (Connection conn = connectionInstance.getConnection();
+
+        try (Connection conn = DatabaseConnection.getConnection();
                 Statement stmt = conn.createStatement();
                 ResultSet allProfiles = stmt.executeQuery(query)) {
 
@@ -67,9 +67,9 @@ public class MySqlProfileDAO implements ProfileDAO {
     @Override
     public List<Profile> getDead() throws SQLException {
         String query = "SELECT * FROM `profiles` JOIN organs on profiles.ProfileId=organs.ProfileId WHERE Dod IS NOT NULL AND ToDonate = 1 AND Expired IS NULL";
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
+
         List<Profile> result = new ArrayList<>();
-        try (Connection conn = connectionInstance.getConnection();
+        try (Connection conn = DatabaseConnection.getConnection();
                 Statement stmt = conn.createStatement();
                 ResultSet allProfiles = stmt.executeQuery(query);) {
             ArrayList<Integer> existingIds = new ArrayList<>();
@@ -97,9 +97,9 @@ public class MySqlProfileDAO implements ProfileDAO {
         String query =
                 "SELECT * FROM profiles JOIN organs on profiles.ProfileId=organs.ProfileId WHERE " +
                         "CONCAT(GivenNames, LastNames) LIKE ? AND Dod IS NOT NULL AND ToDonate = 1 AND Expired IS NULL;";
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
+
         List<Profile> result = new ArrayList<>();
-        Connection conn = connectionInstance.getConnection();
+        Connection conn = DatabaseConnection.getConnection();
         PreparedStatement stmt = conn.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
                 ResultSet.CONCUR_READ_ONLY);
 
