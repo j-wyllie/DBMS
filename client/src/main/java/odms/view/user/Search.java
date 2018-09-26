@@ -22,11 +22,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
-import odms.commons.model.profile.Profile;
-import odms.controller.database.DAOFactory;
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
-import odms.controller.database.profile.ProfileDAO;
 import odms.view.CommonView;
 import org.controlsfx.control.CheckComboBox;
 
@@ -133,7 +131,7 @@ public class Search extends CommonView {
                 final Profile donor = row.getItem();
                 String donations = "";
                 if (row.isHover() && donor != null) {
-                    if (donor.getOrgansDonated().size() > 0) {
+                    if (!donor.getOrgansDonated().isEmpty()) {
                         donations = ". Donor: " + donor.getOrgansDonated().toString();
                     }
                     row.setTooltip(new Tooltip(donor.getFullName() + donations));
@@ -295,15 +293,15 @@ public class Search extends CommonView {
      * @param maxLength that can be entered in the textfield
      * @return
      */
-    public static EventHandler<KeyEvent> numeric_Validation(final Integer maxLength) {
+    public static EventHandler<KeyEvent> numericValidation(final Integer maxLength) {
         return e -> {
-            TextField txt_TextField = (TextField) e.getSource();
-            if (txt_TextField.getText().length() >= maxLength) {
+            TextField txtField = (TextField) e.getSource();
+            if (txtField.getText().length() >= maxLength) {
                 e.consume();
             }
             if (e.getCharacter().matches("[0-9.]")) {
-                if ((txt_TextField.getText().contains(".") ||
-                        txt_TextField.getText().length() == 0) &&
+                if ((txtField.getText().contains(".") ||
+                        txtField.getText().length() == 0) &&
                         e.getCharacter().matches("[.]")) {
                     e.consume();
                 }
@@ -322,10 +320,9 @@ public class Search extends CommonView {
         this.parentView = parentView;
         this.currentUser = currentUser;
         if (currentUser != null) {
-            this.currentUser = currentUser;
             ageRangeField.setDisable(true);
-            ageField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
-            ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
+            ageField.addEventHandler(KeyEvent.KEY_TYPED, numericValidation(10));
+            ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numericValidation(10));
             genderStrings.clear();
             genderStrings.add("any");
             genderStrings.add("male");
@@ -357,9 +354,7 @@ public class Search extends CommonView {
                 }
             });
 
-            organsCombobox.addEventHandler(ComboBox.ON_HIDDEN, event -> {
-                performSearchFromFilters();
-            });
+            organsCombobox.addEventHandler(ComboBox.ON_HIDDEN, event -> performSearchFromFilters());
 
             makeSearchTable(currentUser);
             setSearchTablePlaceholder();

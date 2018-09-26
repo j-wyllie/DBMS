@@ -23,7 +23,6 @@ public class UsersList {
     private odms.view.user.UsersList view;
     private ObservableList<User> usersObservableList;
     private ContextMenu contextMenu;
-    private UserDAO userDAO= DAOFactory.getUserDao();
 
     /**
      * Public constructor for the ViewUsersController class.
