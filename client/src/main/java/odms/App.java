@@ -4,6 +4,7 @@ import javafx.application.Application;
 import lombok.extern.slf4j.Slf4j;
 import odms.cli.CommandLine;
 import odms.controller.GuiMain;
+import odms.controller.database.DatabaseConnection;
 import odms.controller.history.CurrentHistory;
 
 @Slf4j
@@ -18,7 +19,7 @@ public class App {
 
             } else {
                 if ("-cmd".equalsIgnoreCase(args[0])) {
-                    CommandLine commandLine = new CommandLine();
+                    CommandLine commandLine = new CommandLine(DatabaseConnection.getInstance());
                     commandLine.initialiseConsole();
                 }
             }

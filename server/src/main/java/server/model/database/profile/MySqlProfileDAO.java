@@ -313,10 +313,10 @@ public class MySqlProfileDAO implements ProfileDAO {
         }
         query.append(
                 " WHERE ((p.PreferredName is not null and CONCAT(p.GivenNames, p.PreferredName, " +
-                        "p.LastNames) LIKE ?) or (CONCAT(p.GivenNames, p.LastNames) LIKE ?))";
+                        "p.LastNames) LIKE ?) or (CONCAT(p.GivenNames, p.LastNames) LIKE ?))");
         System.out.println(region);
         if (!"".equals(region)) {
-            query += " and " +
+            query.append(" and " +
                         "p.Region like ?");
         }
         if (!gender.equals("any")) {

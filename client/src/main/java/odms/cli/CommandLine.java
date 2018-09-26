@@ -1,12 +1,5 @@
 package odms.cli;
 
-import static odms.cli.CommandUtils.validateCommandType;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 import odms.cli.commands.Help;
 import odms.cli.commands.Print;
@@ -26,6 +19,14 @@ import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import static odms.cli.CommandUtils.validateCommandType;
+
 @Slf4j
 public class CommandLine implements Runnable {
 
@@ -33,11 +34,13 @@ public class CommandLine implements Runnable {
     private UserDAO userDatabase;
     private LineReader reader;
     private Terminal terminal;
+    private DatabaseConnection instance;
 
     /**
      * Create a standard input/output terminal
      */
-    public CommandLine() {
+    public CommandLine(DatabaseConnection instance) {
+        this.instance = instance;
         this.profileDatabase = DAOFactory.getProfileDao();
         this.userDatabase = DAOFactory.getUserDao();
 
@@ -45,7 +48,6 @@ public class CommandLine implements Runnable {
             terminal = TerminalBuilder.terminal();
             reader = LineReaderBuilder.builder()
                     .terminal(terminal)
-                    .appName("ODMS")
                     .completer(Commands.commandAutoCompletion())
                     .history(new DefaultHistory())
                     .parser(new DefaultParser())
@@ -68,14 +70,14 @@ public class CommandLine implements Runnable {
         try {
             terminal = TerminalBuilder.builder()
                     .system(false)
+                    .dumb(true)
                     .streams(input, output)
                     .build();
+
 
             reader = LineReaderBuilder.builder()
                     .terminal(terminal)
                     .appName("ODMS")
-                    .completer(Commands.commandAutoCompletion())
-                    .history(new DefaultHistory())
                     .parser(new DefaultParser())
                     .build();
 
@@ -100,10 +102,11 @@ public class CommandLine implements Runnable {
         this.userDatabase = DAOFactory.getUserDao();
 
         System.out.println("Organ profile Management System");
-        System.out.println("Please enter your commands below:\n");
+        System.out.println("Please enter your commands below:");
+        System.out.println("Type 'help' for a list of commands\n");
 
         while (!exit) {
-            input = reader.readLine("> ").trim();
+            input = reader.readLine("> ");
 
             terminal.flush();
 
@@ -120,7 +123,6 @@ public class CommandLine implements Runnable {
                     log.error(e.getMessage(), e);
                 }
             }
-
         }
     }
 
@@ -135,7 +137,6 @@ public class CommandLine implements Runnable {
      */
     private void processInput(ArrayList<String> input, String rawInput) throws SQLException {
         Commands inputCommand = validateCommandType(input, rawInput);
-        DatabaseConnection instance = DatabaseConnection.getInstance();
 
         switch (inputCommand) {
             case INVALID:
