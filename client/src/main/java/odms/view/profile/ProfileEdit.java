@@ -966,29 +966,29 @@ public class ProfileEdit extends CommonView {
         return cityField.getText();
     }
 
-    public Integer getHLAXAField() { return Integer.valueOf(hlaXAField.getText().replaceAll(NOT_ANY_DIGIT, "")); }
+    public String getHLAXAField() { return hlaXAField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
 
-    public Integer getHLAXBField() { return Integer.valueOf(hlaXBField.getText().replaceAll(NOT_ANY_DIGIT, "")); }
+    public String getHLAXBField() { return hlaXBField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
 
-    public Integer getHLAXCField() { return Integer.valueOf(hlaXCField.getText().replaceAll(NOT_ANY_DIGIT, "")); }
+    public String getHLAXCField() { return hlaXCField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
 
-    public Integer getHLAXDPField() { return Integer.valueOf(hlaXDPField.getText().replaceAll(NOT_ANY_DIGIT, "")); }
+    public String getHLAXDPField() { return hlaXDPField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
 
-    public Integer getHLAXDQField() { return Integer.valueOf(hlaXDQField.getText().replaceAll(NOT_ANY_DIGIT, "")); }
+    public String getHLAXDQField() { return hlaXDQField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
 
-    public Integer getHLAXDRField() { return Integer.valueOf(hlaXDRField.getText().replaceAll(NOT_ANY_DIGIT, "")); }
+    public String getHLAXDRField() { return hlaXDRField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
 
-    public Integer getHLAYAField() { return Integer.valueOf(hlaYAField.getText().replaceAll(NOT_ANY_DIGIT, "")); }
+    public String getHLAYAField() { return hlaYAField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
 
-    public Integer getHLAYBField() { return Integer.valueOf(hlaYBField.getText().replaceAll(NOT_ANY_DIGIT, "")); }
+    public String getHLAYBField() { return hlaYBField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
 
-    public Integer getHLAYCField() { return Integer.valueOf(hlaYCField.getText().replaceAll(NOT_ANY_DIGIT, "")); }
+    public String getHLAYCField() { return hlaYCField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
 
-    public Integer getHLAYDPField() { return Integer.valueOf(hlaYDPField.getText().replaceAll(NOT_ANY_DIGIT, "")); }
+    public String getHLAYDPField() { return hlaYDPField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
 
-    public Integer getHLAYDQField() { return Integer.valueOf(hlaYDQField.getText().replaceAll(NOT_ANY_DIGIT, "")); }
+    public String getHLAYDQField() { return hlaYDQField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
 
-    public Integer getHLAYDRField() { return Integer.valueOf(hlaYDRField.getText().replaceAll(NOT_ANY_DIGIT, "")); }
+    public String getHLAYDRField() { return hlaYDRField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
 
     public String getSecondaryHlaField() { return secondaryHlaField.getText(); }
 

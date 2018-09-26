@@ -295,10 +295,10 @@ public class Search extends CommonView {
     }
 
     /**
-     * Limits the characters entered in textfield to only digits and maxLength
+     * Limits the characters entered in textfield to only digits and maxLength.
      *
      * @param maxLength that can be entered in the textfield
-     * @return
+     * @return eventHandler
      */
     public static EventHandler<KeyEvent> numericValidation(final Integer maxLength) {
         return e -> {
@@ -361,7 +361,8 @@ public class Search extends CommonView {
                 }
             });
 
-            organsCombobox.addEventHandler(ComboBox.ON_HIDDEN, event -> performSearchFromFilters());
+            organsCombobox.addEventHandler(ComboBox.ON_HIDDEN, event ->
+                performSearchFromFilters());
 
             makeSearchTable(currentUser);
             setSearchTablePlaceholder();
@@ -373,7 +374,7 @@ public class Search extends CommonView {
     /**
      * Clears the search table and sets the placeholder.
      */
-    public void setSearchTablePlaceholder() {
+    private void setSearchTablePlaceholder() {
         try {
             makeSearchTable(currentUser);
             searchTable.getItems().clear();
