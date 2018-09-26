@@ -18,9 +18,9 @@ public interface HospitalDAO {
     List<Hospital> getAll() throws SQLException;
 
     /**
-     * Get a hospital from database.
+     * Get a hospital from database
      *
-     * @param name the name of the hospital to retrieve
+     * @param name the name of the hospital to retrieve.
      * @return hospital object
      * @throws SQLException thrown when there is a server error.
      */

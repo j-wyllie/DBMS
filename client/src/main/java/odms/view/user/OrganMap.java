@@ -143,6 +143,7 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
                 Stage stage = new Stage();
                 stage.setScene(scene);
                 stage.setTitle("Schedule Procedure");
+                stage.setResizable(false);
                 stage.initOwner(mapView.getScene().getWindow());
                 stage.initModality(Modality.WINDOW_MODAL);
                 stage.show();

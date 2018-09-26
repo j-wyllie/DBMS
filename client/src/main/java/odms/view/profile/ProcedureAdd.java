@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -16,7 +15,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Profile;
-import odms.commons.model.enums.OrganEnum;
 
 @Slf4j
 public class ProcedureAdd {
@@ -24,7 +22,7 @@ public class ProcedureAdd {
     private static ProceduresDisplay parentView;
     private static Profile searchedDonor;
 
-    private odms.controller.profile.ProcedureAdd controller = new odms.controller.profile.ProcedureAdd(this);
+    private odms.controller.profile.ProcedureAdd controller = new odms.controller.profile.ProcedureAdd();
 
     @FXML
     private TextField summaryField;
@@ -44,12 +42,10 @@ public class ProcedureAdd {
     @FXML
     private ListView<String> affectedOrgansListView;
 
-    private ObservableList<String> donatedOrgans;
-
     @FXML
-    public void handleAddButtonClicked(ActionEvent actionEvent) {
+    public void handleAddButtonClicked() {
         try {
-            controller.add(getSearchedDonor());
+            controller.add(getSearchedDonor(), new ArrayList<>(getAffectedOrgansListView()), controller.parseProcedure(getSummaryField(), getDateOfProcedureDatePicker(), getDescriptionField(), searchedDonor.getDateOfBirth()));
             parentView.refreshProcedureTable();
             Stage stage = (Stage) addButton.getScene().getWindow();
             stage.close();
@@ -60,8 +56,8 @@ public class ProcedureAdd {
     }
 
     @FXML
-    private void onEnter(ActionEvent event) {
-        handleAddButtonClicked(event);
+    private void onEnter() {
+        handleAddButtonClicked();
     }
 
     /**
@@ -72,10 +68,8 @@ public class ProcedureAdd {
         warningLabel.setVisible(false);
         affectedOrgansListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         List<String> organs = new ArrayList<>();
-        searchedDonor.getOrgansDonating().forEach(organEnum -> {
-            organs.add(organEnum.getNamePlain());
-        });
-        donatedOrgans = FXCollections
+        searchedDonor.getOrgansDonating().forEach(organEnum -> organs.add(organEnum.getNamePlain()));
+        ObservableList<String> donatedOrgans = FXCollections
                 .observableArrayList();
         donatedOrgans.addAll(organs);
         affectedOrgansListView.setItems(donatedOrgans);
@@ -102,7 +96,7 @@ public class ProcedureAdd {
         return descriptionField.getText();
     }
 
-    public ArrayList getAffectedOrgansListView() {
+    public List getAffectedOrgansListView() {
         return new ArrayList<>(affectedOrgansListView.getSelectionModel().getSelectedItems());
     }
 }

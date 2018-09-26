@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import static odms.controller.user.AvailableOrgans.*;
-import static odms.view.user.Search.numeric_Validation;
+import static odms.view.user.Search.numericValidation;
 
 /**
  * Available organs view.
@@ -178,7 +178,7 @@ public class AvailableOrgans extends CommonView {
                 "Countdown"
         );
         countdownCol.setCellValueFactory(
-                cdf -> new SimpleStringProperty(getTimeToExpiryHoursSeconds(
+                cdf -> new SimpleStringProperty(getTimeToExpiryStd(
                         cdf.getValue().getValue(), cdf.getValue().getKey())
                 )
         );
@@ -340,8 +340,8 @@ public class AvailableOrgans extends CommonView {
                 });
 
         ageRangeField.setDisable(true);
-        ageField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
-        ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
+        ageField.addEventHandler(KeyEvent.KEY_TYPED, numericValidation(10));
+        ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numericValidation(10));
 
         ageField.textProperty().addListener((observable, oldValue, newValue) -> {
             setPotentialOrganMatchesList();

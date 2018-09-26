@@ -102,6 +102,7 @@ public class MySqlHospitalDAO implements HospitalDAO {
 
     /**
      * Creates a hospital object from a result set.
+     *
      * @param resultSet query results, contains hospital data
      * @return hospital object
      * @throws SQLException thrown when there is a server error.

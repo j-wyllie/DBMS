@@ -6,20 +6,25 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Request {
+    private static final Integer PORT = 6969;
+    private static final String DOMAIN = "localhost";
+    private static final String URL = "http://" + DOMAIN + ":" + PORT + "/api/v1/";
+
+    private static final String TYPE_CONTENT = "Content-Type";
+    private static final String TYPE_JSON = "application/json";
 
     private String urlString;
     private int token;
     private Map<String, Object> queryParams;
     private String body;
 
-    private static Integer port = 6969;
-    private static String domain = "localhost";
-    private static String url = "http://" + domain + ":" + port + "/api/v1/";
+
 
     public Request(String urlString, int token, Map<String, Object> queryParams, String body) {
         this.urlString = urlString;
@@ -39,7 +44,7 @@ public class Request {
         //Creating the connection to the server.
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty(TYPE_CONTENT, TYPE_JSON);
 
         String body = execute(con);
         int status = con.getResponseCode();
@@ -53,11 +58,11 @@ public class Request {
         //Creating the connection to the server.
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
-        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty(TYPE_CONTENT, TYPE_JSON);
 
         con.setDoOutput(true);
         OutputStream output = con.getOutputStream();
-        output.write(this.body.getBytes("UTF-8"));
+        output.write(this.body.getBytes(StandardCharsets.UTF_8));
 
         String body = execute(con);
         int status = con.getResponseCode();
@@ -72,11 +77,11 @@ public class Request {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestProperty("X-HTTP-Method-Override", "PATCH");
         con.setRequestMethod("POST");
-        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty(TYPE_CONTENT, TYPE_JSON);
         con.setDoOutput(true);
 
         OutputStream output = con.getOutputStream();
-        output.write(this.body.getBytes("UTF-8"));
+        output.write(this.body.getBytes(StandardCharsets.UTF_8));
 
         String body = execute(con);
         int status = con.getResponseCode();
@@ -90,7 +95,7 @@ public class Request {
         //Creating the connection to the server.
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("DELETE");
-        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty(TYPE_CONTENT, TYPE_JSON);
 
         String body = execute(con);
         int status = con.getResponseCode();
@@ -103,7 +108,7 @@ public class Request {
         con.setConnectTimeout(60000);
         con.setReadTimeout(60000);
 
-        StringBuffer responseContent = new StringBuffer();
+        StringBuilder responseContent = new StringBuilder();
         BufferedReader response;
         try {
             response = new BufferedReader(
@@ -138,6 +143,6 @@ public class Request {
     }
 
     public static String getUrl() {
-        return url;
+        return URL;
     }
 }
