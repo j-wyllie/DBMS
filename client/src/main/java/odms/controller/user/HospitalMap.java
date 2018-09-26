@@ -23,6 +23,8 @@ import java.util.List;
  */
 public class HospitalMap {
 
+    private static final int EARTH_RADIUS = 6371; // Radius of the earth
+    private static final int ONE_KM = 1000;
     private final odms.view.user.HospitalMap view;
 
     /**
@@ -112,8 +114,6 @@ public class HospitalMap {
      * @return Distance between the two coordinates in km
      */
     public double calcDistanceHaversine(double lat1, double lon1, double lat2, double lon2) {
-        final int EARTH_RADIUS = 6371; // Radius of the earth
-        final int ONE_KM = 1000;
 
         double latDistance = Math.toRadians(lat2 - lat1);
         double lonDistance = Math.toRadians(lon2 - lon1);

@@ -65,6 +65,11 @@ public class HospitalMap extends CommonView implements Initializable,
     private static final int HOSPITAL_COLUMN_WIDTH = 200;
     private static DecimalFormat decimalFormat = new DecimalFormat("####0.00");
 
+    private static final double HELICOPTER_SPEED_KMH = 262;
+    private static final int SECONDS_IN_HOUR = 3600;
+    private static final int MLS_IN_SECOND = 1000;
+
+
     private odms.controller.user.HospitalMap controller =
             new odms.controller.user.HospitalMap(this);
 
@@ -440,8 +445,6 @@ public class HospitalMap extends CommonView implements Initializable,
     private void createRouteBetweenLocations(Double originLat, Double originLong,
             String originName, Double destinationLat, Double destinationLong,
             String destinationName) {
-        final double HELICOPTER_SPEED_KMH = 262;
-        final int SECONDS_IN_HOUR = 3600;
 
         if (hospitalSelected1.getId().equals(hospitalSelected2.getId())) {
             clearRoutesAndSelection();
@@ -536,7 +539,6 @@ public class HospitalMap extends CommonView implements Initializable,
 
         String travelMethodGiven = String.valueOf(
                 travelMethod.getSelectionModel().getSelectedItem());
-        final int MLS_IN_SECOND = 1000;
 
         try {
             double durationNumber = Double.parseDouble(duration) * MLS_IN_SECOND;
