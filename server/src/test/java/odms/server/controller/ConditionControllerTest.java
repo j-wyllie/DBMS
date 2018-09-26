@@ -1,6 +1,8 @@
 package odms.server.controller;
 
 import com.google.gson.Gson;
+import java.util.HashMap;
+import java.util.List;
 import odms.commons.model.profile.Condition;
 import odms.commons.model.profile.Profile;
 import odms.server.CommonTestUtils;
@@ -12,6 +14,7 @@ import server.model.database.DAOFactory;
 import server.model.database.condition.ConditionDAO;
 import server.model.database.profile.ProfileDAO;
 import server.model.enums.KeyEnum;
+import server.model.enums.ResponseMsgEnum;
 import spark.Request;
 import spark.Response;
 
@@ -74,61 +77,75 @@ public class ConditionControllerTest extends CommonTestUtils {
     @Test
     public void testGetAllValid() {
         when(requestA.params(KeyEnum.ID.toString())).thenReturn(String.valueOf(profileA.getId()));
-        assertEquals(1, ConditionController.getAll(requestA, responseA).length());
-        assertEquals(200, responseA.status());
+        List<Condition> expected = conditionDAO
+                .getAll(profileA.getId());
+        List<String> testResults = gson.fromJson(
+                ConditionController.getAll(requestA, responseA), List.class);
+        assertEquals(expected.size(), testResults.size());
     }
 
     @Test
     public void testGetAllInvalid() {
         // Profile id param is missing.
-        assertEquals(0, ConditionController.getAll(requestA, responseA).length());
-        assertEquals(400, responseA.status());
+        assertEquals(ResponseMsgEnum.BAD_REQUEST.toString(), ConditionController.getAll(requestA, responseA));
     }
 
     @Test
     public void testAddValid() {
+        // Check condition count.
+        assertEquals(0, conditionDAO.getAll(profileA.getId(), true).size());
+        // Add new chronic condition.
         when(requestB.params(KeyEnum.ID.toString())).thenReturn(String.valueOf(profileA.getId()));
-        ConditionController.add(requestB, responseB);
-        assertEquals(200, responseB.status());
+        assertEquals("Condition added successfully", ConditionController.add(requestB, responseB));
+        conditionB = conditionDAO.getAll(profileA.getId(), true).get(0);
+        // Check new condition count.
+        assertEquals(1, conditionDAO.getAll(profileA.getId(), true).size());
+        // Clean up.
+        conditionDAO.remove(conditionB);
     }
 
     @Test
     public void testAddInvalid() {
         // Profile id param is missing.
-        ConditionController.add(requestB, responseB);
-        assertEquals(400, responseB.status());
+        assertEquals(ResponseMsgEnum.BAD_REQUEST.toString(), ConditionController.add(requestB, responseB));
     }
 
     @Test
     public void testEditValid() {
         conditionA.setDateCured(LocalDate.now());
         when(requestA.body()).thenReturn(gson.toJson(conditionA));
-        ConditionController.edit(requestA, responseA);
-        assertEquals(200, responseA.status());
+        assertEquals("Condition Updated", ConditionController.edit(requestA, responseA));
     }
 
     @Test
     public void testEditInvalid() {
         // Condition body is missing.
-        ConditionController.edit(requestA, responseA);
-        assertEquals(400, responseA.status());
+        when(requestA.body()).thenReturn(gson.toJson(new HashMap<>()));
+        assertEquals(ResponseMsgEnum.BAD_REQUEST.toString(), ConditionController.edit(requestA, responseA));
     }
 
     @Test
     public void testDeleteValid() {
+        // Check condition count before deletion.
+        assertEquals(1, conditionDAO.getAll(profileA.getId(), false).size());
+        // Delete the condition.
         when(requestA.params(KeyEnum.ID.toString())).thenReturn(String.valueOf(conditionA.getId()));
-        ConditionController.delete(requestA, responseA);
-        assertEquals(200, responseA.status());
+        assertEquals("Condition Deleted", ConditionController.delete(requestA, responseA));
+        // Check condition count after deletion.
+        assertEquals(0, conditionDAO.getAll(profileA.getId(), false).size());
     }
 
     @Test
     public void testDeleteInvalid() {
-        ConditionController.delete(requestA, responseA);
-        assertEquals(400, responseA.status());
+        // Required attributes missing.
+        assertEquals(ResponseMsgEnum.BAD_REQUEST.toString(), ConditionController.delete(requestA, responseA));
     }
 
     @After
     public void tearDown() throws SQLException {
+        // Condition teardown.
+        conditionDAO.remove(conditionA);
+        // Profile teardown.
         profileDAO.remove(profileA);
     }
 }

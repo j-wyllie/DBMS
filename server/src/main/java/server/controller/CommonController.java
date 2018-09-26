@@ -32,22 +32,20 @@ public class CommonController {
      */
     public static String setup(Request req, Response res) {
         try {
-            DAOFactory.getUserDao().get(ADMIN);
-        } catch (UserNotFoundException e) {
-            createDefaultAdmin();
+            try {
+                DAOFactory.getUserDao().get(ADMIN);
+            } catch (UserNotFoundException e) {
+                createDefaultAdmin();
+            }
+            try {
+                DAOFactory.getUserDao().get(CLINICIAN);
+            } catch (UserNotFoundException e) {
+                createDefaultClinician();
+            }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
             res.status(500);
-            return e.getMessage();
-        }
-        try {
-            DAOFactory.getUserDao().get(CLINICIAN);
-        } catch (UserNotFoundException e) {
-            createDefaultClinician();
-        } catch (SQLException e) {
-            log.error(e.getMessage(), e);
-            res.status(500);
-            return e.getMessage();
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
 
         res.status(201);
@@ -58,31 +56,24 @@ public class CommonController {
     /**
      * Creates a default admin profile in the database.
      */
-    private static void createDefaultAdmin() {
-        try {
-            User admin = new User(UserType.ADMIN, ADMIN);
-            admin.setUsername(ADMIN);
-            admin.setPassword(ADMIN);
-            admin.setDefault(true);
-            DAOFactory.getUserDao().add(admin);
-        } catch (SQLException e) {
-            log.error(e.getMessage(), e);
-        }
+    private static void createDefaultAdmin() throws SQLException {
+        User admin = new User(UserType.ADMIN, ADMIN);
+        admin.setUsername(ADMIN);
+        admin.setPassword(ADMIN);
+        admin.setDefault(true);
+        DAOFactory.getUserDao().add(admin);
     }
 
     /**
      * Creates a default clinician profile in the database.
      */
-    private static void createDefaultClinician() {
-        try {
-            User clinician = new User(UserType.CLINICIAN, "Doc");
-            clinician.setUsername(CLINICIAN);
-            clinician.setPassword("password");
-            clinician.setDefault(true);
-            DAOFactory.getUserDao().add(clinician);
-        } catch (SQLException e) {
-            log.error(e.getMessage(), e);
-        }
+    private static void createDefaultClinician() throws SQLException {
+        User clinician = new User(UserType.CLINICIAN, "Doc");
+        clinician.setUsername(CLINICIAN);
+        clinician.setPassword("password");
+        clinician.setDefault(true);
+        DAOFactory.getUserDao().add(clinician);
+
     }
 
     /**

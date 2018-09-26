@@ -339,10 +339,10 @@ public class ProfileController {
             valid = database.checkCredentials(username, password);
         } catch (SQLException e) {
             response.status(500);
-            return e.getMessage();
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         } catch (UserNotFoundException e) {
             response.status(404);
-            return "Profile not found.";
+            return "Profile not found";
         }
 
         if (valid) {
@@ -357,8 +357,8 @@ public class ProfileController {
                 return e.getMessage();
             }
         } else {
-            response.status(404);
-            return "Error.";
+            response.status(401);
+            return "Unauthorized";
         }
     }
 

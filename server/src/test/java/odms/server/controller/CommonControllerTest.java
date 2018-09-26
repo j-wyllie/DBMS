@@ -1,5 +1,6 @@
 package odms.server.controller;
 
+import com.google.gson.JsonParser;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
@@ -14,6 +15,7 @@ import server.model.database.DAOFactory;
 import server.model.database.profile.ProfileDAO;
 import server.model.database.user.UserDAO;
 import server.model.enums.KeyEnum;
+import server.model.enums.ResponseMsgEnum;
 import spark.Request;
 import spark.Response;
 
@@ -56,14 +58,18 @@ public class CommonControllerTest extends CommonTestUtils {
     private Response responseD;
     private Response responseE;
 
+    // General variables.
+    JsonParser parser = new JsonParser();
+
     @Before
     public void setup() throws UserNotFoundException, SQLException {
         profileA = new Profile("Alice", "Smith",
                 genericDate, "LPO7236");
-        profileDAO.add(profileA);
         profileA.setUsername("alices");
-        profileA.setPassword("12345");
+        profileDAO.add(profileA);
         profileA = profileDAO.get(profileA.getNhi());
+        profileA.setPassword("12345");
+        profileDAO.savePassword(profileA.getUsername(), profileA.getPassword());
 
         // Default admin.
         userA = new User(UserType.ADMIN, "admin", "Canterbury");
@@ -72,6 +78,7 @@ public class CommonControllerTest extends CommonTestUtils {
         userA.setDefault(true);
         userDAO.add(userA);
         userA = userDAO.get(userA.getUsername());
+        userA.setPassword("admin");
 
         // Default clinician.
         userB = new User(UserType.CLINICIAN, "Default", "Canterbury");
@@ -80,6 +87,7 @@ public class CommonControllerTest extends CommonTestUtils {
         userB.setDefault(true);
         userDAO.add(userB);
         userB = userDAO.get(userB.getUsername());
+
 
         requestA = mock(Request.class);
         when(requestA.queryParams("username")).thenReturn(userA.getUsername());
@@ -114,60 +122,57 @@ public class CommonControllerTest extends CommonTestUtils {
         userDAO.remove(userA);
         userDAO.remove(userB);
         CommonController.setup(requestC, responseC);
-        assertEquals(userA, userDAO.get(userA.getUsername()));
-        assertEquals(userB, userDAO.get(userB.getUsername()));
+        assertEquals(userA.getUsername(), userDAO.get(userA.getUsername()).getUsername());
+        assertEquals(userB.getUsername(), userDAO.get(userB.getUsername()).getUsername());
     }
 
     @Test
     public void testSetupNotRequired() throws UserNotFoundException, SQLException {
         CommonController.setup(requestC, responseC);
-        assertEquals(userA, userDAO.get(userA.getUsername()));
-        assertEquals(userB, userDAO.get(userB.getUsername()));
+        assertEquals(userA.getUsername(), userDAO.get(userA.getUsername()).getUsername());
+        assertEquals(userB.getUsername(), userDAO.get(userB.getUsername()).getUsername());
     }
 
     @Test
     public void testCheckCredentialsUserValid() {
         String response = CommonController.checkCredentials(requestA, responseA);
-        assertEquals(200, responseA.status());
+        int id = parser.parse(response).getAsJsonObject().get(KeyEnum.ID.toString()).getAsInt();
+        assertEquals(userA.getStaffID().toString(), String.valueOf(id));
     }
 
     @Test
     public void testCheckCredentialsUserInvalid() {
         // Overwrite mock with invalid password.
-        when(requestA.headers("password")).thenReturn("invalid");
-        String response = CommonController.checkCredentials(requestA, responseA);
-        assertEquals(404, responseA.status());
+        when(requestA.queryParams("password")).thenReturn("invalid");
+        assertEquals("Unauthorized", CommonController.checkCredentials(requestA, responseA));
     }
 
     @Test
     public void testCheckCredentialsUserInvalidUsername() {
         // Overwrite mock with invalid username.
-        when(requestA.headers("username")).thenReturn("invalid");
-        String response = CommonController.checkCredentials(requestA, responseA);
-        assertEquals(404, responseA.status());
+        when(requestA.queryParams("username")).thenReturn("invalid");
+        assertEquals("User not found", CommonController.checkCredentials(requestA, responseA));
     }
 
     @Test
     public void testCheckCredentialsProfileValid() {
         String response = CommonController.checkCredentials(requestB, responseB);
-        assertEquals(200, responseB.status());
+        int id = parser.parse(response).getAsJsonObject().get(KeyEnum.ID.toString()).getAsInt();
+        assertEquals(profileA.getId().toString(), String.valueOf(id));
     }
 
     @Test
     public void testCheckCredentialsProfileInvalid() {
         // Overwrite mock with invalid password.
-        when(requestB.headers("password")).thenReturn("invalid");
-        String response = CommonController.checkCredentials(requestB, responseB);
-        assertEquals(404, responseB.status());
+        when(requestB.queryParams("password")).thenReturn("invalid");
+        assertEquals("Unauthorized", CommonController.checkCredentials(requestB, responseB));
     }
 
     @Test
     public void testCheckCredentialsProfileInvalidUsername() {
         // Overwrite mock with invalid username.
-        when(requestB.headers("username")).thenReturn("invalid");
-        String response = CommonController.checkCredentials(requestB, responseB);
-        assertEquals(404, responseB.status());
-
+        when(requestB.queryParams("username")).thenReturn("invalid");
+        assertEquals("Profile not found", CommonController.checkCredentials(requestB, responseB));
     }
 
     @Test
@@ -176,17 +181,14 @@ public class CommonControllerTest extends CommonTestUtils {
         int token = Middleware.authenticate(userA.getStaffID(), userA.getUserType()).get("Token");
         when(requestD.headers(KeyEnum.AUTH.toString())).thenReturn(String.valueOf(token));
         assertTrue(Middleware.isAdminAuthenticated(requestD, responseD));
-
         // Logout the user.
-        CommonController.logout(requestD, responseD);
-        assertEquals(200, responseD.status());
+        assertEquals("User successfully logged out", CommonController.logout(requestD, responseD));
     }
 
     @Test
     public void testLogoutUserInvalid() {
         // Logout the user - token header missing and user not logged in.
-        CommonController.logout(requestD, responseD);
-        assertEquals(400, responseD.status());
+        assertEquals(ResponseMsgEnum.BAD_REQUEST.toString(), CommonController.logout(requestD, responseD));
     }
 
     @Test
@@ -195,14 +197,11 @@ public class CommonControllerTest extends CommonTestUtils {
         int token = Middleware.authenticate(userA.getStaffID(), userA.getUserType()).get("Token");
         when(requestD.headers(KeyEnum.AUTH.toString())).thenReturn(String.valueOf(token));
         assertTrue(Middleware.isAdminAuthenticated(requestD, responseD));
-
         // Invalid token set.
         int invalidToken = -1;
         when(requestD.headers(KeyEnum.AUTH.toString())).thenReturn(String.valueOf(invalidToken));
-
         // Logout the user.
-        CommonController.logout(requestD, responseD);
-        assertEquals(401, responseD.status());
+        assertEquals("User unauthorized.", CommonController.logout(requestD, responseD));
     }
 
     @Test
@@ -211,17 +210,14 @@ public class CommonControllerTest extends CommonTestUtils {
         int token = Middleware.authenticate(profileA.getId(), UserType.PROFILE).get("Token");
         when(requestE.headers(KeyEnum.AUTH.toString())).thenReturn(String.valueOf(token));
         assertTrue(Middleware.isAuthenticated(requestE, responseE));
-
         // Logout the user.
-        CommonController.logout(requestE, responseE);
-        assertEquals(200, responseE.status());
+        assertEquals("User successfully logged out", CommonController.logout(requestE, responseE));
     }
 
     @Test
     public void testLogoutProfileInvalid() {
         // Logout the profile - token header missing and user not logged in.
-        CommonController.logout(requestE, responseE);
-        assertEquals(400, responseE.status());
+        assertEquals(ResponseMsgEnum.BAD_REQUEST.toString(), CommonController.logout(requestE, responseE));
     }
 
     @Test
@@ -230,23 +226,22 @@ public class CommonControllerTest extends CommonTestUtils {
         int token = Middleware.authenticate(profileA.getId(), UserType.PROFILE).get("Token");
         when(requestE.headers(KeyEnum.AUTH.toString())).thenReturn(String.valueOf(token));
         assertTrue(Middleware.isAuthenticated(requestE, responseE));
-
         // Invalid token set.
         int invalidToken = -1;
         when(requestE.headers(KeyEnum.AUTH.toString())).thenReturn(String.valueOf(invalidToken));
-
         // Logout the user.
-        CommonController.logout(requestE, responseE);
-        assertEquals(401, responseE.status());
+        assertEquals("User unauthorized.",  CommonController.logout(requestE, responseE));
     }
 
     @After
     public void tearDown() throws SQLException {
         // Profile teardown.
-        profileDAO.remove(profileA);
-
+        for (Profile profile : profileDAO.getAll()) {
+            profileDAO.remove(profile);
+        }
         // User teardown.
-        userDAO.remove(userA);
-        userDAO.remove(userB);
+        for (User user : userDAO.getAll()) {
+            userDAO.remove(user);
+        }
     }
 }

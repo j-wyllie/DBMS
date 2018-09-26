@@ -226,8 +226,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     private Profile setConditions(Profile profile) {
         ConditionDAO database = DAOFactory.getConditionDao();
-
-        profile.setConditions(database.getAll(profile.getId(), false));
+        profile.setConditions(database.getAll(profile.getId()));
         return profile;
     }
 

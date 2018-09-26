@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Condition;
 import server.model.database.DatabaseConnection;
@@ -19,9 +20,41 @@ public class MySqlConditionDAO implements ConditionDAO {
      * Get all conditions for the profile.
      * @param profile to get the conditions for.
      * @param chronic true if the conditions required are chronic.
+     * @return the list of conditions for the profile.
      */
     @Override
-    public ArrayList<Condition> getAll(int profile, boolean chronic) {
+    public List<Condition> getAll(int profile, boolean chronic) {
+        String query = "select * from conditions where ProfileId = ? and Chronic = ?;";
+        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
+        ArrayList<Condition> allConditions = new ArrayList<>();
+
+        try {
+            Connection conn = connectionInstance.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, profile);
+            stmt.setBoolean(2, chronic);
+            ResultSet allConditionRows = stmt.executeQuery();
+
+            while (allConditionRows.next()) {
+                Condition condition = parseCondition(allConditionRows);
+                allConditions.add(condition);
+            }
+            conn.close();
+            stmt.close();
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        }
+
+        return allConditions;
+    }
+
+    /**
+     * Get all conditions for the profile.
+     * @param profile to get the conditions for.
+     * @return the list of conditions for the profile.
+     */
+    @Override
+    public List<Condition> getAll(int profile) {
         String query = "select * from conditions where ProfileId = ?;";
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         ArrayList<Condition> allConditions = new ArrayList<>();

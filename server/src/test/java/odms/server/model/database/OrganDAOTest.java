@@ -13,9 +13,11 @@ import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
 import odms.server.CommonTestUtils;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import server.model.database.DAOFactory;
 import server.model.database.organ.MySqlOrganDAO;
 import server.model.database.profile.MySqlProfileDAO;
 import server.model.database.user.MySqlUserDAO;
@@ -31,10 +33,10 @@ public class OrganDAOTest extends CommonTestUtils {
     private OrganEnum organ4;
     private OrganEnum organ5;
     private MySqlUserDAO mysqlUserDAO;
+    private static User testUser;
 
     @BeforeClass
-    public static void setupClass() throws SQLException {
-        User testUser;
+    public static void setupClass() throws SQLException, UserNotFoundException {
         testUser = new User(UserType.CLINICIAN, "Clinician", "Auckland");
         testUser.setUsername("Bob");
         testUser.setDefault(false);
@@ -43,6 +45,7 @@ public class OrganDAOTest extends CommonTestUtils {
 
         MySqlUserDAO userDAO = new MySqlUserDAO();
         userDAO.add(testUser);
+        testUser = userDAO.get(testUser.getUsername());
     }
 
     @Before
@@ -169,5 +172,10 @@ public class OrganDAOTest extends CommonTestUtils {
         assertFalse(mysqlOrganDao.getExpired(testProfile2).isEmpty());
         mysqlOrganDao.revertExpired(testProfile2.getId(), organ2.getNamePlain());
         assertTrue(mysqlOrganDao.getExpired(testProfile2).isEmpty());
+    }
+
+    @AfterClass
+    public static void cleanup() throws SQLException {
+        DAOFactory.getUserDao().remove(testUser);
     }
 }
