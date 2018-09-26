@@ -32,7 +32,7 @@ public class Server {
      * The main server start.
      * @param args parameters for application
      */
-    public static void main (String[] args) {
+    public static void main(String[] args) {
         log.info("Server is alive!");
         log.info("Listening on port: " + port);
 
@@ -206,6 +206,16 @@ public class Server {
                 post("", HospitalController::create);
                 patch("", HospitalController::edit);
                 delete("", HospitalController::delete);
+            });
+
+            // hla api endpoints
+            path("/hla", () -> {
+                // id references profile
+                path("/:id", () -> {
+                    get("", HLAController::get);
+                    post("", HLAController::add);
+                    delete("", HLAController::delete);
+                });
             });
         });
     }

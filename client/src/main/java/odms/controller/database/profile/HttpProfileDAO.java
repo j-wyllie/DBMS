@@ -14,7 +14,6 @@ import com.google.gson.*;
 import lombok.extern.slf4j.Slf4j;
 import odms.Session;
 import odms.commons.model.enums.OrganEnum;
-import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.Profile;
 import odms.controller.http.Request;
 import odms.controller.http.Response;
@@ -195,7 +194,8 @@ public class HttpProfileDAO implements ProfileDAO {
             log.error(e.getMessage(), e);
         }
         if (response != null && response.getStatus() == 200) {
-            return parser.fromJson(response.getBody(), Profile.class);
+            Profile profile = parser.fromJson(response.getBody(), Profile.class);
+            return profile;
         }
         return null;
     }

@@ -182,8 +182,7 @@ public class ProfileController {
             return e.getMessage();
         }
 
-        Gson gson = new Gson();
-        String responseBody = gson.toJson(profile);
+        String responseBody = new Gson().toJson(profile);
 
         res.type(DataTypeEnum.JSON.toString());
         res.status(200);
