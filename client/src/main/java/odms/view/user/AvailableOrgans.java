@@ -1,5 +1,17 @@
 package odms.view.user;
 
+import static odms.controller.user.AvailableOrgans.getExpiryLength;
+import static odms.controller.user.AvailableOrgans.getTimeRemaining;
+import static odms.controller.user.AvailableOrgans.getTimeToExpiryStd;
+import static odms.controller.user.AvailableOrgans.getWaitTime;
+import static odms.controller.user.AvailableOrgans.getWaitTimeRaw;
+import static odms.view.user.Search.numericValidation;
+
+import java.sql.SQLException;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -17,18 +29,10 @@ import odms.commons.model.enums.NewZealandRegionsEnum;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
+import odms.controller.HlaController;
 import odms.controller.user.OrganExpiryProgressBar;
 import odms.view.CommonView;
 import org.controlsfx.control.CheckComboBox;
-
-import java.sql.SQLException;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import static odms.controller.user.AvailableOrgans.*;
-import static odms.view.user.Search.numericValidation;
 
 /**
  * Available organs view.
@@ -56,8 +60,8 @@ public class AvailableOrgans extends CommonView {
     @FXML
     private TableView availableOrgansTable;
 
-
     private OrganEnum selectedOrgan;
+    private Profile donorProfile;
 
     private ObservableList<Entry<Profile, OrganEnum>> listOfAvailableOrgans;
     private ObservableList<Map.Entry<Profile, OrganEnum>> listOfFilteredAvailableOrgans;
@@ -65,6 +69,7 @@ public class AvailableOrgans extends CommonView {
     private ClinicianProfile parentView;
     private odms.controller.user.AvailableOrgans controller =
             new odms.controller.user.AvailableOrgans();
+    private HlaController hlaController = new HlaController();
 
     private ObservableList<String> organsStrings = FXCollections.observableArrayList();
 
@@ -125,10 +130,21 @@ public class AvailableOrgans extends CommonView {
                 cdf -> new SimpleStringProperty(
                         cdf.getValue().getCountry() + ", " + cdf.getValue().getRegion()));
 
+        TableColumn<Profile, String> hlaMatchColumn = new TableColumn<>(
+                "HLA Match"
+        );
+
+        hlaMatchColumn.setCellValueFactory(
+                cdf -> new SimpleStringProperty(
+                         hlaController.getMatchString(cdf.getValue().getId(), donorProfile.getId())
+                )
+        );
+
         potentialOrganMatchTable.getColumns().add(waitTimeColumn);
         potentialOrganMatchTable.getColumns().add(ageColumn);
         potentialOrganMatchTable.getColumns().add(nhiColumn);
         potentialOrganMatchTable.getColumns().add(locationColumn);
+        potentialOrganMatchTable.getColumns().add(hlaMatchColumn);
 
         setPotentialOrganMatchesList();
 
@@ -257,10 +273,9 @@ public class AvailableOrgans extends CommonView {
      * Populates available organs table with ALL available organs in database.
      */
     private void setPotentialOrganMatchesList() {
-
         try {
             OrganEnum organToMatch = selectedOrgan;
-            Profile donorProfile = ((Map.Entry<Profile, OrganEnum>) availableOrgansTable
+            donorProfile = ((Map.Entry<Profile, OrganEnum>) availableOrgansTable
                     .getSelectionModel().getSelectedItem()).getKey();
 
             potentialOrganMatches = odms.controller.user.AvailableOrgans

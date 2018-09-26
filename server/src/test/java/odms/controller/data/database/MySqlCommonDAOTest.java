@@ -7,6 +7,7 @@ import java.io.PrintStream;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import odms.commons.model.profile.Profile;
+import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,12 +18,13 @@ import server.model.database.profile.ProfileDAO;
 /**
  * MySqlCommonDao Tests.
  */
-public class MySqlCommonDAOTest extends MySqlCommonTests {
+public class MySqlCommonDAOTest extends CommonTestUtils {
     private CommonDAO commonDAO = DAOFactory.getCommonDao();
     private ProfileDAO profileDAO = DAOFactory.getProfileDao();
 
     private PrintStream originalOut = System.out;
     private ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+
 
     private String expectedBadOutput = "Please enter a valid read-only query.";
 

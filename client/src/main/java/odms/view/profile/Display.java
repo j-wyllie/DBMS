@@ -17,6 +17,8 @@ import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.AlertController;
 import odms.controller.data.ImageDataIO;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.common.CommonDAO;
 import odms.view.CommonView;
 import odms.view.SocialFeedTab;
 import odms.view.user.TransplantWaitingList;
@@ -88,6 +90,8 @@ public class Display extends CommonView {
      */
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
+        CommonDAO server = DAOFactory.getCommonDao();
+        server.logout();
         currentProfile = null;
         if(socialFeedInitialised) {
             socialFeed.pauseTimer();
@@ -98,7 +102,7 @@ public class Display extends CommonView {
 
 
     /**
-     * sets all of the items in the fxml to their respective values.
+     * Sets all of the items in the fxml to their respective values.
      *
      * @param currentProfile donors profile
      */
@@ -297,7 +301,6 @@ public class Display extends CommonView {
 
     /**
      * Sets the current donor attributes to the labels on start up.
-     *
      * @param profile to be used
      * @param isOpenedByClinician boolean, if true profile has been opened by a clinician/admin
      * @param transplantWaitingList view for the transplantWaitingList. Will have null value if

@@ -25,7 +25,6 @@ public class ProcedureController {
 
     /**
      * Gets a list of all procedures.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -41,7 +40,7 @@ public class ProcedureController {
             pending = Boolean.valueOf(req.queryParams(KeyEnum.PENDING.toString()));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            res.status(500);
+            res.status(400);
             return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
@@ -64,7 +63,6 @@ public class ProcedureController {
 
     /**
      * Adds a procedure to a profile in storage.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -98,7 +96,6 @@ public class ProcedureController {
 
     /**
      * Edits a procedure stored for a profile.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -112,7 +109,10 @@ public class ProcedureController {
         try {
             newProcedure = gson.fromJson(req.body(), Procedure.class);
             pending = Boolean.valueOf(req.queryParams(KeyEnum.PENDING.toString()));
-        } catch (Exception e) {
+            if (newProcedure == null) {
+                throw new IllegalArgumentException("Missing required fields.");
+            }
+        } catch (IllegalArgumentException e) {
             log.error(e.getMessage(), e);
             res.status(400);
             return ResponseMsgEnum.BAD_REQUEST.toString();
@@ -127,12 +127,11 @@ public class ProcedureController {
         }
 
         res.status(201);
-        return "profile Created";
+        return "Procedure Updated";
     }
 
     /**
      * Removes a procedure from a stored profile.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -165,7 +164,6 @@ public class ProcedureController {
 
     /**
      * Gets all organs affected by a procedure for a stored profile.
-     * 
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -246,7 +244,7 @@ public class ProcedureController {
 
         try {
             id = Integer.valueOf(req.params(KeyEnum.ID.toString()));
-            organ = OrganEnum.valueOf(gson.toJson(req.body(), OrganEnum.class));
+            organ = gson.fromJson(req.body(), OrganEnum.class);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             res.status(400);
@@ -262,6 +260,6 @@ public class ProcedureController {
         }
 
         res.status(200);
-        return "Affected organ removed";
+        return "Affected organ added";
     }
 }

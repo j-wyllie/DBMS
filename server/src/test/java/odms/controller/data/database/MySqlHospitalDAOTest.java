@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class MySqlHospitalDAOTest extends MySqlCommonTests {
+public class MySqlHospitalDAOTest extends CommonTestUtils {
 
     private Hospital testHospital1;
     private Hospital testHospital2;

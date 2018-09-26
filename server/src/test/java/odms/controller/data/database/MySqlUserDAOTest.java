@@ -4,9 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import java.sql.SQLException;
+import java.util.List;
+import odms.commons.model.user.User;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
+import odms.server.CommonTestUtils;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +27,7 @@ import server.model.database.user.UserDAO;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(PasswordUtilities.class)
 @PowerMockIgnore("javax.management.*")
-public class MySqlUserDaoTest extends MySqlCommonTests {
+public class MySqlUserDAOTest extends CommonTestUtils {
     private UserDAO userDAO = DAOFactory.getUserDao();
 
     private User testUser0;

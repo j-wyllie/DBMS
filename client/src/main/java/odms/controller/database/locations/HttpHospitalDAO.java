@@ -37,7 +37,7 @@ public class HttpHospitalDAO implements HospitalDAO {
         JsonParser parser = new JsonParser();
         Gson gson = new Gson();
         Response response = null;
-        Request request = new Request(url, 0, queryParams);
+        Request request = new Request(url, queryParams);
         try {
             response = request.get();
         } catch (IOException e) {
@@ -68,7 +68,7 @@ public class HttpHospitalDAO implements HospitalDAO {
         queryParams.put("name", name);
         Gson parser = new Gson();
         Response response = null;
-        Request request = new Request(url, 0, queryParams);
+        Request request = new Request(url, queryParams);
         try {
             response = request.get();
         } catch (IOException e) {
@@ -122,7 +122,7 @@ public class HttpHospitalDAO implements HospitalDAO {
         Response response = null;
 
         String body = gson.toJson(hospital);
-        Request request = new Request(url, 0, queryParams, body);
+        Request request = new Request(url, queryParams, body);
         try {
             response = request.post();
         } catch (IOException e) {
@@ -145,7 +145,7 @@ public class HttpHospitalDAO implements HospitalDAO {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("id", hospital.getId());
         String body = gson.toJson(hospital);
-        Request request = new Request(url, 0, queryParams, body);
+        Request request = new Request(url, queryParams, body);
         Response response = null;
 
         try {
@@ -169,7 +169,7 @@ public class HttpHospitalDAO implements HospitalDAO {
         String url = String.format(URL, PORTNUMBER);
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("name", name);
-        Request request = new Request(url, 0, queryParams);
+        Request request = new Request(url, queryParams);
         Response response = null;
 
         try {

@@ -2,21 +2,18 @@ package odms.controller.profile;
 
 import static org.junit.Assert.assertEquals;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
-import odms.controller.database.organ.HttpOrganDAO;
 import odms.controller.database.procedure.HttpProcedureDAO;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(HttpProcedureDAO.class)
