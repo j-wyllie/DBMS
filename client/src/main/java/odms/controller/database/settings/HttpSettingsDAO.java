@@ -146,7 +146,7 @@ public class HttpSettingsDAO implements SettingsDAO {
      * @return the parameters.
      */
     private Map<String, Object> getLocaleQueryParams() {
-        int id = 0;
+        int id;
         UserType userType = Session.getCurrentUser().getValue();
         if (userType == UserType.ADMIN || userType == UserType.CLINICIAN) {
             User user = (User) Session.getCurrentUser().getKey();
@@ -161,5 +161,4 @@ public class HttpSettingsDAO implements SettingsDAO {
         queryParams.put("UserType", userType);
         return queryParams;
     }
-
 }
