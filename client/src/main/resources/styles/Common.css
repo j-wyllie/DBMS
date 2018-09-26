@@ -7,14 +7,23 @@
 
 .banner-default {
     -fx-background-color: linear-gradient(#34c6a7, #1fa98c);
+    -fx-background-image: url(/images/banner.png);
+    -fx-background-repeat: repeat;
+    -fx-background-position: left;
 }
 
 .banner-admin {
     -fx-background-color: linear-gradient(#e07173, #ae4446);
+    -fx-background-image: url(/images/banner.png);
+    -fx-background-repeat: repeat;
+    -fx-background-position: left;
 }
 
 .banner-clinician {
     -fx-background-color: linear-gradient(#71aee1, #135c94);
+    -fx-background-image: url(/images/banner.png);
+    -fx-background-repeat: repeat;
+    -fx-background-position: left;
 }
 
 .button-logout {
