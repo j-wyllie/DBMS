@@ -1,24 +1,25 @@
 package odms.commons.model.profile;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * The full HLA type of a patient
  */
 public class HLAType {
+
+    public static final String GENE = "[a-z,A-Z]+";
+    public static final String ALELLE = "[0-9]+";
+    public static final String SECONDARY_TYPE = GENE + ALELLE;
+
     private static List<String> primaryGeneList = Arrays.asList("A", "B", "C", "DP", "DQ", "DR");
+
     private Map<String, Integer> groupX = new HashMap<>();
     private Map<String, Integer> groupY = new HashMap<>();
     private Map<String, Integer> secondaryAntigens = new HashMap<>();
-    public final static String GENE = "[a-z,A-Z]+";
-    public final static String ALELLE = "[0-9]+";
-    public final static String SECONDARY_TYPE = GENE + ALELLE;
+
 
     /**
      * Initialises the keys of the HLA type
@@ -42,16 +43,17 @@ public class HLAType {
     }
 
     /**
-     *  Initialises the key-value pairs of the HLA type
-     * @param xa  Group X gene A  Allele
-     * @param xb  Group X gene B  Allele
-     * @param xc  Group X gene C  Allele
+     * Initialises the key-value pairs of the HLA type
+     *
+     * @param xa Group X gene A  Allele
+     * @param xb Group X gene B  Allele
+     * @param xc Group X gene C  Allele
      * @param xdp Group X gene DP Allele
      * @param xdq Group X gene DQ Allele
      * @param xdr Group X gene DR Allele
-     * @param ya  Group Y gene A  Allele
-     * @param yb  Group Y gene B  Allele
-     * @param yc  Group Y gene C  Allele
+     * @param ya Group Y gene A  Allele
+     * @param yb Group Y gene B  Allele
+     * @param yc Group Y gene C  Allele
      * @param ydp Group Y gene DQ Allele
      * @param ydq Group Y gene DP Allele
      * @param ydr Group Y gene DR Allele
@@ -75,14 +77,36 @@ public class HLAType {
         groupY.put("DR", ydr);
     }
 
-    public static List<String> getPrimaryGeneList() { return primaryGeneList; }
-    public Map<String, Integer> getGroupX() { return groupX; }
-    public Map<String, Integer> getGroupY() { return groupY; }
-    public Map getSecondaryAntigens() { return secondaryAntigens; }
+    public static List<String> getPrimaryGeneList() {
+        return primaryGeneList;
+    }
 
-    public void setGroupX(Map<String, Integer> map) { groupX = map; }
-    public void setGroupY(Map<String, Integer> map) { groupY = map; }
-    public void setSecondaryAntigens(Map<String, Integer> map) { secondaryAntigens = map; }
-    public void addSecondaryAntigen(String gene, Integer allele) { secondaryAntigens.put(gene, allele); }
+    public Map<String, Integer> getGroupX() {
+        return groupX;
+    }
+
+    public Map<String, Integer> getGroupY() {
+        return groupY;
+    }
+
+    public Map getSecondaryAntigens() {
+        return secondaryAntigens;
+    }
+
+    public void setGroupX(Map<String, Integer> map) {
+        groupX = map;
+    }
+
+    public void setGroupY(Map<String, Integer> map) {
+        groupY = map;
+    }
+
+    public void setSecondaryAntigens(Map<String, Integer> map) {
+        secondaryAntigens = map;
+    }
+
+    public void addSecondaryAntigen(String gene, Integer allele) {
+        secondaryAntigens.put(gene, allele);
+    }
 }
 

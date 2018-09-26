@@ -23,8 +23,8 @@ public class HlaController {
         Integer ya = hlaB.getGroupX().get(gene);
         Integer yb = hlaB.getGroupY().get(gene);
 
-        // try matching same groups
-        Integer numMatchingSame = 0;
+        // Try matching same groups
+        int numMatchingSame = 0;
         if (xa.equals(ya)) {
             numMatchingSame++;
         }
@@ -32,8 +32,8 @@ public class HlaController {
             numMatchingSame++;
         }
 
-        // try matching cross groups
-        Integer numMatchingCross = 0;
+        // Try matching cross groups
+        int numMatchingCross = 0;
         if (xa.equals(yb)) {
             numMatchingCross++;
         }
@@ -47,33 +47,32 @@ public class HlaController {
     /**
      * Returns with a score of match fit as a percentage.
      *
-     * @param hlaA first HLA to compare
-     * @param hlaB second HLA to compare
-     * @return match fit as a percentage
+     * @param hlaA first HLA to compare.
+     * @param hlaB second HLA to compare.
+     * @return match fit as a percentage.
      */
     private static Integer matchCalcScore(HLAType hlaA, HLAType hlaB) {
         final float matchMultiplier = 100f / 12f;
         float score;
-        int numMatchingAnitgens = 0;
+        int numMatchingAntigens = 0;
 
         try {
             for (String gene : HLAType.getPrimaryGeneList()) {
-                numMatchingAnitgens += calcMatch(gene, hlaA, hlaB);
+                numMatchingAntigens += calcMatch(gene, hlaA, hlaB);
             }
         } catch (NullPointerException exception) {
             return null;
         }
 
-        score = numMatchingAnitgens * matchMultiplier;
+        score = numMatchingAntigens * matchMultiplier;
         return (int) score;
     }
 
-
     /**
-     * Get the secondary HLAs as a list of strings
+     * Get the secondary HLAs as a list of strings.
      *
-     * @param profileID the profile ID of the HLAs
-     * @return List of secondary HLAs
+     * @param profileID the profile ID of the HLAs.
+     * @return List of secondary HLAs.
      */
     public List<String> getSecondaryHLAs(Integer profileID) {
         HLADAO hladao = DAOFactory.getHlaDAO();
@@ -87,11 +86,11 @@ public class HlaController {
     }
 
     /**
-     * Returns the match score as a string, or message if n/a
+     * Returns the match score as a string, or message if n/a.
      *
-     * @param profileIdA the profile ID of the first HLA to compare
-     * @param profileIdB the profile ID of the second HLA to compare
-     * @return the string representing the HLAs match fit
+     * @param profileIdA the profile ID of the first HLA to compare.
+     * @param profileIdB the profile ID of the second HLA to compare.
+     * @return the string representing the HLAs match fit.
      */
     public String getMatchString(Integer profileIdA, Integer profileIdB) {
         Integer score = matchScore(profileIdA, profileIdB);
@@ -107,9 +106,9 @@ public class HlaController {
     /**
      * Returns with a score of match fit as a percentage.
      *
-     * @param profileIdA the profile ID of the first HLA to compare
-     * @param profileIdB the profile ID of the second HLA to compare
-     * @return match fit as a percentage
+     * @param profileIdA the profile ID of the first HLA to compare.
+     * @param profileIdB the profile ID of the second HLA to compare.
+     * @return match fit as a percentage.
      */
     private static Integer matchScore(Integer profileIdA, Integer profileIdB) {
 
@@ -122,8 +121,8 @@ public class HlaController {
     /**
      * Gets HLAType from database.
      *
-     * @param profileIdA the profile ID of the first HLA
-     * @param profileIdB the profile ID of the second HLA
+     * @param profileIdA the profile ID of the first HLA.
+     * @param profileIdB the profile ID of the second HLA.
      * @return arraylist of two HLATypes to be compared.
      */
     private static ArrayList<HLAType> getDatabaseHLA(Integer profileIdA, Integer profileIdB) {

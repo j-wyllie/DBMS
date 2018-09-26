@@ -37,12 +37,12 @@ public class Server {
      *
      * @param args parameters for application
      */
-    public static void main (String[] args) {
+    public static void main(String[] args) {
         log.info("Server is alive!");
         log.info("Listening on port: " + port);
 
         port(port);
-        initExceptionHandler((e) -> {
+        initExceptionHandler(e -> {
             log.error("Server init failed");
             log.error(e.getMessage(), e);
         });
@@ -119,15 +119,15 @@ public class Server {
             });
 
             // condition api endpoints.
-            path("/conditions", () -> {
+            path("/conditions", () ->
                 path("/:id", () -> {
                     patch("", ConditionController::edit);
                     delete("", ConditionController::delete);
-                });
-            });
+                })
+            );
 
             // procedure api endpoints.
-            path("/procedures", () -> {
+            path("/procedures", () ->
 
                 // id refers to procedure id
                 path("/:id", () -> {
@@ -139,16 +139,16 @@ public class Server {
                         post("", ProcedureController::addOrgan);
                         delete("", ProcedureController::deleteOrgan);
                     });
-                });
-            });
+                })
+            );
 
             // drugs api endpoints.
-            path("/drugs", () -> {
+            path("/drugs", () ->
                 path("/:id", () -> {
                     patch("", DrugController::edit);
                     delete("", DrugController::delete);
-                });
-            });
+                })
+            );
 
             // countries api endpoints.
             path("/countries", () -> {

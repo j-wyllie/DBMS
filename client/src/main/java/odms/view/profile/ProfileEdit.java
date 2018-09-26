@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.collections.FXCollections;
@@ -32,7 +31,6 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import javax.xml.soap.Text;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.NewZealandRegionsEnum;
@@ -221,29 +219,9 @@ public class ProfileEdit extends CommonView {
     @FXML
     private void handleSecondaryHlaListViewKeyPressed(KeyEvent code) {
         if (code.getCode() == KeyCode.DELETE) {
-            List<String> HLAsToRemove = secondaryHlaListView.getSelectionModel().getSelectedItems();
-            controller.handelSecondaryHlaDeleted(HLAsToRemove);
+            List<String> hlasToRemove = secondaryHlaListView.getSelectionModel().getSelectedItems();
+            controller.handelSecondaryHlaDeleted(hlasToRemove);
         }
-    }
-
-    /**
-     * Button handler to undo last action.
-     *
-     * @param event clicking on the undo button.
-     */
-    @FXML
-    private void handleUndoButtonClicked(ActionEvent event) {
-        controller.undo();
-    }
-
-    /**
-     * Button handler to redo last undo action.
-     *
-     * @param event clicking on the redo button.
-     */
-    @FXML
-    private void handleRedoButtonClicked(ActionEvent event) {
-        controller.redo();
     }
 
     /**
@@ -504,7 +482,6 @@ public class ProfileEdit extends CommonView {
             alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
         }
 
-        // populate HLA fields;
         // HLA text setters
         HLADAO hladao = DAOFactory.getHlaDAO();
         HLAType hlaType = hladao.get(currentProfile.getId());
@@ -608,7 +585,6 @@ public class ProfileEdit extends CommonView {
         comboCountryOfDeath.getItems().addAll(validCountries);
 
         // City and region should be displayed same regardless
-        CountryDAO countryDAO = DAOFactory.getCountryDAO();
         if (currentProfile.getCity() != null) {
             cityField.setText(currentProfile.getCity());
         }

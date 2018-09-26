@@ -38,27 +38,27 @@ public class HLAController {
         HLAType hlaType = new HLAType();
 
         try {
-            List<HLA> HLAgroupX = database.getGroupX(profileID);
-            List<HLA> HLAgroupY = database.getGroupY(profileID);
-            List<HLA> HLAsecondary = database.getNonPrimary(profileID);
+            List<HLA> hlaGroupX = database.getGroupX(profileID);
+            List<HLA> hlaGgroupY = database.getGroupY(profileID);
+            List<HLA> hlaSecondary = database.getNonPrimary(profileID);
 
-            Map<String, Integer> HLATypeGroupX = new HashMap<>();
-            for (HLA hla : HLAgroupX) {
-                HLATypeGroupX.put(hla.getAlphaValue(), hla.getNumericValue());
+            Map<String, Integer> hlaTypeGroupX = new HashMap<>();
+            for (HLA hla : hlaGroupX) {
+                hlaTypeGroupX.put(hla.getAlphaValue(), hla.getNumericValue());
             }
-            hlaType.setGroupX(HLATypeGroupX);
+            hlaType.setGroupX(hlaTypeGroupX);
 
-            Map<String, Integer> HLATypeGroupY = new HashMap<>();
-            for (HLA hla : HLAgroupY) {
-                HLATypeGroupY.put(hla.getAlphaValue(), hla.getNumericValue());
+            Map<String, Integer> hlaTypeGroupY = new HashMap<>();
+            for (HLA hla : hlaGgroupY) {
+                hlaTypeGroupY.put(hla.getAlphaValue(), hla.getNumericValue());
             }
-            hlaType.setGroupY(HLATypeGroupY);
+            hlaType.setGroupY(hlaTypeGroupY);
 
-            Map<String, Integer> HLATypeSecondary = new HashMap<>();
-            for (HLA hla : HLAsecondary) {
-                HLATypeSecondary.put(hla.getAlphaValue(), hla.getNumericValue());
+            Map<String, Integer> hlaTypeSecondary = new HashMap<>();
+            for (HLA hla : hlaSecondary) {
+                hlaTypeSecondary.put(hla.getAlphaValue(), hla.getNumericValue());
             }
-            hlaType.setSecondaryAntigens(HLATypeSecondary);
+            hlaType.setSecondaryAntigens(hlaTypeSecondary);
         } catch (Exception e) {
             res.status(500);
             return e.getMessage();
@@ -86,21 +86,21 @@ public class HLAController {
         HLAType hlaType = gson.fromJson(req.body(), HLAType.class);
 
         try {
-            Map<String, Integer> HLATypeX = hlaType.getGroupX();
-            for (String key : HLATypeX.keySet()) {
-                HLA hla = new HLA(key, HLATypeX.get(key), true, false);
+            Map<String, Integer> hlaTypeX = hlaType.getGroupX();
+            for (String key : hlaTypeX.keySet()) {
+                HLA hla = new HLA(key, hlaTypeX.get(key), true, false);
                 database.add(profileID, hla);
             }
 
-            Map<String, Integer> HLATypeY = hlaType.getGroupY();
-            for (String key : HLATypeY.keySet()) {
-                HLA hla = new HLA(key, HLATypeY.get(key), false, true);
+            Map<String, Integer> hlaTypeY = hlaType.getGroupY();
+            for (String key : hlaTypeY.keySet()) {
+                HLA hla = new HLA(key, hlaTypeY.get(key), false, true);
                 database.add(profileID, hla);
             }
 
-            Map<String, Integer> HLATypeSecondary = hlaType.getSecondaryAntigens();
-            for (String key : HLATypeSecondary.keySet()) {
-                HLA hla = new HLA(key, HLATypeSecondary.get(key), false, false);
+            Map<String, Integer> hlaTypeSecondary = hlaType.getSecondaryAntigens();
+            for (String key : hlaTypeSecondary.keySet()) {
+                HLA hla = new HLA(key, hlaTypeSecondary.get(key), false, false);
                 database.add(profileID, hla);
             }
         } catch (Exception e) {

@@ -23,7 +23,6 @@ public class MySqlHLADao implements HLADAO {
      * @param profileId the profile ID to operate against.
      * @return a collection of HLA's.
      */
-    @Override
     public List<HLA> getGroupX(Integer profileId) {
         String query = SELECT +
                 "FROM hla_type WHERE ProfileId = ? AND GroupX = true AND GroupY = false;";
@@ -37,7 +36,6 @@ public class MySqlHLADao implements HLADAO {
      * @param profileId the profile ID to operate against.
      * @return a collection of HLA's.
      */
-    @Override
     public List<HLA> getGroupY(Integer profileId) {
         String query = SELECT +
                 "FROM hla_type WHERE ProfileId = ? AND GroupX = false AND GroupY = true;";
@@ -51,7 +49,6 @@ public class MySqlHLADao implements HLADAO {
      * @param profileId the profile ID to operate against.
      * @return a collection of HLA's.
      */
-    @Override
     public List<HLA> getNonPrimary(Integer profileId) {
         String query = SELECT +
                 "FROM hla_type WHERE ProfileId = ? AND GroupX = false AND GroupY = false;";
@@ -65,7 +62,6 @@ public class MySqlHLADao implements HLADAO {
      * @param profileId to add the HLA to.
      * @param hla to add.
      */
-    @Override
     public void add(Integer profileId, HLA hla) {
         String query = "INSERT INTO hla_type " +
                 "(ProfileId, AlphaValue, NumericValue, GroupX, GroupY) " +
@@ -78,8 +74,8 @@ public class MySqlHLADao implements HLADAO {
      * Remove a HLA from a profile.
      *
      * @param profileId of HLA to remove.
+     * @param hla to remove.
      */
-    @Override
     public void remove(Integer profileId, HLA hla) {
         String query = "DELETE FROM hla_type " +
                 "WHERE ProfileId = ? AND AlphaValue = ? AND NumericValue = ? " +
@@ -93,7 +89,6 @@ public class MySqlHLADao implements HLADAO {
      *
      * @param profileId of HLA to remove.
      */
-    @Override
     public void removeAll(Integer profileId) {
         String query = "DELETE FROM hla_type " +
                 "WHERE ProfileId = ?";

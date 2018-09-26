@@ -1,19 +1,28 @@
 package odms.view.user;
 
+import static odms.controller.user.AvailableOrgans.getExpiryLength;
+import static odms.controller.user.AvailableOrgans.getTimeRemaining;
+import static odms.controller.user.AvailableOrgans.getTimeToExpiryStd;
+import static odms.controller.user.AvailableOrgans.getWaitTime;
+import static odms.controller.user.AvailableOrgans.getWaitTimeRaw;
+import static odms.view.user.Search.numericValidation;
+
+import java.sql.SQLException;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import javafx.util.Callback;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.BloodTypeEnum;
 import odms.commons.model.enums.NewZealandRegionsEnum;
@@ -24,15 +33,6 @@ import odms.controller.HlaController;
 import odms.controller.user.OrganExpiryProgressBar;
 import odms.view.CommonView;
 import org.controlsfx.control.CheckComboBox;
-
-import java.sql.SQLException;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import static odms.controller.user.AvailableOrgans.*;
-import static odms.view.user.Search.numeric_Validation;
 
 /**
  * Available organs view.
@@ -355,8 +355,8 @@ public class AvailableOrgans extends CommonView {
                 });
 
         ageRangeField.setDisable(true);
-        ageField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
-        ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
+        ageField.addEventHandler(KeyEvent.KEY_TYPED, numericValidation(10));
+        ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numericValidation(10));
 
         ageField.textProperty().addListener((observable, oldValue, newValue) -> {
             setPotentialOrganMatchesList();

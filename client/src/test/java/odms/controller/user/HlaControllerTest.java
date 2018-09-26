@@ -1,5 +1,8 @@
 package odms.controller.user;
 
+import static junit.framework.TestCase.assertEquals;
+
+import java.util.ArrayList;
 import odms.commons.model.profile.HLAType;
 import odms.controller.HlaController;
 import org.junit.Before;
@@ -9,10 +12,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.ArrayList;
-
-import static junit.framework.TestCase.assertEquals;
-
 /**
  * Runs tests that confirm correct scoring in the HlaController file.
  *
@@ -21,6 +20,7 @@ import static junit.framework.TestCase.assertEquals;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(HlaController.class)
 public class HlaControllerTest {
+    private static final String DATABASE_HLA = "getDatabaseHLA";
     private HLAType same1 = new HLAType(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
     private HLAType same2 = new HLAType(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
 
@@ -51,7 +51,7 @@ public class HlaControllerTest {
         hlas.add(same1);
         hlas.add(same2);
         PowerMockito.stub(
-                PowerMockito.method(HlaController.class, "getDatabaseHLA")
+                PowerMockito.method(HlaController.class, DATABASE_HLA)
         ).toReturn(hlas);
 
         assertEquals("100%", controller.getMatchString(1, 2));
@@ -64,7 +64,7 @@ public class HlaControllerTest {
         hlas.add(cross1);
         hlas.add(cross2);
         PowerMockito.stub(
-                PowerMockito.method(HlaController.class, "getDatabaseHLA")
+                PowerMockito.method(HlaController.class, DATABASE_HLA)
         ).toReturn(hlas);
 
         assertEquals("100%", controller.getMatchString(3, 4));
@@ -76,7 +76,7 @@ public class HlaControllerTest {
         hlas.add(half1);
         hlas.add(half2);
         PowerMockito.stub(
-                PowerMockito.method(HlaController.class, "getDatabaseHLA")
+                PowerMockito.method(HlaController.class, DATABASE_HLA)
         ).toReturn(hlas);
 
         assertEquals("50%", controller.getMatchString(5, 6));
@@ -88,7 +88,7 @@ public class HlaControllerTest {
         hlas.add(zero1);
         hlas.add(zero2);
         PowerMockito.stub(
-                PowerMockito.method(HlaController.class, "getDatabaseHLA")
+                PowerMockito.method(HlaController.class, DATABASE_HLA)
         ).toReturn(hlas);
 
         assertEquals("0%", controller.getMatchString(7, 8));
@@ -100,7 +100,7 @@ public class HlaControllerTest {
         hlas.add(null2); //null2 is the receiver
         hlas.add(null1);
         PowerMockito.stub(
-                PowerMockito.method(HlaController.class, "getDatabaseHLA")
+                PowerMockito.method(HlaController.class, DATABASE_HLA)
         ).toReturn(hlas);
 
         assertEquals("No HLA", controller.getMatchString(9, 10));

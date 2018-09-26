@@ -43,7 +43,7 @@ public interface HLADAO {
      * Remove a hlaType from a profile.
      *
      * @param profileId of HLA to remove.
-     * @param hla to add.
+     * @param hla to remove.
      */
     void remove(Integer profileId, HLA hla);
 
