@@ -1,6 +1,7 @@
 package odms.controller.data.database;
 
 import odms.commons.model.locations.Hospital;
+import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

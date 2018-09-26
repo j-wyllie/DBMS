@@ -95,7 +95,7 @@ public class HttpHospitalDAO implements HospitalDAO {
         queryParams.put("id", id);
         Gson parser = new Gson();
         Response response = null;
-        Request request = new Request(url, 0, queryParams);
+        Request request = new Request(url, queryParams);
         try {
             response = request.get();
         } catch (IOException e) {
