@@ -107,21 +107,6 @@ CREATE TABLE IF NOT EXISTS `hla_type` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hospitals`
---
-
-DROP TABLE IF EXISTS `hospitals`;
-CREATE TABLE IF NOT EXISTS `hospitals` (
-  `Id` int(11) NOT NULL,
-  `Name` varchar(50) DEFAULT NULL,
-  `Address` varchar(100) DEFAULT NULL,
-  `Latitude` double DEFAULT NULL,
-  `Longitude` double DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `locale`
 --
 
@@ -159,6 +144,33 @@ CREATE TABLE IF NOT EXISTS `organs` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `hospitals`
+--
+
+DROP TABLE IF EXISTS `hospitals`;
+CREATE TABLE IF NOT EXISTS `hospitals` (
+  `Id` INT(11),
+  `Name` VARCHAR(50) UNIQUE DEFAULT NULL,
+  `Address` VARCHAR(100) DEFAULT NULL,
+  `Latitude` DOUBLE DEFAULT NULL,
+  `Longitude` DOUBLE DEFAULT NULL,
+  `Bone` BOOLEAN DEFAULT FALSE,
+  `Bone-marrow` BOOLEAN DEFAULT FALSE,
+  `Connective-tissue` BOOLEAN DEFAULT FALSE,
+  `Cornea` BOOLEAN DEFAULT FALSE,
+  `Heart` BOOLEAN DEFAULT FALSE,
+  `Intestine` BOOLEAN DEFAULT FALSE,
+  `Kidney` BOOLEAN DEFAULT FALSE,
+  `Liver` BOOLEAN DEFAULT FALSE,
+  `Lung` BOOLEAN DEFAULT FALSE,
+  `Middle-ear` BOOLEAN DEFAULT FALSE,
+  `Pancreas` BOOLEAN DEFAULT FALSE,
+  `Skin` BOOLEAN DEFAULT FALSE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `procedures`
 --
 
@@ -170,7 +182,8 @@ CREATE TABLE IF NOT EXISTS `procedures` (
   `Description` varchar(200) NOT NULL,
   `ProcedureDate` datetime DEFAULT NULL,
   `Pending` BOOLEAN DEFAULT NULL,
-  `Previous` BOOLEAN DEFAULT NULL
+  `Previous` BOOLEAN DEFAULT NULL,
+  `Hospital` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -294,8 +307,7 @@ ALTER TABLE `hla_type`
 -- Indexes for table `hospitals`
 --
 ALTER TABLE `hospitals`
-  ADD PRIMARY KEY (`Id`),
-  ADD UNIQUE KEY `Id` (`Id`);
+  ADD PRIMARY KEY (`Id`);
 
 --
 -- Indexes for table `locale`
@@ -315,7 +327,8 @@ ALTER TABLE `organs`
 --
 ALTER TABLE `procedures`
   ADD PRIMARY KEY (`Id`),
-  ADD KEY `ProfileId` (`ProfileId`);
+  ADD KEY `ProfileId` (`ProfileId`),
+  ADD KEY `Hospital` (`Hospital`);
 
 --
 -- Indexes for table `profiles`
@@ -442,6 +455,8 @@ ALTER TABLE `organs`
 --
 ALTER TABLE `procedures`
   ADD CONSTRAINT `procedures_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
+ALTER TABLE `procedures`
+  ADD CONSTRAINT `procedures_ibfk_2` FOREIGN KEY (`Hospital`) REFERENCES `hospitals` (`Id`) ON DELETE SET NULL;
 
 INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (1, 'NZ', 1),
