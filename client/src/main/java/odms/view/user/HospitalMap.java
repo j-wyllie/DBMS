@@ -23,18 +23,15 @@ import com.lynden.gmapsfx.service.directions.DirectionsServiceCallback;
 import com.lynden.gmapsfx.service.directions.TravelModes;
 import com.lynden.gmapsfx.shapes.Polyline;
 import java.io.IOException;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -43,6 +40,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
@@ -58,13 +56,14 @@ import odms.view.CommonView;
  * View class for the hospital map tab.
  */
 @Slf4j
-public class HospitalMap extends CommonView implements Initializable,
+public class HospitalMap extends CommonView implements
         MapComponentInitializedListener, DirectionsServiceCallback {
+
+    private static final String KEY = "AIzaSyCfq6coJWIFGQusltLJCA8tZMt9cjouzLw";
+    private static DecimalFormat decimalFormat = new DecimalFormat("####0.00");
 
     private odms.controller.user.HospitalMap controller =
             new odms.controller.user.HospitalMap(this);
-
-    private static DecimalFormat decimalFormat = new DecimalFormat("####0.00");
 
     private DirectionsService directionsService;
     private DirectionsPane directionsPane;
@@ -83,7 +82,6 @@ public class HospitalMap extends CommonView implements Initializable,
 
     private Boolean hasConnection;
 
-    @FXML
     private GoogleMapView mapView;
 
     @FXML
@@ -110,40 +108,38 @@ public class HospitalMap extends CommonView implements Initializable,
     @FXML
     private Button deleteHospitalButton;
 
-    /**
-     * Init method for the map.
-     * @param location location
-     * @param resources resources
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-        mapView.addMapInializedListener(this);
-        hospitalList = new ArrayList<>();
-        markers = new ArrayList<>();
-
-        if (hospitalSelected1 != null && hospitalSelected2 != null) {
-            createRouteBetweenLocations(
-                    hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude(),
-                    hospitalSelected1.getName(), hospitalSelected2.getLatitude(),
-                    hospitalSelected2.getLongitude(), hospitalSelected2.getName());
-        }
-
-        ObservableList<String> travelMethods =
-                FXCollections.observableArrayList("Car", "Helicopter");
-        travelMethod.setItems(travelMethods);
-        travelMethod.setValue("Car");
-    }
+    @FXML
+    private GridPane gridPane;
 
     /**
      * Checks if connection to Google Maps is possible, if not shows a label to user.
+     * Inits the map if connection is available.
      * @param currentUser the current logged in user
      */
     public void initialize(User currentUser) {
         hasConnection = netIsAvailable();
         if (!hasConnection) {
-            mapView.setVisible(false);
             noInternetLabel.setVisible(true);
+        } else {
+            mapView = new GoogleMapView("en-US", KEY);
+            gridPane.add(mapView, 0, 0, 2, 3);
+            Node map = mapView;
+            map.toBack();
+            mapView.addMapInializedListener(this);
+            hospitalList = new ArrayList<>();
+            markers = new ArrayList<>();
+
+            if (hospitalSelected1 != null && hospitalSelected2 != null) {
+                createRouteBetweenLocations(
+                        hospitalSelected1.getLatitude(), hospitalSelected1.getLongitude(),
+                        hospitalSelected1.getName(), hospitalSelected2.getLatitude(),
+                        hospitalSelected2.getLongitude(), hospitalSelected2.getName());
+            }
+
+            ObservableList<String> travelMethods =
+                    FXCollections.observableArrayList("Car", "Helicopter");
+            travelMethod.setItems(travelMethods);
+            travelMethod.setValue("Car");
         }
         if (!currentUser.getUserType().equals(UserType.ADMIN)) {
             userIsAdmin = false;
@@ -178,13 +174,13 @@ public class HospitalMap extends CommonView implements Initializable,
 
             travelInfo.setWrapText(true);
 
-        // Creating the actual map object using specified options
-        map = mapView.createMap(mapOptions, false);
+            // Creating the actual map object using specified options
+            map = mapView.createMap(mapOptions, false);
 
-        // Creates objects needed for directions/routing
-        directionsService = new DirectionsService();
-        directionsPane = mapView.getDirec();
-        directionsRenderer = new DirectionsRenderer(true, mapView.getMap(), directionsPane);
+            // Creates objects needed for directions/routing
+            directionsService = new DirectionsService();
+            directionsPane = mapView.getDirec();
+            directionsRenderer = new DirectionsRenderer(true, mapView.getMap(), directionsPane);
 
             // Creates a hospital object for a custom location added by the user,
             // is cleared using the clear button

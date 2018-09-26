@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.lynden.gmapsfx.GoogleMapView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -13,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 
 <AnchorPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.151" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.user.HospitalMap">
-   <GridPane AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
+   <GridPane fx:id="gridPane" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
      <columnConstraints>
          <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
        <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
@@ -25,8 +24,7 @@
          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="NEVER" />
      </rowConstraints>
       <children>
-            <TextArea fx:id="travelInfo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.rowSpan="2" />
-         <GoogleMapView fx:id="mapView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowSpan="2" />
+            <TextArea fx:id="travelInfo" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.rowSpan="2" GridPane.vgrow="ALWAYS" />
             <TableView fx:id="markersTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" />
          <Label fx:id="noInternetLabel" alignment="CENTER" text="Internet connection is required to view the map" visible="false" GridPane.columnSpan="2" GridPane.halignment="CENTER" />
          <GridPane maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="2">
@@ -40,7 +38,7 @@
                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
            </columnConstraints>
            <rowConstraints>
-             <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" />
+             <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" valignment="BOTTOM" />
            </rowConstraints>
             <children>
                <Button fx:id="deleteHospitalButton" maxWidth="1.7976931348623157E308" onAction="#handleDeleteHospital" text="Delete Hospital" GridPane.columnIndex="6">
