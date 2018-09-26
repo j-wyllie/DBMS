@@ -1,4 +1,4 @@
-package odms.server.model.database;
+package odms.controller.data.database;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
