@@ -53,25 +53,25 @@ public class AvailableOrgansTest {
     public void testGetwaitTime() {
         OrganEnum.BONE.setDate(LocalDateTime.now(), profile1);
         String waittime = AvailableOrgans.getWaitTime(OrganEnum.BONE, profile1.getOrgansRequired(), profile1);
-        assertEquals(waittime, "Registered today");
+        assertEquals("Registered today", waittime);
     }
 
     @Test
     public void testGetwaitTimeInvalid() {
         String waittime = AvailableOrgans.getWaitTime(OrganEnum.BONE, profile1.getOrgansRequired(), profile1);
-        assertEquals(waittime, "Insufficient data");
+        assertEquals("Insufficient data", waittime);
     }
 
     @Test
     public void testFormatDuration() {
         String duration = AvailableOrgans.formatDuration("", Long.MAX_VALUE);
-        assertEquals(duration, "106751991167 days 7 hours ");
+        assertEquals("106751991167 days 7 hours ", duration);
     }
 
     @Test
     public void testCheckWaitTimeMinutesHours() {
         String duration = AvailableOrgans.checkWaitTimeMinutesHours("", Long.MAX_VALUE);
-        assertEquals(duration,"2562047788015 hours ");
+        assertEquals("2562047788015 hours ", duration);
     }
 
     @Test

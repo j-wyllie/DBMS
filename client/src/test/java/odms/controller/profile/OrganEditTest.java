@@ -53,7 +53,7 @@ public class OrganEditTest {
         PowerMockito.stub(PowerMockito.method(HttpOrganDAO.class, "addDonating"))
                 .toReturn(null);
         controller.addOrgansDonating(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
-        assertEquals(currentProfile.getOrgansDonating().size(), 1);
+        assertEquals(1, currentProfile.getOrgansDonating().size());
     }
 
     @Test
@@ -64,7 +64,7 @@ public class OrganEditTest {
         PowerMockito.stub(PowerMockito.method(HttpOrganDAO.class, "addDonation"))
                 .toReturn(null);
         controller.addOrgansDonated(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
-        assertEquals(currentProfile.getOrgansDonated().size(), 1);
+        assertEquals(1, currentProfile.getOrgansDonated().size());
     }
 
     @Test
@@ -75,7 +75,7 @@ public class OrganEditTest {
         PowerMockito.stub(PowerMockito.method(HttpOrganDAO.class, "addRequired"))
                 .toReturn(null);
         controller.addOrgansRequired(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
-        assertEquals(currentProfile.getOrgansRequired().size(), 1);
+        assertEquals(1, currentProfile.getOrgansRequired().size());
     }
 
     @Test
@@ -89,7 +89,7 @@ public class OrganEditTest {
                 .toReturn(null);
         testOrganStrings.add("lung");
         controller.addOrgansDonating(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
-        assertEquals(currentProfile.getOrgansDonating().size(), 2);
+        assertEquals(2, currentProfile.getOrgansDonating().size());
     }
 
     @Test
@@ -101,7 +101,7 @@ public class OrganEditTest {
                 .toReturn(null);
         testOrganStrings.add("lung");
         controller.addOrgansDonated(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
-        assertEquals(currentProfile.getOrgansDonated().size(), 2);
+        assertEquals(2, currentProfile.getOrgansDonated().size());
     }
 
     @Test
@@ -113,7 +113,7 @@ public class OrganEditTest {
                 .toReturn(null);
         testOrganStrings.add("lung");
         controller.addOrgansRequired(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
-        assertEquals(currentProfile.getOrgansRequired().size(), 2);
+        assertEquals(2, currentProfile.getOrgansRequired().size());
     }
 
     @Test

@@ -3,7 +3,6 @@ package odms.view.profile;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -363,9 +362,7 @@ public class OrganDisplay extends CommonView {
         stage.initOwner(source.getScene().getWindow());
         stage.initModality(Modality.WINDOW_MODAL);
         stage.centerOnScreen();
-        stage.setOnHiding(ob -> {
-            refreshListViews();
-        });
+        stage.setOnHiding(ob -> refreshListViews());
         stage.show();
     }
 

@@ -2,7 +2,7 @@ package odms.data;
 
 public class NHIConflictException extends Exception {
 
-    private String nhi;
+    private final String nhi;
 
     public NHIConflictException(String message, String nhi) {
         super(message);

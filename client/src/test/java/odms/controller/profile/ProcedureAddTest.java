@@ -34,7 +34,7 @@ public class ProcedureAddTest {
         profileOneAttr.add("nhi=\"123456879\"");
         currentProfile = new Profile(profileOneAttr);
         currentProfile.setId(99999);
-        controller = new odms.controller.profile.ProcedureAdd(view);
+        controller = new odms.controller.profile.ProcedureAdd();
     }
 
     @Test
@@ -50,7 +50,7 @@ public class ProcedureAddTest {
     @Test
     public void testParseProcedure() {
         Procedure procedure = controller.parseProcedure("abc", LocalDate.now(), "", LocalDate.now());
-        assertEquals(procedure.getSummary(),"abc");
+        assertEquals("abc", procedure.getSummary());
     }
 
 }

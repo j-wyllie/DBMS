@@ -1,32 +1,18 @@
 package odms.controller.profile;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.collections.ObservableList;
+import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
-import odms.controller.database.procedure.HttpProcedureDAO;
-import odms.controller.database.procedure.ProcedureDAO;
-import odms.view.profile.Display;
-import odms.commons.model.enums.OrganEnum;
 import odms.controller.database.DAOFactory;
-
-import java.time.LocalDate;
+import odms.controller.database.procedure.ProcedureDAO;
 
 /**
  * Controller for the add procedure scene.
  */
 public class ProcedureAdd {
-
-    private odms.view.profile.ProcedureAdd view;
-
-    /**
-     * constructor for the ProcedureAdd class. Sets the view variable.
-     * @param v the view
-     */
-    public ProcedureAdd(odms.view.profile.ProcedureAdd v) {
-        view = v;
-    }
 
     /**
      * Add a procedure to the current profile.

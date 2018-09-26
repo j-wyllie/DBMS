@@ -1,11 +1,18 @@
 package odms.controller.profile;
 
+import static odms.controller.data.MedicationDataIO.getActiveIngredients;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import java.util.Map;
 import javafx.fxml.FXML;
 import odms.commons.model.history.History;
+import odms.commons.model.medications.Drug;
+import odms.commons.model.medications.Interaction;
 import odms.commons.model.profile.Profile;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
@@ -14,17 +21,6 @@ import odms.controller.database.DAOFactory;
 import odms.controller.database.interactions.MedicationInteractionsDAO;
 import odms.controller.database.medication.MedicationDAO;
 import odms.controller.history.CurrentHistory;
-import odms.commons.model.medications.Drug;
-import odms.commons.model.medications.Interaction;
-import odms.view.profile.MedicationsGeneral;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Map;
-
-import static odms.controller.data.MedicationDataIO.getActiveIngredients;
 
 public class Medications extends CommonController {
 
@@ -93,10 +89,8 @@ public class Medications extends CommonController {
                 " at " +
                 currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         profile.getMedicationTimestamps().add(data);
-        //todo improve generateUpdateInfo
         ProfileGeneralControllerTODOContainsOldProfileMethods
                 .generateUpdateInfo(drug.getDrugName(), profile);
-        //todo maybe "profile" needs to be changed to "profile"
         History history = new History("profile", profile.getId(), "added drug",
                 drug.getDrugName(), Integer.parseInt(
                 data.substring(data.indexOf("index of") + 9, data.indexOf(" at"))),
@@ -201,8 +195,8 @@ public class Medications extends CommonController {
      *
      */
     @FXML
-    public ArrayList<String> viewActiveIngredients(Drug drug) throws IOException {
-        ArrayList<String> activeIngredients;
+    public List<String> viewActiveIngredients(Drug drug) throws IOException {
+        List<String> activeIngredients;
         activeIngredients = getActiveIngredients(drug.getDrugName());
         return activeIngredients;
 

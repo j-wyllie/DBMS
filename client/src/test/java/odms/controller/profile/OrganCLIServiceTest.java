@@ -44,7 +44,7 @@ public class OrganCLIServiceTest {
         PowerMockito.stub(PowerMockito.method(HttpOrganDAO.class, "addDonating"))
                 .toReturn(null);
         OrganCLIService.addOrgansDonating(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
-        assertEquals(currentProfile.getOrgansDonating().size(), 1);
+        assertEquals(1, currentProfile.getOrgansDonating().size());
     }
 
     @Test
@@ -55,7 +55,7 @@ public class OrganCLIServiceTest {
         PowerMockito.stub(PowerMockito.method(HttpOrganDAO.class, "addDonation"))
                 .toReturn(null);
         OrganCLIService.addOrgansDonated(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
-        assertEquals(currentProfile.getOrgansDonated().size(), 1);
+        assertEquals(1, currentProfile.getOrgansDonated().size());
     }
 
     @Test
@@ -66,7 +66,7 @@ public class OrganCLIServiceTest {
         PowerMockito.stub(PowerMockito.method(HttpOrganDAO.class, "addRequired"))
                 .toReturn(null);
         OrganCLIService.addOrgansRequired(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
-        assertEquals(currentProfile.getOrgansRequired().size(), 1);
+        assertEquals(1, currentProfile.getOrgansRequired().size());
     }
 
     @Test
@@ -80,7 +80,7 @@ public class OrganCLIServiceTest {
                 .toReturn(null);
         testOrganStrings.add("lung");
         OrganCLIService.addOrgansDonating(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
-        assertEquals(currentProfile.getOrgansDonating().size(), 2);
+        assertEquals(2, currentProfile.getOrgansDonating().size());
     }
 
     @Test
@@ -92,7 +92,7 @@ public class OrganCLIServiceTest {
                 .toReturn(null);
         testOrganStrings.add("lung");
         OrganCLIService.addOrgansDonated(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
-        assertEquals(currentProfile.getOrgansDonated().size(), 2);
+        assertEquals(2, currentProfile.getOrgansDonated().size());
     }
 
     @Test
@@ -104,7 +104,7 @@ public class OrganCLIServiceTest {
                 .toReturn(null);
         testOrganStrings.add("lung");
         OrganCLIService.addOrgansRequired(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
-        assertEquals(currentProfile.getOrgansRequired().size(), 2);
+        assertEquals(2, currentProfile.getOrgansRequired().size());
     }
 
     @Test

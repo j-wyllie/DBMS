@@ -15,8 +15,8 @@ import odms.view.CommonView;
 
 @Slf4j
 public class ConditionAdd extends CommonView {
-    private static Profile searchedDonor;
-    private static ProfileMedicalHistory parent;
+    private Profile searchedDonor;
+    private ProfileMedicalHistory parent;
     private odms.controller.profile.ConditionAdd controller = new odms.controller.profile.ConditionAdd();
 
     @FXML
@@ -89,23 +89,23 @@ public class ConditionAdd extends CommonView {
         return searchedDonor;
     }
 
-    public String getNameFieldText() {
+    private String getNameFieldText() {
         return nameField.getText();
     }
 
-    public LocalDate getDateDiagnosed() {
+    private LocalDate getDateDiagnosed() {
         return dateDiagnosedDatePicker.getValue();
     }
 
-    public Boolean getIsCured() {
+    private Boolean getIsCured() {
         return curedCheckBox.isSelected();
     }
 
-    public Boolean getIsChronic() {
+    private Boolean getIsChronic() {
         return chronicCheckBox.isSelected();
     }
 
-    public LocalDate getDateCured() {
+    private LocalDate getDateCured() {
         return dateCuredDatePicker.getValue();
     }
 

@@ -3,6 +3,7 @@ package odms.commons.model.enums;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 
 public enum BloodTypeEnum {
     O_NEGATIVE("O-"),
@@ -29,7 +30,7 @@ public enum BloodTypeEnum {
      *
      * @return ArrayList of BloodType name Strings
      */
-    public static ArrayList<String> toArrayList() {
+    public static List<String> toArrayList() {
         ArrayList<String> bloodTypes = new ArrayList<>();
 
         for (BloodTypeEnum bloodType : new ArrayList<>(EnumSet.allOf(BloodTypeEnum.class))) {

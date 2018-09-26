@@ -46,18 +46,18 @@ public class ProcedureGeneralTest {
         testProcedure.setId(1);
         currentProfile.getAllProcedures().add(testProcedure);
         int initial_size = currentProfile.getAllProcedures().size();
-        controller.removeProcedure(testProcedure, currentProfile);
+        controller.removeProcedure(testProcedure);
         assertNotEquals(initial_size, currentProfile.getAllProcedures());
     }
 
     @Test
     public void testGetEmptyPreviousProcedures() {
-        assertEquals(controller.getPreviousProcedures(currentProfile).size(), 0);
+        assertEquals(0, controller.getPreviousProcedures(currentProfile).size());
     }
 
     @Test
     public void testGetEmptyPendingProcedures() {
-        assertEquals(controller.getPendingProcedures(currentProfile).size(), 0);
+        assertEquals(0, controller.getPendingProcedures(currentProfile).size());
     }
 
     @Test

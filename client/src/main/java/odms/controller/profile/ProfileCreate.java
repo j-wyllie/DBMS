@@ -2,17 +2,14 @@ package odms.controller.profile;
 
 import static odms.controller.AlertController.invalidDate;
 import static odms.controller.AlertController.invalidEntry;
-import static odms.controller.AlertController.invalidNhi;
-
-import odms.commons.model.profile.Profile;
-import odms.controller.database.DAOFactory;
-import odms.data.NHIConflictException;
-import odms.view.profile.CreateAccount;
-import odms.controller.CommonController;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import odms.commons.model.profile.Profile;
+import odms.controller.CommonController;
+import odms.controller.database.DAOFactory;
+import odms.data.NHIConflictException;
 
 public class ProfileCreate extends CommonController {
 

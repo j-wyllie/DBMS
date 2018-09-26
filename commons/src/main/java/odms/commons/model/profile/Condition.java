@@ -8,6 +8,9 @@ import java.time.format.DateTimeFormatter;
  * A specific condition for use in medication history.
  */
 public class Condition {
+
+    private static final String DATE_FORMAT = "dd-MM-yyyy";
+
     private int id;
     private String name;
     private LocalDate dateOfDiagnosis;
@@ -20,6 +23,7 @@ public class Condition {
 
     /**
      * Constructor for cured conditions.
+     *
      * @param name name of the condition.
      * @param dateOfDiagnosis date of diagnosis.
      * @param dateCured date cured.
@@ -50,11 +54,14 @@ public class Condition {
         }
 
         this.isChronic = isChronic;
-        if (isChronic) {this.chronicText = "CHRONIC";}
+        if (isChronic) {
+            this.chronicText = "CHRONIC";
+        }
     }
 
     /**
      * Constructor for uncured conditions.
+     *
      * @param name name of the condition.
      * @param dateOfDiagnosis date of diagnosis.
      * @param isChronic is the condition chronic.
@@ -64,15 +71,20 @@ public class Condition {
         this(name, dateOfDiagnosis, null, isChronic);
     }
 
-    public Condition(String name, LocalDate dateOfDiagnosis, LocalDate dateCured, boolean isChronic) throws IllegalArgumentException {
-        this(name, dateOfDiagnosis.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), dateCured.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), isChronic);
+    public Condition(String name, LocalDate dateOfDiagnosis, LocalDate dateCured, boolean isChronic)
+            throws IllegalArgumentException {
+        this(name, dateOfDiagnosis.format(DateTimeFormatter.ofPattern(DATE_FORMAT)),
+                dateCured.format(DateTimeFormatter.ofPattern(DATE_FORMAT)), isChronic);
     }
 
-    public Condition(String name, LocalDate dateOfDiagnosis, boolean isChronic) throws IllegalArgumentException {
-        this(name, dateOfDiagnosis.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), null, isChronic);
+    public Condition(String name, LocalDate dateOfDiagnosis, boolean isChronic)
+            throws IllegalArgumentException {
+        this(name, dateOfDiagnosis.format(DateTimeFormatter.ofPattern(DATE_FORMAT)), null,
+                isChronic);
     }
 
-    public Condition(int id, String name, LocalDate dateOfDiagnosis, boolean chronic, boolean cured, LocalDate curedDate) {
+    public Condition(int id, String name, LocalDate dateOfDiagnosis, boolean chronic, boolean cured,
+            LocalDate curedDate) {
         this.id = id;
         this.name = name;
         this.dateOfDiagnosis = dateOfDiagnosis;
@@ -80,7 +92,9 @@ public class Condition {
         this.isCured = cured;
         this.dateCured = curedDate;
 
-        if (isChronic) {this.chronicText = "CHRONIC";}
+        if (isChronic) {
+            this.chronicText = "CHRONIC";
+        }
     }
 
     public Condition(int id) {
@@ -88,25 +102,70 @@ public class Condition {
     }
 
     // getters
-    public int getId() { return this.id; }
-    public String getName() { return this.name; }
-    public LocalDate getDateOfDiagnosis() { return dateOfDiagnosis; }
-    public LocalDate getDateCured() { return dateCured; }
-    public String getDateOfDiagnosisString() { return dateOfDiagnosisString; }
-    public String getDateCuredString() { return dateCuredString; }
-    public boolean getCured() { return this.isCured; }
-    public boolean getChronic() { return isChronic; }
-    public String getChronicText() { return chronicText; }
+    public int getId() {
+        return this.id;
+    }
 
+    public String getName() {
+        return this.name;
+    }
+
+    public LocalDate getDateOfDiagnosis() {
+        return dateOfDiagnosis;
+    }
+
+    public LocalDate getDateCured() {
+        return dateCured;
+    }
+
+    public String getDateOfDiagnosisString() {
+        return dateOfDiagnosisString;
+    }
+
+    public String getDateCuredString() {
+        return dateCuredString;
+    }
+
+    public boolean getCured() {
+        return this.isCured;
+    }
+
+    public boolean getChronic() {
+        return isChronic;
+    }
+
+    public String getChronicText() {
+        return chronicText;
+    }
 
     // setters
-    public void setId(int id) { this.id = id; }
-    public void setIsCured(boolean isCured) { this.isCured = isCured; }
-    public void setIsChronic(boolean isChronic) { this.isChronic = isChronic; }
-    public void setChronicText(String chronicText) { this.chronicText = chronicText; }
-    public void setDateOfDiagnosis(LocalDate dateOfDiagnosis) { this.dateOfDiagnosis = dateOfDiagnosis; }
-    public void setDateCured(LocalDate dateCured) { this.dateCured = dateCured; }
-    public void setName(String name) { this.name = name; }
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setIsCured(boolean isCured) {
+        this.isCured = isCured;
+    }
+
+    public void setIsChronic(boolean isChronic) {
+        this.isChronic = isChronic;
+    }
+
+    public void setChronicText(String chronicText) {
+        this.chronicText = chronicText;
+    }
+
+    public void setDateOfDiagnosis(LocalDate dateOfDiagnosis) {
+        this.dateOfDiagnosis = dateOfDiagnosis;
+    }
+
+    public void setDateCured(LocalDate dateCured) {
+        this.dateCured = dateCured;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
 
 }

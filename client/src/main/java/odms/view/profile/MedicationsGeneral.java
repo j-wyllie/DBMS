@@ -5,6 +5,7 @@ import static odms.controller.data.MedicationDataIO.getSuggestionList;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.SimpleStringProperty;
@@ -140,7 +141,7 @@ public class MedicationsGeneral extends CommonView {
      */
     @FXML
     private void handleViewActiveIngredients(ActionEvent event) {
-        ArrayList<String> activeIngredients = null;
+        List<String> activeIngredients = null;
         try {
             activeIngredients = controller.viewActiveIngredients(getSelectedDrug());
         } catch (IOException e) {

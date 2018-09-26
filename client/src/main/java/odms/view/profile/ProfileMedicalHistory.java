@@ -179,9 +179,7 @@ public class ProfileMedicalHistory extends CommonView {
 
         pastDateCuredColumn.setOnEditCommit(
                 (EventHandler<CellEditEvent<Condition, LocalDate>>) t -> {
-                    if (t.getNewValue().isBefore(
-                            t.getTableView().getItems().get(t.getTablePosition().getRow())
-                                    .getDateOfDiagnosis())
+                    if (t.getNewValue().isBefore(t.getTableView().getItems().get(t.getTablePosition().getRow()).getDateOfDiagnosis())
                             || t.getNewValue().isAfter(LocalDate.now())) {
                     } else {
                         controller.removeCondition(t.getTableView().getItems().get(
@@ -390,12 +388,12 @@ public class ProfileMedicalHistory extends CommonView {
      */
     @FXML
     private void refreshButtonAvailability() {
-        ArrayList<Condition> allConditions = getSelectedConditions();
+        List<Condition> allConditions = getSelectedConditions();
         hideItems();
         disableButtonsIfNoItems(allConditions);
     }
 
-    public ArrayList<Condition> getSelectedConditions() {
+    public List<Condition> getSelectedConditions() {
         ArrayList<Condition> conditions = convertConditionObservableToArray(pastConditionsTable.getSelectionModel().getSelectedItems());
         conditions.addAll(convertConditionObservableToArray(curConditionsTable.getSelectionModel().getSelectedItems()));
         return conditions;
@@ -407,7 +405,7 @@ public class ProfileMedicalHistory extends CommonView {
      * @param items to check
      */
     private void disableButtonsIfNoItems(List<?> items) {
-        if (items.size() == 0) {
+        if (items.isEmpty()) {
             deleteConditionButton.setDisable(true);
             toggleCuredButton.setDisable(true);
             toggleChronicButton.setDisable(true);

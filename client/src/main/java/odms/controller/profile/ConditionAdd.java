@@ -1,16 +1,16 @@
 package odms.controller.profile;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import odms.commons.model.history.History;
 import odms.commons.model.profile.Condition;
 import odms.commons.model.profile.Profile;
 import odms.controller.CommonController;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.condition.ConditionDAO;
 import odms.controller.history.CurrentHistory;
-import odms.commons.model.history.History;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 public class ConditionAdd extends CommonController {
 
@@ -33,7 +33,7 @@ public class ConditionAdd extends CommonController {
      *
      * @return the current conditions of the user
      */
-    public ArrayList<Condition> getCurrentConditions(Profile profile) {
+    List<Condition> getCurrentConditions(Profile profile) {
         ArrayList<Condition> currentConditions = new ArrayList<>();
         for (Condition condition : profile.getAllConditions()) {
             if (!condition.getCured()) {

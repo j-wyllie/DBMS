@@ -9,16 +9,20 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import odms.commons.model.medications.Interaction;
 
 public class MedicationDataIO {
+
+    private MedicationDataIO() {
+        throw new UnsupportedOperationException();
+    }
 
     // Value used to identify if response was a internal server error.
     private static final String SERVERERROR = "1";
@@ -59,7 +63,7 @@ public class MedicationDataIO {
      * @param drugName represents the value to send in the HTTP GET request to the API.
      * @throws IOException IOException URL and HttpURLConnection may cause IOExceptions.
      */
-    public static ArrayList<String> getActiveIngredients(String drugName) throws IOException {
+    public static List<String> getActiveIngredients(String drugName) throws IOException {
         ArrayList<String> activeList = new ArrayList<>();
 
         if (!(drugName == null || drugName.equals(""))) {

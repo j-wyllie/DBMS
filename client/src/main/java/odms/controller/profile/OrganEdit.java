@@ -39,7 +39,6 @@ public class OrganEdit extends CommonController {
         return organsRemoved;
     }
 
-    // todo rename to something meaningful
     public void caseDonated(Profile p, Set<OrganEnum> organsAdded) {
         Set<OrganEnum> organsRemoved;
         organsRemoved = findOrgansRemoved(
@@ -55,13 +54,11 @@ public class OrganEdit extends CommonController {
      *
      * @param organs a set of organsDonating that the profile has donated
      */
-    public void addOrgansDonated(Set<OrganEnum> organs, Profile p) {
-        //todo fix generate update info
+    void addOrgansDonated(Set<OrganEnum> organs, Profile p) {
         ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("pastDonations",
                 p);
 
         for (OrganEnum organ : organs) {
-            //todo might need to change to addOrganDonated
             if(!DAOFactory.getOrganDao().getDonations(p).contains(organ)) {
                 DAOFactory.getOrganDao().addDonation(p, organ);
             }
@@ -84,7 +81,6 @@ public class OrganEdit extends CommonController {
      * @param organs a set of organs to remove from the list
      */
     public void removeOrgansDonated(Set<OrganEnum> organs, Profile p) {
-        //todo fix generate update info
         ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo("organsDonated",
                 p);
 
@@ -129,7 +125,6 @@ public class OrganEdit extends CommonController {
      * @param organs a set of organs to be removed
      */
     public void removeOrgansDonating(Set<OrganEnum> organs, Profile p) {
-        // todo generate update info
         ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo(
             "organsDonating",
                 p
@@ -191,7 +186,6 @@ public class OrganEdit extends CommonController {
         }
     }
 
-    // TODO what does this even mean??
     public void caseRequired(Profile p, Set<OrganEnum> organsAdded) {
         Set<OrganEnum> organsRemoved;
         p.setReceiver(true);
@@ -210,7 +204,7 @@ public class OrganEdit extends CommonController {
      *
      * @param organs the set of organs to be received
      */
-    public void addOrgansRequired(Set<OrganEnum> organs, Profile p) {
+    void addOrgansRequired(Set<OrganEnum> organs, Profile p) {
         ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo(
             "organsRequired",
                 p
@@ -242,7 +236,6 @@ public class OrganEdit extends CommonController {
      * @param organs a set of organs to be removed
      */
     public void removeOrgansRequired(Set<OrganEnum> organs, Profile p) {
-        //todo fix generate update info into simpler solution
         ProfileGeneralControllerTODOContainsOldProfileMethods.generateUpdateInfo(
             "organsReceiving",
                 p
