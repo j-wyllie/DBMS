@@ -182,6 +182,18 @@ public class AvailableOrgans {
     }
 
     /**
+     * Get remaining time in standard '5y 4d 3h 2m 1s' format.
+     *
+     * @param organ the organ being checked against.
+     * @param profile the selected profile.
+     * @return formatted string.
+     */
+    public static String getTimeToExpiryStd(OrganEnum organ, Profile profile) {
+        return getTimeToExpiryFormatted(organ, profile, true);
+    }
+
+
+    /**
      * Gets the expiry time for an organ.
      *
      * @param organ Expired organ.
