@@ -47,14 +47,6 @@ public class AvailableOrgansTest {
         assert(waittime == -1);
     }
 
-    @Ignore
-    public void testGetWaitTime() {
-        OrganEnum bone = OrganEnum.BONE;
-        bone.setDate(LocalDateTime.now(), profile1);
-        String waittime = AvailableOrgans.getWaitTime(bone, profile1.getOrgansRequired(), profile1);
-        assertEquals("Registered today", waittime);
-    }
-
     @Test
     public void testGetwaitTimeInvalid() {
         String waittime = AvailableOrgans.getWaitTime(OrganEnum.BONE, profile1.getOrgansRequired(), profile1);
@@ -85,14 +77,6 @@ public class AvailableOrgansTest {
         profile1.setDateOfDeath(LocalDateTime.MIN.plusYears(1));
         LocalDateTime expiryTime = AvailableOrgans.getExpiryTime(OrganEnum.BONE, profile1);
         assertEquals(LocalDateTime.MIN.plusYears(6), expiryTime);
-    }
-
-    @Test
-    public void testGetTimeRemaining() {
-        profile1.setDateOfBirth(LocalDate.MIN);
-        profile1.setDateOfDeath(LocalDateTime.MIN.plusYears(1000000000));
-        assert(AvailableOrgans.getTimeRemaining(OrganEnum.BONE, profile1) == Duration.between(LocalDateTime.now(), AvailableOrgans.getExpiryTime(OrganEnum.BONE, profile1))
-                .toMillis());
     }
 
     @Test
