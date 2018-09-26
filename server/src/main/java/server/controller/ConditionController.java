@@ -1,5 +1,6 @@
 package server.controller;
 
+import com.google.gson.JsonParser;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Condition;
@@ -42,8 +43,7 @@ public class ConditionController {
         }
 
         try {
-            conditions = database.getAll(profileId, true);
-            conditions.addAll(database.getAll(profileId, false));
+            conditions = database.getAll(profileId);
         } catch (Exception e) {
             res.status(500);
             return e.getMessage();
@@ -87,7 +87,7 @@ public class ConditionController {
         }
 
         res.status(201);
-        return "Condition added successfully.";
+        return "Condition added successfully";
     }
 
     /**
@@ -98,12 +98,16 @@ public class ConditionController {
      */
     public static String edit(Request req, Response res) {
         Gson gson = new Gson();
+        JsonParser parser = new JsonParser();
         ConditionDAO database = DAOFactory.getConditionDao();
         Condition condition;
 
         try {
+            if (req.body() == null || parser.parse(req.body()).getAsJsonObject().size() < 1) {
+                throw new IllegalArgumentException("Required fields missing.");
+            }
             condition = gson.fromJson(req.body(), Condition.class);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             res.status(400);
             return ResponseMsgEnum.BAD_REQUEST.toString();
         }
@@ -131,7 +135,7 @@ public class ConditionController {
         int id;
 
         try {
-            id = Integer.valueOf(req.queryParams(KeyEnum.ID.toString()));
+            id = Integer.valueOf(req.params(KeyEnum.ID.toString()));
         } catch (Exception e) {
             res.status(400);
             return ResponseMsgEnum.BAD_REQUEST.toString();
@@ -146,6 +150,6 @@ public class ConditionController {
         }
 
         res.status(200);
-        return RES_CONDITION_UPDATED;
+        return "Condition Deleted";
     }
 }

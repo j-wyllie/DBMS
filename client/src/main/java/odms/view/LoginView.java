@@ -81,7 +81,6 @@ public class LoginView extends CommonController {
 
     /**
      * Attempts to log the profile in with their credentials.
-     *
      * @param event    login button clicked event.
      * @param username Username entered.
      * @throws SQLException thrown when there is an error in the sql.
@@ -119,7 +118,6 @@ public class LoginView extends CommonController {
 
     /**
      * Checks the profiles credentials.
-     *
      * @return boolean if valid credentials.
      */
     public boolean isValidProfile() {
@@ -186,7 +184,6 @@ public class LoginView extends CommonController {
 
     /**
      * Load a user from the database.
-     *
      * @param username the username to load
      * @return a user object
      * @throws SQLException          if a SQL error occurs
@@ -200,7 +197,6 @@ public class LoginView extends CommonController {
 
     /**
      * Load the user view.
-     *
      * @param user user to be loaded.
      */
     private void loadUserView(User user) {
@@ -236,7 +232,6 @@ public class LoginView extends CommonController {
 
     /**
      * Scene change to create account view.
-     *
      * @param event clicking on the create new account link.
      * @throws IOException thrown when the window can not be created.
      */
@@ -249,7 +244,6 @@ public class LoginView extends CommonController {
 
     /**
      * Displays a password prompt window when a user logs in and doesn't have a password set.
-     *
      * @param currentProfile the current profile being logged in.
      * @param event          login button clicked mouse event.
      * @throws IOException thrown when the window can not be created.
@@ -279,7 +273,6 @@ public class LoginView extends CommonController {
 
     /**
      * Handle enter button being used to login.
-     *
      * @param event enter key pressed event.
      */
     @FXML

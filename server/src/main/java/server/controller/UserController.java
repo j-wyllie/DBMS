@@ -200,11 +200,11 @@ public class UserController {
         try {
             valid = database.checkCredentials(username, password);
         } catch (UserNotFoundException e) {
-            res.status(400);
-            return e.getMessage();
+            res.status(404);
+            return "User not found";
         } catch (SQLException e) {
             res.status(500);
-            return e.getMessage();
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
 
         if (valid) {
@@ -220,8 +220,8 @@ public class UserController {
                 return e.getMessage();
             }
         } else {
-            res.status(404);
-            return "Error.";
+            res.status(401);
+            return "Unauthorized";
         }
     }
 }
