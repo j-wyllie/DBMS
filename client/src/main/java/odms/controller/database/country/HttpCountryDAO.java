@@ -44,7 +44,7 @@ public class HttpCountryDAO implements CountryDAO {
 
         String responseBody = gson.toJson(body);
 
-        Request request = new Request(COUNTRIES_URL, 0, new HashMap<>(), responseBody);
+        Request request = new Request(COUNTRIES_URL, new HashMap<>(), responseBody);
         try {
             request.patch();
         } catch (IOException e) {
@@ -55,7 +55,7 @@ public class HttpCountryDAO implements CountryDAO {
     private List<String> getListRequest(Map<String, Object> queryParams) {
         JsonParser parser = new JsonParser();
         Response response = null;
-        Request request = new Request(COUNTRIES_URL, 0, queryParams);
+        Request request = new Request(COUNTRIES_URL,  queryParams);
         try {
             response = request.get();
         } catch (IOException e) {

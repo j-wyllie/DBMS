@@ -5,15 +5,16 @@ import static org.junit.Assert.assertEquals;
 import java.sql.SQLException;
 import java.util.List;
 import odms.commons.model.enums.CountriesEnum;
+import odms.server.CommonTestUtils;
 import org.junit.Before;
 import org.junit.Test;
 import server.model.database.country.MySqlCountryDAO;
 
-public class MySqlCountryDAOTest extends MySqlCommonTests {
+public class MySqlCountryDAOTest extends CommonTestUtils {
     private MySqlCountryDAO mySqlCountryDAO;
 
     @Before
-    public void setup() {
+    public void setup() throws SQLException {
         mySqlCountryDAO = new MySqlCountryDAO();
         mySqlCountryDAO.update(CountriesEnum.NZ, false);
     }
@@ -32,7 +33,7 @@ public class MySqlCountryDAOTest extends MySqlCommonTests {
     }
 
     @Test
-    public void testUpdate() {
+    public void testUpdate() throws SQLException {
         mySqlCountryDAO.update(CountriesEnum.NZ, true);
         List<String> countries = mySqlCountryDAO.getAll(false);
         assertEquals(0, countries.size());

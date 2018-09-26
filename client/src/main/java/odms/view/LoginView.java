@@ -4,7 +4,6 @@ import static odms.controller.AlertController.invalidUsername;
 
 import java.io.IOException;
 import java.sql.SQLException;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +14,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
+import odms.Session;
+import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.AlertController;
@@ -49,7 +50,6 @@ public class LoginView extends CommonController {
 
     /**
      * Scene change to profile profile view if log in credentials are valid.
-     *
      * @param event the login button clicked event.
      */
     @FXML
@@ -60,13 +60,15 @@ public class LoginView extends CommonController {
             try {
                 if (CommonView.isValidNHI(usernameField.getText())) {
                     tryLoginProfile(event, username);
-                } else if (checkUser()) {
+                } else if (isValidUser()) {
                     currentUser = loadUser(username);
+                    Session.setCurrentUser(currentUser, currentUser.getUserType());
                     loadUserView(currentUser);
                 } else {
                     AlertController.invalidUsernameOrPassword();
                 }
             } catch (UserNotFoundException | SQLException | IllegalArgumentException u) {
+                log.error(u.getMessage(), u);
                 AlertController.invalidUsernameOrPassword();
 
             }
@@ -75,24 +77,28 @@ public class LoginView extends CommonController {
 
     /**
      * Attempts to log the profile in with their credentials.
-     *
      * @param event    login button clicked event.
      * @param username Username entered.
      * @throws SQLException thrown when there is an error in the sql.
      */
     private void tryLoginProfile(ActionEvent event, String username) throws SQLException {
-        Profile currentProfile = loadProfile(username);
+        Profile profile = new Profile(username);
+        profile.setPassword(passwordField.getText());
+        Session.setCurrentUser(profile, UserType.PROFILE);
 
         if (!hasPassword()) {
             try {
-                showPasswordPromptWindow(currentProfile, event);
+                showPasswordPromptWindow(profile, event);
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }
-        } else if (checkProfile()) {
-            loadProfileView(currentProfile);
         } else {
-            AlertController.invalidUsernameOrPassword();
+            if (isValidProfile()) {
+                Profile currentProfile = loadProfile(username);
+                loadProfileView(currentProfile);
+            } else {
+                AlertController.invalidUsernameOrPassword();
+            }
         }
     }
 
@@ -108,41 +114,38 @@ public class LoginView extends CommonController {
 
     /**
      * Checks the profiles credentials.
-     *
      * @return boolean if valid credentials.
      */
-    private boolean checkProfile() {
+    public boolean isValidProfile() {
         ProfileDAO database = DAOFactory.getProfileDao();
-        return database.checkCredentials(usernameField.getText(), passwordField.getText());
+        Profile profile = (Profile) Session.getCurrentUser().getKey();
+        return database.checkCredentials(usernameField.getText(), profile.getPassword());
     }
 
     /**
      * Checks the users credentials with the database.
-     *
      * @return Boolean based on if the credentials are correct. True if valid.
      */
-    private Boolean checkUser() {
+    private Boolean isValidUser() {
         UserDAO database = DAOFactory.getUserDao();
         return database.checkCredentials(usernameField.getText(), passwordField.getText());
     }
 
     /**
      * Load a profile from the database.
-     *
      * @param username the username to load
      * @return a profile object
      * @throws SQLException if a SQL error occurs
      */
-    private Profile loadProfile(String username) throws SQLException {
+    public Profile loadProfile(String username) throws SQLException {
         return DAOFactory.getProfileDao().get(username);
     }
 
     /**
      * Load the profile view.
-     *
      * @param profile the profile object whose data will be displayed
      */
-    private void loadProfileView(Profile profile) {
+    public void loadProfileView(Profile profile) {
         try {
             if (profile != null) {
                 FXMLLoader fxmlLoader = new FXMLLoader();
@@ -176,7 +179,6 @@ public class LoginView extends CommonController {
 
     /**
      * Load a user from the database.
-     *
      * @param username the username to load
      * @return a user object
      * @throws SQLException          if a SQL error occurs
@@ -190,11 +192,9 @@ public class LoginView extends CommonController {
 
     /**
      * Load the user view.
-     *
      * @param user user to be loaded.
      */
     private void loadUserView(User user) {
-
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(
@@ -226,7 +226,6 @@ public class LoginView extends CommonController {
 
     /**
      * Scene change to create account view.
-     *
      * @param event clicking on the create new account link.
      * @throws IOException thrown when the window can not be created.
      */
@@ -239,7 +238,6 @@ public class LoginView extends CommonController {
 
     /**
      * Displays a password prompt window when a user logs in and doesn't have a password set.
-     *
      * @param currentProfile the current profile being logged in.
      * @param event          login button clicked mouse event.
      * @throws IOException thrown when the window can not be created.
@@ -252,7 +250,7 @@ public class LoginView extends CommonController {
         Scene scene = new Scene(fxmlLoader.load());
 
         PasswordPrompt view = fxmlLoader.getController();
-        view.initialize(currentProfile);
+        view.initialize(currentProfile, this);
 
         Stage stage = new Stage();
         stage.initStyle(StageStyle.UTILITY);
@@ -269,7 +267,6 @@ public class LoginView extends CommonController {
 
     /**
      * Handle enter button being used to login.
-     *
      * @param event enter key pressed event.
      */
     @FXML

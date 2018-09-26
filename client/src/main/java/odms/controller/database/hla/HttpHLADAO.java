@@ -2,14 +2,12 @@ package odms.controller.database.hla;
 
 
 import com.google.gson.Gson;
+import java.io.IOException;
+import java.util.HashMap;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.HLAType;
 import odms.controller.http.Request;
 import odms.controller.http.Response;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.HashMap;
 
 
 /**
@@ -28,7 +26,7 @@ public class HttpHLADAO implements HLADAO {
     @Override
     public HLAType get(Integer profileID) {
         String url = Request.getUrl() + "hla/" + profileID;
-        Request request = new Request(url, 0, new HashMap<>());
+        Request request = new Request(url, new HashMap<>());
 
         Response response = null;
         try {
@@ -58,7 +56,7 @@ public class HttpHLADAO implements HLADAO {
 
         Gson gson = new Gson();
         String body = gson.toJson(hlaType);
-        Request request = new Request(url, 0, new HashMap<>(), body);
+        Request request = new Request(url, new HashMap<>(), body);
 
         try {
             request.post();
@@ -88,7 +86,7 @@ public class HttpHLADAO implements HLADAO {
     public void delete(Integer profileID) {
         String url = Request.getUrl() + "hla/" + profileID;
 
-        Request request = new Request(url, 0, new HashMap<>());
+        Request request = new Request(url, new HashMap<>());
         try {
             request.delete();
         } catch (IOException e) {

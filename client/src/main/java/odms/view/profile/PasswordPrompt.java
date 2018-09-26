@@ -5,6 +5,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
 import odms.commons.model.profile.Profile;
+import odms.view.LoginView;
+
+import java.sql.SQLException;
 
 /**
  * The password prompt window view.
@@ -31,14 +34,16 @@ public class PasswordPrompt {
     private odms.controller.profile.PasswordPrompt controller =
             new odms.controller.profile.PasswordPrompt(this);
 
+    private LoginView loginView;
+
     /**
      * Validates the password on confirm button pressed.
      */
     @FXML
-    public void handleConfirmBtnPressed() {
+    public void handleConfirmBtnPressed() throws SQLException {
         if (passwordField.getText().length() >= PasswordPrompt.PW_MIN_LENGTH) {
             if (passwordField.getText().equals(confirmPasswordField.getText())) {
-                controller.savePassword();
+                controller.savePassword(this.loginView);
                 Stage stage = (Stage) confirmPasswordField.getScene().getWindow();
                 stage.close();
             } else {
@@ -53,15 +58,16 @@ public class PasswordPrompt {
      * initializes view. Sets the current profile.
      * @param currentProfile the current profile.
      */
-    public void initialize(Profile currentProfile) {
+    public void initialize(Profile currentProfile, LoginView loginView) {
         this.currentProfile = currentProfile;
+        this.loginView = loginView;
     }
 
     /**
      * Handle enter button being used to save password.
      */
     @FXML
-    private void onEnter() {
+    private void onEnter() throws SQLException {
         handleConfirmBtnPressed();
     }
 

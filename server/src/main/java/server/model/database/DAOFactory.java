@@ -12,6 +12,8 @@ import server.model.database.locations.HospitalDAO;
 import server.model.database.locations.MySqlHospitalDAO;
 import server.model.database.medication.MedicationDAO;
 import server.model.database.medication.MySqlMedicationDAO;
+import server.model.database.middleware.MiddlewareDAO;
+import server.model.database.middleware.MySqlMiddlewareDAO;
 import server.model.database.organ.MySqlOrganDAO;
 import server.model.database.organ.OrganDAO;
 import server.model.database.procedure.MySqlProcedureDAO;
@@ -74,6 +76,12 @@ public class DAOFactory {
     public static CountryDAO getCountryDAO() {
         return new MySqlCountryDAO();
     }
+
+    /**
+     * Gives the data access object class for the Middleware class attributes.
+     * @return dao for particular database type.
+     */
+    public static MiddlewareDAO getMiddlewareDAO() { return new MySqlMiddlewareDAO(); }
 
     /**
      * Gives the data access object class for the Hospital object.
