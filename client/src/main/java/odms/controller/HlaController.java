@@ -1,12 +1,9 @@
 package odms.controller;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.saxon.ma.arrays.ArrayFunctionSet.ArrayRemove;
 import odms.commons.model.profile.HLAType;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.hla.HLADAO;
@@ -28,19 +25,19 @@ public class HlaController {
 
         // try matching same groups
         Integer numMatchingSame = 0;
-        if (xa.equals(xb)) {
+        if (xa.equals(ya)) {
             numMatchingSame++;
         }
-        if (ya.equals(yb)) {
+        if (xb.equals(yb)) {
             numMatchingSame++;
         }
 
         // try matching cross groups
         Integer numMatchingCross = 0;
-        if (xa.equals(ya)) {
+        if (xa.equals(yb)) {
             numMatchingCross++;
         }
-        if (ya.equals(xb)) {
+        if (xb.equals(ya)) {
             numMatchingCross++;
         }
 
@@ -99,7 +96,7 @@ public class HlaController {
     public String getMatchString(Integer profileIdA, Integer profileIdB) {
         Integer score = matchScore(profileIdA, profileIdB);
         String text;
-        if (score.equals(null)) {
+        if (score == null) {
             text = "No HLA";
         } else {
             text = String.valueOf(score) + "%";
@@ -121,5 +118,4 @@ public class HlaController {
 
         return matchScore(hlaA, hlaB);
     }
-
 }

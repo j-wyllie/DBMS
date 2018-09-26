@@ -39,15 +39,12 @@ public class HLA {
     public String getAlphaValue() {
         return alphaValue;
     }
-
     public Integer getNumericValue() {
         return numericValue;
     }
-
     public Boolean getGroupX() {
         return groupX;
     }
-
     public Boolean getGroupY() {
         return groupY;
     }

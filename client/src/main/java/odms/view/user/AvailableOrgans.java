@@ -135,7 +135,6 @@ public class AvailableOrgans extends CommonView {
         );
 
         hlaMatchColumn.setCellValueFactory(
-
                 cdf -> new SimpleStringProperty(
                          hlaController.getMatchString(cdf.getValue().getId(), donorProfile.getId())
                 )

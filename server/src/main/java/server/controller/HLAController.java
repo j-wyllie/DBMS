@@ -147,7 +147,6 @@ public class HLAController {
             return e.getMessage();
         }
 
-
         res.status(201);
         return "HLAs deleted";
     }
