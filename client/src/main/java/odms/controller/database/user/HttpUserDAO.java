@@ -71,7 +71,7 @@ public class HttpUserDAO implements UserDAO {
 
     @Override
     public void remove(User user) {
-        String url = USERS + user.getStaffID();
+        String url = USERS + "/" +  user.getStaffID();
         Request request = new Request(url, 0, new HashMap<>());
         try {
             request.delete();

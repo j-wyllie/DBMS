@@ -25,7 +25,6 @@ public class HttpHospitalDAO implements HospitalDAO {
     private static final String URL_ALL = "http://localhost:%s/api/v1/hospitals/all";
     private static final String URL = "http://localhost:%s/api/v1/hospitals";
 
-
     /**
      * Get all hospitals in database.
      *

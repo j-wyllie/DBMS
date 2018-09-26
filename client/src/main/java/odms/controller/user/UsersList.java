@@ -67,7 +67,7 @@ public class UsersList {
             if (t.getButton() == MouseButton.SECONDARY) {
                 if (view.getViewUsersTable().getSelectionModel().getSelectedItem() != null &&
                         !view.getViewUsersTable().getSelectionModel().getSelectedItem().getDefault()) {
-                    contextMenu.show(view.getViewUsersTable(), t.getScreenX(), t.getScreenY());
+                            contextMenu.show(view.getViewUsersTable(), t.getScreenX(), t.getScreenY());
                 } else {
                     contextMenu.hide();
                 }
@@ -87,8 +87,11 @@ public class UsersList {
         UserDAO server = DAOFactory.getUserDao();
 
         contextMenu.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
+
+            User user = view.getViewUsersTable().getSelectionModel().getSelectedItem();
+
             if (AlertController.deleteUserConfirmation()) {
-                User user = view.getViewUsersTable().getSelectionModel().getSelectedItem();
+
                 try {
                     server.remove(user);
                 } catch (SQLException e) {

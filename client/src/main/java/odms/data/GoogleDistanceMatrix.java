@@ -15,6 +15,7 @@ import java.net.URL;
 public class GoogleDistanceMatrix {
 
     private static final String BASE_URL = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&";
+    private static final String apiKey = "AIzaSyCfq6coJWIFGQusltLJCA8tZMt9cjouzLw";
 
     public double getDuration(Double originLat, Double originLong, Double destinationLat, Double destinationLong) throws IOException {
 
@@ -22,7 +23,6 @@ public class GoogleDistanceMatrix {
             throw new IOException("Origin and destination are the same");
         }
 
-        String apiKey = "AIzaSyCfq6coJWIFGQusltLJCA8tZMt9cjouzLw";
 
         URL url = new URL(BASE_URL + "origins=" + originLat + "," + originLong + "&destinations=" +
                 destinationLat + "," + destinationLong + "&key=" + apiKey);

@@ -157,8 +157,6 @@ public final class AddressIO {
 
         return longLat;
     }
-
-
 }
 
 

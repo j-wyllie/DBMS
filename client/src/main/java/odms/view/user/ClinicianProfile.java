@@ -158,7 +158,6 @@ public class ClinicianProfile extends CommonView {
         }
     }
 
-
     /**
      * Initializes the controller for the general details Tab.
      */
@@ -239,7 +238,6 @@ public class ClinicianProfile extends CommonView {
             }
         }
     }
-
 
     /**
      * Sets up the social feed tab when it's clicked. Adds a listener to start and top the timer.

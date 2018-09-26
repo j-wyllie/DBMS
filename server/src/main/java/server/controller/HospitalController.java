@@ -79,7 +79,6 @@ public class HospitalController {
             }
         }
 
-
         Gson gson = new Gson();
         String responseBody = gson.toJson(hospital);
 
