@@ -1,7 +1,9 @@
 package odms.server.controller;
 
 import com.google.gson.Gson;
+import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Condition;
+import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
 import odms.server.CommonTestUtils;
@@ -11,6 +13,7 @@ import org.junit.Test;
 import server.controller.ProcedureController;
 import server.model.database.DAOFactory;
 import server.model.database.condition.ConditionDAO;
+import server.model.database.organ.OrganDAO;
 import server.model.database.procedure.ProcedureDAO;
 import server.model.database.profile.ProfileDAO;
 import server.model.enums.KeyEnum;
@@ -32,6 +35,7 @@ public class ProcedureControllerTest extends CommonTestUtils {
     // Data access object variables.
     ProfileDAO profileDAO = DAOFactory.getProfileDao();
     ProcedureDAO procedureDAO = DAOFactory.getProcedureDao();
+    OrganDAO organDAO = DAOFactory.getOrganDao();
 
     // Profile variables.
     private Profile profileA;
@@ -48,27 +52,32 @@ public class ProcedureControllerTest extends CommonTestUtils {
     private Request requestA;
     private Request requestB;
     private Request requestC;
+    private Request requestD;
 
     // Response variables.
     private Response responseA;
     private Response responseB;
     private Response responseC;
+    private Response responseD;
 
     // General variables.
     Gson gson = new Gson();
 
     @Before
-    public void setup() throws SQLException {
+    public void setup() throws SQLException, OrganConflictException {
         profileA = new Profile("Alice", "Smith",
                 genericDate, "LPO7236");
         profileDAO.add(profileA);
         profileA.setUsername("alices");
         profileA.setPassword("12345");
         profileA = profileDAO.get(profileA.getNhi());
+        organDAO.addDonating(profileA, OrganEnum.BONE);
+        organDAO.addDonating(profileA, OrganEnum.BONE_MARROW);
 
         procedureA = new Procedure("Lung Transplant", genericDate, "");
         procedureB = new Procedure("Heart Transplant", genericDate, "");
         procedureC = new Procedure("Bone Marrow Transplant", LocalDate.now().plusDays(7), "");
+        procedureC.addAffectedOrgan(profileA, OrganEnum.BONE);
         procedureD = new Procedure("Cornea Transplant", LocalDate.now().plusDays(7), "");
 
         procedureDAO.add(profileA.getId(), procedureA);
@@ -77,6 +86,7 @@ public class ProcedureControllerTest extends CommonTestUtils {
         procedureB = procedureDAO.getAll(profileA.getId(), false).get(1);
         procedureDAO.add(profileA.getId(), procedureC);
         procedureC = procedureDAO.getAll(profileA.getId(), true).get(0);
+
 
         requestA = mock(Request.class);
         responseA = mock(Response.class);
@@ -88,6 +98,12 @@ public class ProcedureControllerTest extends CommonTestUtils {
         requestC = mock(Request.class);
         when(requestC.params(KeyEnum.ID.toString())).thenReturn(String.valueOf(procedureC.getId()));
         responseC = mock(Response.class);
+
+        requestD = mock(Request.class);
+        procedureB.setDate(LocalDate.now().plusDays(7));
+        when(requestD.body()).thenReturn(gson.toJson(procedureB));
+        when(requestD.queryParams(KeyEnum.PENDING.toString())).thenReturn(String.valueOf(true));
+        responseD = mock(Response.class);
     }
 
     @Test
@@ -122,7 +138,7 @@ public class ProcedureControllerTest extends CommonTestUtils {
 
     @Test
     public void testEditValid() {
-
+        assertEquals("Procedure Updated", ProcedureController.edit(requestD, responseD));
     }
 
     @Test
@@ -141,18 +157,40 @@ public class ProcedureControllerTest extends CommonTestUtils {
     }
 
     @Test
-    public void testGetOrgans() {
-
+    public void testGetOrgansValid() {
+        List<String> testResult = gson.fromJson(ProcedureController.getOrgans(requestC, responseC), List.class);
+        assertEquals(1, testResult.size());
     }
 
     @Test
-    public void testDeleteOrgan() {
-
+    public void testGetOrgansInvalid() {
+        assertEquals(ResponseMsgEnum.BAD_REQUEST.toString(), ProcedureController.getOrgans(requestA, responseA));
     }
 
     @Test
-    public void testAddOrgan() {
+    public void testDeleteOrganValid() {
+        when(requestC.queryParams(KeyEnum.NAME.toString())).thenReturn(String.valueOf(OrganEnum.BONE));
+        assertEquals("Affected organ removed", ProcedureController.deleteOrgan(requestC, responseC));
+        List<String> testResult = gson.fromJson(ProcedureController.getOrgans(requestC, responseC), List.class);
+        assertEquals(0, testResult.size());
+    }
 
+    @Test
+    public void testDeleteOrganInvalid() {
+        assertEquals(ResponseMsgEnum.BAD_REQUEST.toString(), ProcedureController.deleteOrgan(requestA, responseA));
+    }
+
+    @Test
+    public void testAddOrganValid() {
+        when(requestC.body()).thenReturn(gson.toJson(OrganEnum.BONE_MARROW));
+        assertEquals("Affected organ added", ProcedureController.addOrgan(requestC, responseC));
+        List<String> testResult = gson.fromJson(ProcedureController.getOrgans(requestC, responseC), List.class);
+        assertEquals(2, testResult.size());
+    }
+
+    @Test
+    public void testAddOrganInvalid() {
+        assertEquals(ResponseMsgEnum.BAD_REQUEST.toString(), ProcedureController.addOrgan(requestA, responseA));
     }
 
     @After
