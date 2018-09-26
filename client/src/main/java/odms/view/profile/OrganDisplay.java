@@ -3,6 +3,7 @@ package odms.view.profile;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -25,6 +26,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.enums.OrganSelectEnum;
 import odms.commons.model.profile.Profile;
@@ -36,6 +38,7 @@ import odms.view.user.TransplantWaitingList;
 /**
  * Organ Display list and table views for profiles.
  */
+@Slf4j
 public class OrganDisplay extends CommonView {
 
     private static OrganSelectEnum windowType;
@@ -133,18 +136,22 @@ public class OrganDisplay extends CommonView {
         }
 
         if (!isClinician) {
-            this.viewAsProfileSetup();
+            viewAsProfileSetup();
         }
 
         populateOrganLists();
 
-        listViewDonating.setOnMousePressed(event -> {
-            if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
-                    listViewDonating.getSelectionModel().getSelectedItem() != null) {
-                giveReasonForOverride(event,
-                        listViewDonating.getSelectionModel().getSelectedItem());
-            }
-        });
+        if (isClinician) {
+        listViewDonating.setMouseTransparent(false);
+            listViewDonating.setOnMousePressed(event -> {
+                if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+                        listViewDonating.getSelectionModel().getSelectedItem() != null) {
+                    giveReasonForOverride(event,
+                            listViewDonating.getSelectionModel().getSelectedItem());
+                }
+            });
+        }
+
     }
 
     /**
@@ -204,7 +211,7 @@ public class OrganDisplay extends CommonView {
             stage.setOnHiding(ob -> refreshListViews());
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -259,8 +266,8 @@ public class OrganDisplay extends CommonView {
     private void populateOrganLists() {
         currentProfile = controller.getUpdatedProfileDetails(currentProfile);
 
+        populateOrganList(observableListDonating, controller.getDonatingOrgans(currentProfile));
         populateOrganList(observableListDonated, currentProfile.getOrgansDonated());
-        populateOrganList(observableListDonating, currentProfile.getOrgansDonatingNotExpired());
         populateListReceiving(observableListReceiving, currentProfile.getOrgansRequired());
 
         checkList.clear();
@@ -357,7 +364,6 @@ public class OrganDisplay extends CommonView {
         stage.initModality(Modality.WINDOW_MODAL);
         stage.centerOnScreen();
         stage.setOnHiding(ob -> {
-            populateOrganLists();
             refreshListViews();
         });
         stage.show();
@@ -391,7 +397,6 @@ public class OrganDisplay extends CommonView {
         stage.initModality(Modality.WINDOW_MODAL);
         stage.centerOnScreen();
         stage.setOnHiding(ob -> {
-            populateOrganLists();
             refreshListViews();
             if (transplantWaitingListView != null) {
                 transplantWaitingListView.refreshTable();

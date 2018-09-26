@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import odms.cli.CommandUtils;
 import odms.commons.model.history.History;
 import odms.controller.database.DAOFactory;
@@ -13,7 +14,7 @@ import odms.controller.history.CurrentHistory;
 import odms.controller.profile.ProfileGeneralControllerTODOContainsOldProfileMethods;
 import odms.data.NHIConflictException;
 
-
+@Slf4j
 public class Profile extends CommandUtils {
 
     /**
@@ -65,7 +66,7 @@ public class Profile extends CommandUtils {
         try {
             deleteProfiles(profiles);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -96,7 +97,7 @@ public class Profile extends CommandUtils {
         if (profileList.size() > 0) {
             for (odms.commons.model.profile.Profile profile : profileList) {
                 database.remove(profile);
-                CurrentHistory.deletedProfiles.add(profile);
+                CurrentHistory.getDeletedProfiles().add(profile);
                 CurrentHistory.updateHistory(
                         new odms.commons.model.history.History("profile", profile.getId(),
                                 "deleted", "", -1, LocalDateTime.now()));
@@ -175,7 +176,7 @@ public class Profile extends CommandUtils {
     private static List<odms.commons.model.profile.Profile> search(String expression) {
         ProfileDAO database = DAOFactory.getProfileDao();
         List<odms.commons.model.profile.Profile> profiles = new ArrayList<>();
-        if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+        if (expression.lastIndexOf('=') == expression.indexOf('=')) {
             String attr = expression.substring(expression.indexOf("\"") + 1,
                     expression.lastIndexOf("\""));
             if (expression.substring(8, 8 + "given-names".length()).equals("given-names") ||
@@ -185,7 +186,7 @@ public class Profile extends CommandUtils {
                     profiles = database.search(attr, 0,
                             0, null, null, null, null);
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage(), e);
                 }
             }
         } else {
@@ -202,7 +203,7 @@ public class Profile extends CommandUtils {
      */
     private static odms.commons.model.profile.Profile get(String expression) {
         ProfileDAO database = DAOFactory.getProfileDao();
-        if (expression.lastIndexOf("=") == expression.indexOf("=")) {
+        if (expression.lastIndexOf('=') == expression.indexOf('=')) {
             String attr = expression.substring(expression.indexOf("\"") + 1,
                     expression.lastIndexOf("\""));
             if (expression.substring(8, 8 + "given-names".length()).equals("given-names") ||
@@ -213,7 +214,7 @@ public class Profile extends CommandUtils {
                     return profiles;
 
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage(), e);
                 }
             }
         } else {

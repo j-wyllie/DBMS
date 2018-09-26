@@ -29,6 +29,7 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.medications.Drug;
 import odms.commons.model.profile.Profile;
 import odms.controller.profile.Medications;
@@ -37,6 +38,7 @@ import odms.view.CommonView;
 /**
  * View that contains FXML elements and input handlers for the Medications view.
  */
+@Slf4j
 public class MedicationsGeneral extends CommonView {
 
     @FXML
@@ -142,7 +144,7 @@ public class MedicationsGeneral extends CommonView {
         try {
             activeIngredients = controller.viewActiveIngredients();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             tableViewActiveIngredients
                     .setPlaceholder(new Label("There was an error getting active ingredient data"));
         }
@@ -314,7 +316,7 @@ public class MedicationsGeneral extends CommonView {
                     suggestionMenu.show(textFieldMedicationSearch, Side.BOTTOM, 0, 0);
                     menuItems.clear();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage(), e);
                 }
             });
             pauseTransition.playFromStart();

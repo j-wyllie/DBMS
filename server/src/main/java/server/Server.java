@@ -8,9 +8,11 @@ import static spark.Spark.path;
 import static spark.Spark.port;
 import static spark.Spark.post;
 
+import lombok.extern.slf4j.Slf4j;
 import server.controller.ConditionController;
 import server.controller.CountriesController;
 import server.controller.DrugController;
+import server.controller.HospitalController;
 import server.controller.OrganController;
 import server.controller.ProcedureController;
 import server.controller.ProfileController;
@@ -19,17 +21,9 @@ import server.controller.UserController;
 /**
  * Main entry point for server application.
  */
+@Slf4j
 public class Server {
     private static Integer port = 6969;
-
-    private static UserController userController;
-    private static ProfileController profileController;
-    private static ProcedureController procedureController;
-    private static OrganController organController;
-    private static DrugController drugController;
-    private static CountriesController countriesController;
-    private static ConditionController conditionController;
-
 
     /**
      * Server class should not be instantiated.
@@ -43,23 +37,16 @@ public class Server {
      * @param args parameters for application
      */
     public static void main (String[] args) {
-        System.out.println("Server is alive!");
-        System.out.println("Listening on port: " + port);
+        log.info("Server is alive!");
+        log.info("Listening on port: " + port);
 
-        for (String arg : args) {
-            arg = arg.toLowerCase();
-            switch (arg) {
-                case "-port":
-                    System.out.println("Example to set a custom port.");
-            }
-        }
         port(port);
         initExceptionHandler((e) -> {
-            System.out.println("Server init failed");
-            System.out.println(e.getMessage());
+            log.error("Server init failed");
+            log.error(e.getMessage(), e);
         });
+
         initRoutes();
-        initControllers();
     }
 
     private static void initRoutes() {
@@ -167,17 +154,15 @@ public class Server {
                 get("", CountriesController::getAll);
                 patch("", CountriesController::edit);
             });
+
+            // hospitals api endpoints.
+            path("/hospitals", () -> {
+                get("/all", HospitalController::getAll);
+                get("", HospitalController::get);
+                post("", HospitalController::create);
+                patch("", HospitalController::edit);
+                delete("", HospitalController::delete);
+            });
         });
     }
-
-    private static void initControllers() {
-
-        userController = new UserController();
-        profileController = new ProfileController();
-        organController = new OrganController();
-        drugController = new DrugController();
-        countriesController = new CountriesController();
-        conditionController = new ConditionController();
-    }
-
 }

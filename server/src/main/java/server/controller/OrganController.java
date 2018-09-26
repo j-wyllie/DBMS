@@ -1,11 +1,6 @@
 package server.controller;
 
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.ExpiredOrgan;
 import odms.commons.model.profile.OrganConflictException;
@@ -15,10 +10,30 @@ import org.sonar.api.internal.google.gson.JsonObject;
 import org.sonar.api.internal.google.gson.JsonParser;
 import server.model.database.DAOFactory;
 import server.model.database.organ.OrganDAO;
+import server.model.enums.DataTypeEnum;
+import server.model.enums.KeyEnum;
+import server.model.enums.ResponseMsgEnum;
 import spark.Request;
 import spark.Response;
 
+import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+@Slf4j
 public class OrganController {
+    private static final String DONATED = "donated";
+    private static final String DONATING = "donating";
+    private static final String RECEIVED = "received";
+    private static final String REQUIRED = "required";
+
+    /**
+     * Prevent instantiation of static class.
+     */
+    private OrganController() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Gets a list of all organs for a profile.
@@ -28,7 +43,7 @@ public class OrganController {
      */
     public static String getAll(Request req, Response res) {
         Set<OrganEnum> organs;
-        int profileId = Integer.valueOf(req.params("id"));
+        int profileId = Integer.parseInt(req.params(KeyEnum.ID.toString()));
 
         try {
             organs = getOrgans(new Profile(profileId), req);
@@ -40,7 +55,7 @@ public class OrganController {
         Gson gson = new Gson();
         String responseBody = gson.toJson(organs);
 
-        res.type("application/json");
+        res.type(DataTypeEnum.JSON.toString());
         res.status(200);
 
         return responseBody;
@@ -58,11 +73,11 @@ public class OrganController {
         JsonParser parser = new JsonParser();
 
         try {
-            profileId = Integer.valueOf(req.params("id"));
+            profileId = Integer.valueOf(req.params(KeyEnum.ID.toString()));
             body = parser.parse(req.body()).getAsJsonObject();
         } catch (Exception e) {
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         try {
@@ -86,11 +101,11 @@ public class OrganController {
         int profileId;
         String organ;
         try {
-            profileId = Integer.valueOf(req.params("id"));
-            organ = String.valueOf(req.queryParams("name"));
+            profileId = Integer.valueOf(req.params(KeyEnum.ID.toString()));
+            organ = String.valueOf(req.queryParams(KeyEnum.NAME.toString()));
         } catch (Exception e) {
             res.status(500);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         try {
@@ -113,17 +128,17 @@ public class OrganController {
     private static Set<OrganEnum> getOrgans(Profile profile, Request req) {
         OrganDAO database = DAOFactory.getOrganDao();
 
-        if (req.queryMap().hasKey("donated")) {
-            return database.getDonations(profile.getId());
+        if (req.queryMap().hasKey(DONATED)) {
+            return database.getDonations(profile);
         }
-        if (req.queryMap().hasKey("donating")) {
-            return database.getDonating(profile.getId());
+        if (req.queryMap().hasKey(DONATING)) {
+            return database.getDonating(profile);
         }
-        if (req.queryMap().hasKey("required")) {
+        if (req.queryMap().hasKey(RECEIVED)) {
+            return database.getReceived(profile);
+        }
+        if (req.queryMap().hasKey(REQUIRED)) {
             return database.getRequired(profile);
-        }
-        if (req.queryMap().hasKey("received")) {
-            return database.getReceived(profile.getId());
         }
         return new HashSet<>();
     }
@@ -135,19 +150,21 @@ public class OrganController {
      * @throws OrganConflictException error.
      */
     private static void addOrgan(Profile profile, JsonObject body) throws OrganConflictException {
-        OrganEnum organEnum = OrganEnum.valueOf(body.get("name").getAsString());
+        OrganEnum organEnum = OrganEnum.valueOf(body.get(
+                KeyEnum.NAME.toString()
+        ).getAsString());
         OrganDAO database = DAOFactory.getOrganDao();
 
-        if (body.keySet().contains("donated")) {
+        if (body.keySet().contains(DONATED)) {
             database.addDonation(profile, organEnum);
         }
-        if (body.keySet().contains("donating")) {
+        if (body.keySet().contains(DONATING)) {
             database.addDonating(profile, organEnum);
         }
-        if (body.keySet().contains("required")) {
+        if (body.keySet().contains(REQUIRED)) {
             database.addRequired(profile, organEnum);
         }
-        if (body.keySet().contains("received")) {
+        if (body.keySet().contains(RECEIVED)) {
             database.addReceived(profile, organEnum);
         }
     }
@@ -160,39 +177,38 @@ public class OrganController {
      */
     private static void removeOrgan(Profile profile, String organ, Request req) {
         OrganEnum organEnum = OrganEnum.valueOf(organ);
-        organEnum.setDate(LocalDateTime.parse(req.queryParams("date")), profile);
         OrganDAO database = DAOFactory.getOrganDao();
 
-        if (req.queryMap().hasKey("donated")) {
+        if (req.queryMap().hasKey(DONATED)) {
             database.removeDonation(profile, organEnum);
         }
-        if (req.queryMap().hasKey("donating")) {
+        if (req.queryMap().hasKey(DONATING)) {
             database.removeDonating(profile, organEnum);
         }
-        if (req.queryMap().hasKey("required")) {
+        if (req.queryMap().hasKey(REQUIRED)) {
             database.removeRequired(profile, organEnum);
         }
-        if (req.queryMap().hasKey("received")) {
+        if (req.queryMap().hasKey(RECEIVED)) {
             database.removeReceived(profile, organEnum);
         }
     }
 
     public static String getExpired(Request req, Response res) {
         OrganDAO database = DAOFactory.getOrganDao();
-        int profileId = Integer.valueOf(req.params("id"));
+        int profileId = Integer.parseInt(req.params(KeyEnum.ID.toString()));
         List<ExpiredOrgan> organs;
 
         try {
             organs = database.getExpired(new Profile(profileId));
         } catch (SQLException e) {
             res.status(500);
-            return "Internal Server Error";
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
 
         Gson gson = new Gson();
         String responseBody = gson.toJson(organs);
 
-        res.type("application/json");
+        res.type(DataTypeEnum.JSON.toString());
         res.status(200);
 
         return responseBody;
@@ -201,26 +217,25 @@ public class OrganController {
 
     public static String setExpired(Request req, Response res) {
         OrganDAO database = DAOFactory.getOrganDao();
-        int profileId = Integer.valueOf(req.params("id"));
-        String organ = req.queryParams("organ").toLowerCase().replace("_", " ");
+        int profileId = Integer.parseInt(req.params(KeyEnum.ID.toString()));
+        OrganEnum organ = OrganEnum.valueOf(req.queryParams("organ"));
 
         try {
             if (Integer.valueOf(req.queryParams("expired")) == 1) {
                 String note = req.queryParams("note");
-                int userId = Integer.valueOf(req.queryParams("userId"));
+                int userId = Integer.parseInt(req.queryParams("userId"));
                 database.setExpired(new Profile(profileId), organ, 1, note, userId);
-            }
-            else {
+            } else {
                 database.revertExpired(profileId, organ);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             res.status(500);
-            return "Internal Server Error";
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         res.status(200);

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
 import odms.controller.http.Request;
@@ -19,6 +20,7 @@ import org.sonar.api.internal.google.gson.JsonArray;
 import org.sonar.api.internal.google.gson.JsonElement;
 import org.sonar.api.internal.google.gson.JsonParser;
 
+@Slf4j
 public class HttpProfileDAO implements ProfileDAO {
 
     @Override
@@ -56,22 +58,27 @@ public class HttpProfileDAO implements ProfileDAO {
         try {
             response = request.post();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
-        if (response.getStatus() == 400) {
-            throw new NHIConflictException("NHI in use.", profile.getNhi());
-        }
-        else if (response.getStatus() == 500) {
-            throw new SQLException(response.getBody());
+        if (response != null) {
+            if (response.getStatus() == 400) {
+                throw new NHIConflictException("NHI in use.", profile.getNhi());
+            } else if (response.getStatus() == 500) {
+                throw new SQLException(response.getBody());
+            }
         }
     }
 
     @Override
-    public boolean isUniqueUsername(String username) { throw new UnsupportedOperationException(); }
+    public boolean isUniqueUsername(String username) {
+        throw new UnsupportedOperationException();
+    }
 
     @Override
-    public int isUniqueNHI(String nhi) { throw new UnsupportedOperationException(); }
+    public int isUniqueNHI(String nhi) {
+        throw new UnsupportedOperationException();
+    }
 
     @Override
     public void remove(Profile profile) {
@@ -80,7 +87,7 @@ public class HttpProfileDAO implements ProfileDAO {
         try {
             request.delete();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -93,7 +100,7 @@ public class HttpProfileDAO implements ProfileDAO {
         try {
             request.patch();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -103,7 +110,7 @@ public class HttpProfileDAO implements ProfileDAO {
         String url = "http://localhost:6969/api/v1/profiles/all";
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("searchString", searchString);
+        queryParams.put("searchString", searchString.replace(' ', '+'));
         queryParams.put("ageSearchInt", ageSearchInt);
         queryParams.put("ageRangeSearchInt", ageRangeSearchInt);
         queryParams.put("region", region);
@@ -126,7 +133,7 @@ public class HttpProfileDAO implements ProfileDAO {
         try {
             response = request.get();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         if (response != null) {
             count = parser.parse(response.getBody()).getAsInt();
@@ -150,12 +157,12 @@ public class HttpProfileDAO implements ProfileDAO {
     }
 
     @Override
-    public List<Profile> getOrganReceivers(String organ, String bloodType, Integer lowerAgeRange,
-            Integer upperAgeRange) {
+    public List<Profile> getOrganReceivers(String organs, String bloodTypes,
+           Integer lowerAgeRange, Integer upperAgeRange) {
         String url = "http://localhost:6969/api/v1/profiles/receivers";
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("organ", organ);
-        queryParams.put("bloodType", bloodType);
+        queryParams.put("organs", organs);
+        queryParams.put("bloodTypes", bloodTypes.replace("+", "%2B"));
         queryParams.put("lowerAgeRange", lowerAgeRange);
         queryParams.put("upperAgeRange", upperAgeRange);
 
@@ -169,6 +176,14 @@ public class HttpProfileDAO implements ProfileDAO {
         return getArrayRequest(url, queryParams);
     }
 
+    @Override
+    public List<Profile> getDeadFiltered(String searchString) throws SQLException {
+        String url = "http://localhost:6969/api/v1/profiles/dead";
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("searchString", searchString);
+        return getArrayRequest(url, queryParams);
+    }
+
     private Profile getSingleRequest(String url, Map<String, Object> queryParams) {
         Gson parser = new Gson();
         Response response = null;
@@ -176,11 +191,10 @@ public class HttpProfileDAO implements ProfileDAO {
         try {
             response = request.get();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
-        if (response.getStatus() == 200) {
-            Profile profile = parser.fromJson(response.getBody(), Profile.class);
-            return profile;
+        if (response != null && response.getStatus() == 200) {
+            return parser.fromJson(response.getBody(), Profile.class);
         }
         return null;
     }
@@ -193,11 +207,11 @@ public class HttpProfileDAO implements ProfileDAO {
         try {
             response = request.get();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         List<Profile> profiles = new ArrayList<>();
-        if (response.getStatus() == 200) {
-            JsonArray results = parser.parse(response.getBody().toString()).getAsJsonArray();
+        if (response != null && response.getStatus() == 200) {
+            JsonArray results = parser.parse(response.getBody()).getAsJsonArray();
             for (JsonElement result : results) {
                 profiles.add(gson.fromJson(result, Profile.class));
             }
@@ -205,7 +219,8 @@ public class HttpProfileDAO implements ProfileDAO {
         return profiles;
     }
 
-    private List<Entry<Profile, OrganEnum>> getEntryArrayRequest(String url, Map<String, Object> queryParams) {
+    private List<Entry<Profile, OrganEnum>> getEntryArrayRequest(String url,
+            Map<String, Object> queryParams) {
         JsonParser parser = new JsonParser();
         Gson gson = new Gson();
 
@@ -214,15 +229,16 @@ public class HttpProfileDAO implements ProfileDAO {
         try {
             response = request.get();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         List<Entry<Profile, OrganEnum>> profiles = new ArrayList<>();
-        if (response.getStatus() == 200) {
+        if (response != null && response.getStatus() == 200) {
             JsonArray results = parser.parse(response.getBody().toString()).getAsJsonArray();
             for (JsonElement result : results) {
                 Profile profile = gson.fromJson(result.getAsJsonObject().get("key"), Profile.class);
-                OrganEnum organ = gson.fromJson(result.getAsJsonObject().get("value"), OrganEnum.class);
+                OrganEnum organ = gson
+                        .fromJson(result.getAsJsonObject().get("value"), OrganEnum.class);
                 profiles.add(new SimpleEntry<>(profile, organ));
             }
         }
@@ -240,9 +256,12 @@ public class HttpProfileDAO implements ProfileDAO {
         try {
             response = request.get();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
-        return response.getBody().equals("true");
+        if (response != null) {
+            return response.getBody().equals("true");
+        }
+        return null;
     }
 
     @Override
@@ -252,19 +271,20 @@ public class HttpProfileDAO implements ProfileDAO {
         queryParams.put("username", username);
         queryParams.put("password", password);
 
-
         Request request = new Request(url, 0, queryParams, "{}");
         Response response = null;
         try {
             response = request.post();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
-        if (response.getStatus() == 200) {
-            return true;
-        }
-        if (response.getStatus() == 400) {
-            throw new IllegalArgumentException("Invalid details.");
+        if (response != null) {
+            if (response.getStatus() == 200) {
+                return true;
+            }
+            if (response.getStatus() == 400) {
+                throw new IllegalArgumentException("Invalid details.");
+            }
         }
         return false;
     }
@@ -276,19 +296,20 @@ public class HttpProfileDAO implements ProfileDAO {
         queryParams.put("nhi", nhi);
         queryParams.put("password", password);
 
-
         Request request = new Request(url, 0, queryParams, "{}");
         Response response = null;
         try {
             response = request.post();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
-        if (response.getStatus() == 200) {
-            return true;
-        }
-        if (response.getStatus() == 400) {
-            return false;
+        if (response != null) {
+            if (response.getStatus() == 200) {
+                return true;
+            }
+            if (response.getStatus() == 400) {
+                return false;
+            }
         }
         return false;
     }

@@ -12,8 +12,6 @@ public enum Commands {
     PRINTALLCLINICIANS,
     PRINTALLUSERS,
     PRINTDONORS,
-    REDO,
-    UNDO,
 
     // IO Commands
     EXPORT,

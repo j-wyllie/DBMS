@@ -86,10 +86,10 @@ public final class Help {
                         + "-1998\" > receive-organ=\"liver, kidney\"");
 
         System.out.println("\n-Remove an organ to receive:");
-        System.out.println("profile {attributes to search profiles by} > removereceive-organ=\" {list of "
+        System.out.println("profile {attributes to search profiles by} > remove-receive-organ=\" {list of "
                 + "organs to remove} \"");
         System.out.println("e.g. profile given-names=\"Abby Rose\" last-names=\"Walker\" dob=\"03-"
-                + "03-1998\" > removereceive-organ=\"liver, kidney\"");
+                + "03-1998\" > remove-receive-organ=\"liver, kidney\"");
 
         System.out.println("\n-Print all profiles: ");
         System.out.println("print all profiles");
@@ -107,10 +107,6 @@ public final class Help {
         System.out.println("\n-Import/export data: ");
         System.out.println("export");
         System.out.println("import {filepath}");
-
-        System.out.println("\n-Undo/redo: ");
-        System.out.println("undo");
-        System.out.println("redo");
 
         System.out.println("\n-Make select call to the external database: ");
         System.out.println("db-read {SELECT statement}");
@@ -143,7 +139,7 @@ public final class Help {
         String[] cmdArray = {"create-profile", "create-clinician", "view", "date-created", "organs",
                 "update", "add-organ", "remove-organ", "print all profiles", "print all clinicians",
                 "print all donors", "quit", "donate-organ", "delete", "receive-organ",
-                "removereceive-organ", "import", "export", "undo", "redo", "db-read",
+                "remove-receive-organ", "import", "export", "db-read",
                 "print all users", "attribute list", "organ list"};
         String[] definitionArray = {"\nCreate a new profile", "\nCreate a new clinician",
                 "\nView a profile or clinician", "\nView the date a profile or clinician was created",
@@ -154,7 +150,6 @@ public final class Help {
                 "\nAdd an organ to a profile(s) donated organs list", "\nDelete a profile or clinician",
                 "Add an organ to receive", "Remove an organ from the profiles receive list",
                 "import profile/clinician data", "export the current data to a JSON file",
-                "undo the last action", "redo the last undone action",
                 "make a select call to the external database",
                 "Prints all users (Users are all admins and clinicians)",
                 "The possible attributes are : given-names, last-names, dob, dod, gender, height, "
@@ -174,9 +169,9 @@ public final class Help {
                 "profile {attributes to search profiles by} > donate-organ=\" {list of organs to donate} \"",
                 "profile/clinician {attributes to search profiles/clinicians by} > delete",
                 "profile {attributes to search profiles by} > receive-organ=\" {list of organs to donate} \"",
-                "profile {attributes to search profiles by} > removereceive-organ=\" {list of "
+                "profile {attributes to search profiles by} > remove-receive-organ=\" {list of "
                         + "organs to remove} \"",
-                "import {filepath}", "export", "undo", "redo", "db-read {SELECT statement}",
+                "import {filepath}", "export", "db-read {SELECT statement}",
                 "print all users"};
         if (Arrays.asList(cmdArray).contains(cmd)) {
             int position = Arrays.asList(cmdArray).indexOf(cmd);

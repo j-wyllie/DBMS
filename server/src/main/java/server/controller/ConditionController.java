@@ -1,15 +1,27 @@
 package server.controller;
 
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Condition;
-import odms.commons.model.profile.Profile;
 import org.sonar.api.internal.google.gson.Gson;
 import server.model.database.DAOFactory;
 import server.model.database.condition.ConditionDAO;
+import server.model.enums.DataTypeEnum;
+import server.model.enums.KeyEnum;
+import server.model.enums.ResponseMsgEnum;
 import spark.Request;
 import spark.Response;
 
+@Slf4j
 public class ConditionController {
+    private static final String RES_CONDITION_UPDATED = "Condition Updated";
+
+    /**
+     * Prevent instantiation of static class.
+     */
+    private ConditionController() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Gets a list of all conditions fo a profile.
@@ -23,10 +35,10 @@ public class ConditionController {
         int profileId;
 
         try {
-            profileId = Integer.valueOf(req.params("id"));
+            profileId = Integer.valueOf(req.params(KeyEnum.ID.toString()));
         } catch (Exception e) {
             res.status(500);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         try {
@@ -40,7 +52,7 @@ public class ConditionController {
         Gson gson = new Gson();
         String responseBody = gson.toJson(conditions);
 
-        res.type("application/json");
+        res.type(DataTypeEnum.JSON.toString());
         res.status(200);
 
         return responseBody;
@@ -59,23 +71,23 @@ public class ConditionController {
         int profileId;
 
         try {
-            profileId = Integer.valueOf(req.params("id"));
+            profileId = Integer.valueOf(req.params(KeyEnum.ID.toString()));
             newCondition = gson.fromJson(req.body(), Condition.class);
         } catch (Exception e) {
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         try {
             database.add(profileId, newCondition);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             res.status(500);
-            return "Internal Server Error";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         res.status(201);
-        return "Condition Created";
+        return ResponseMsgEnum.BAD_REQUEST.toString();
     }
 
     /**
@@ -93,19 +105,19 @@ public class ConditionController {
             condition = gson.fromJson(req.body(), Condition.class);
         } catch (Exception e) {
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         try {
             database.update(condition);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             res.status(500);
-            return "Internal Server Error";
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
 
         res.status(200);
-        return "Condition Updated";
+        return RES_CONDITION_UPDATED;
     }
 
     /**
@@ -119,21 +131,21 @@ public class ConditionController {
         int id;
 
         try {
-            id = Integer.valueOf(req.params("id"));
+            id = Integer.valueOf(req.params(KeyEnum.ID.toString()));
         } catch (Exception e) {
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         try {
             database.remove(new Condition(id));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             res.status(500);
-            return "Internal Server Error";
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
 
         res.status(200);
-        return "Condition Deleted";
+        return RES_CONDITION_UPDATED;
     }
 }

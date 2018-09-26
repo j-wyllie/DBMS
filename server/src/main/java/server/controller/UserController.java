@@ -8,9 +8,18 @@ import odms.commons.model.user.UserNotFoundException;
 import org.sonar.api.internal.google.gson.Gson;
 import server.model.database.DAOFactory;
 import server.model.database.user.UserDAO;
+import server.model.enums.DataTypeEnum;
+import server.model.enums.ResponseMsgEnum;
 import spark.*;
 
 public class UserController {
+
+    /**
+     * Prevent instantiation of static class.
+     */
+    private UserController() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Gets all users stored.
@@ -32,7 +41,7 @@ public class UserController {
         Gson gson = new Gson();
         String responseBody = gson.toJson(users);
 
-        res.type("application/json");
+        res.type(DataTypeEnum.JSON.toString());
         res.status(200);
 
         return responseBody;
@@ -49,6 +58,7 @@ public class UserController {
         UserDAO database = DAOFactory.getUserDao();
         User user;
         try {
+
             if (req.queryMap().hasKey("id")) {
                 user = database.get(Integer.valueOf(req.queryParams("id")));
             } else {
@@ -65,9 +75,8 @@ public class UserController {
         Gson gson = new Gson();
         String responseBody = gson.toJson(user);
 
-        res.type("application/json");
+        res.type(DataTypeEnum.JSON.toString());
         res.status(200);
-
         return responseBody;
     }
 
@@ -79,31 +88,29 @@ public class UserController {
      * @return the response body.
      */
     public static String create(Request req, Response res) {
-        Gson gson = new Gson();
         UserDAO database = DAOFactory.getUserDao();
         User newUser;
 
         try {
-            newUser = gson.fromJson(req.body(), User.class);
+            newUser = new Gson().fromJson(req.body(), User.class);
             if (!(database.isUniqueUsername(newUser.getUsername()))) {
                 throw new IllegalArgumentException("Username must be unique.");
             }
         } catch (SQLException e) {
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         } catch (IllegalArgumentException e) {
             res.status(403);
-            return "Forbidden";
+            return ResponseMsgEnum.FORBIDDEN.toString();
         }
 
-        if (!(newUser == null)) {
-            try {
-                database.add(newUser);
-            } catch (SQLException e) {
-                res.status(500);
-                return "Internal Server Error";
-            }
+        try {
+            database.add(newUser);
+        } catch (SQLException e) {
+            res.status(500);
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
+
         res.status(201);
         return "user Created";
     }
@@ -125,14 +132,19 @@ public class UserController {
             user.setStaffID(Integer.valueOf(req.params("id")));
         } catch (Exception e) {
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         try {
-            database.update(user);
+            if (database.isUniqueUsername(user.getUsername())) {
+                database.update(user);
+            } else {
+                res.status(403);
+                return ResponseMsgEnum.FORBIDDEN.toString();
+            }
         } catch (SQLException e) {
             res.status(500);
-            return "Internal Server Error";
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
 
         res.status(200);
@@ -147,9 +159,8 @@ public class UserController {
      * @return the response body.
      */
     public static String delete(Request req, Response res) {
-        Gson gson = new Gson();
         UserDAO database = DAOFactory.getUserDao();
-        User user = null;
+        User user;
 
         try {
             // Creating a dummy user object so that the DAO can access the id
@@ -157,16 +168,14 @@ public class UserController {
             user.setStaffID(Integer.valueOf(req.params("id")));
         } catch (Exception e) {
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
-        if (!(user == null)) {
-            try {
-                database.remove(user);
-            } catch (SQLException e) {
-                res.status(500);
-                return "Internal Server Error";
-            }
+        try {
+            database.remove(user);
+        } catch (SQLException e) {
+            res.status(500);
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
 
         res.status(200);
@@ -184,7 +193,10 @@ public class UserController {
         Boolean valid;
 
         try {
-            valid = database.checkCredentials(req.queryParams("username"), req.queryParams("password"));
+            valid = database.checkCredentials(
+                    req.queryParams("username"),
+                    req.queryParams("password")
+            );
         } catch (UserNotFoundException e) {
             res.status(400);
             return e.getMessage();
@@ -194,7 +206,7 @@ public class UserController {
         }
 
         if (valid) {
-            res.type("application/json");
+            res.type(DataTypeEnum.JSON.toString());
             res.status(200);
         } else {
             res.status(404);

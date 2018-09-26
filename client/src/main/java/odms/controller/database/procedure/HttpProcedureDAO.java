@@ -10,12 +10,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
 import odms.controller.http.Request;
 import odms.controller.http.Response;
 
+@Slf4j
 public class HttpProcedureDAO implements ProcedureDAO {
 
     @Override
@@ -30,12 +32,12 @@ public class HttpProcedureDAO implements ProcedureDAO {
         try {
             response = request.get();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         JsonParser parser = new JsonParser();
         Gson gson = new Gson();
-        if (response.getStatus() == 200) {
+        if (response != null && response.getStatus() == 200) {
             JsonArray results = parser.parse(response.getBody()).getAsJsonArray();
             for (JsonElement result : results) {
                 procedures.add(gson.fromJson(result, Procedure.class));
@@ -46,29 +48,29 @@ public class HttpProcedureDAO implements ProcedureDAO {
     }
 
     @Override
-    public void add(Profile profile, Procedure procedure) {
+    public boolean add(Profile profile, Procedure procedure) {
         Gson gson = new Gson();
         String url = Request.getUrl() + String.format("profiles/%s/procedures", profile.getId());
         String body = gson.toJson(procedure);
         Request request = new Request(url, 0, new HashMap<>(), body);
         try {
             request.post();
+            return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
+            return false;
         }
     }
 
     @Override
     public void remove(Procedure procedure) {
-        Gson gson = new Gson();
         // profile id does not matter
         String url = Request.getUrl() + "procedures/" + procedure.getId();
-        String body = gson.toJson(procedure);
         Request request = new Request(url, 0, new HashMap<>());
         try {
             request.delete();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -88,7 +90,7 @@ public class HttpProcedureDAO implements ProcedureDAO {
         try {
             request.patch();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -101,12 +103,12 @@ public class HttpProcedureDAO implements ProcedureDAO {
         try {
             response = request.get();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         JsonParser parser = new JsonParser();
         Gson gson = new Gson();
-        if (response.getStatus() == 200) {
+        if (response != null && response.getStatus() == 200) {
             JsonArray results = parser.parse(response.getBody().toString()).getAsJsonArray();
             for (JsonElement result : results) {
                 affectedOrgans.add(gson.fromJson(result, OrganEnum.class));
@@ -124,7 +126,7 @@ public class HttpProcedureDAO implements ProcedureDAO {
         try {
             request.post();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -137,7 +139,7 @@ public class HttpProcedureDAO implements ProcedureDAO {
         try {
             request.delete();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 }

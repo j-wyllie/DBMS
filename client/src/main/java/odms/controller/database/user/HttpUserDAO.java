@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.user.User;
 import odms.controller.http.Request;
 import odms.controller.http.Response;
@@ -18,6 +19,7 @@ import java.util.Map;
 /**
  * Contains all of the methods to do with the user endpoint.
  */
+@Slf4j
 public class HttpUserDAO implements UserDAO {
 
     private static final String USERS_ALL = "http://localhost:6969/api/v1/users/all";
@@ -55,7 +57,7 @@ public class HttpUserDAO implements UserDAO {
         try {
             response = request.post();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         if (response != null) {
             if (response.getStatus() == 400) {
@@ -74,7 +76,7 @@ public class HttpUserDAO implements UserDAO {
         try {
             request.delete();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -90,7 +92,7 @@ public class HttpUserDAO implements UserDAO {
                 throw new IllegalArgumentException("Username already exists.");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -131,7 +133,7 @@ public class HttpUserDAO implements UserDAO {
                 throw new IllegalArgumentException("Username already exists.");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return false;
     }
@@ -156,7 +158,7 @@ public class HttpUserDAO implements UserDAO {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         return null;
@@ -178,7 +180,7 @@ public class HttpUserDAO implements UserDAO {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         return users;

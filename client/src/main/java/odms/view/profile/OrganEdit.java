@@ -1,11 +1,5 @@
 package odms.view.profile;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -21,17 +15,30 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.enums.OrganSelectEnum;
+import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
+import odms.controller.AlertController;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Control Organ view tab pane.
  */
+@Slf4j
 public class OrganEdit extends OrganCommon {
-    protected ObservableList<String> observableListOrgansSelected = FXCollections.observableArrayList();
+    protected ObservableList<String> observableListOrgansSelected = FXCollections
+            .observableArrayList();
     private Profile currentProfile;
-    private odms.controller.profile.OrganEdit controller = new odms.controller.profile.OrganEdit(this);
+    private odms.controller.profile.OrganEdit controller = new odms.controller.profile.OrganEdit(
+            this);
 
     @FXML
     private ListView<String> viewOrgansAvailable;
@@ -47,6 +54,8 @@ public class OrganEdit extends OrganCommon {
     private Label lblSelected;
 
     private OrganSelectEnum windowType;
+
+    private Procedure procedure;
 
     /**
      * Convert an HashSet of Organ Strings to a HashSet of OrganEnum.
@@ -103,26 +112,40 @@ public class OrganEdit extends OrganCommon {
      */
     protected void buildOrgansAvailable(ObservableList<String> removeStrings) {
         observableListOrgansAvailable = FXCollections.observableArrayList();
-        observableListOrgansAvailable.addAll(OrganEnum.toArrayList());
-        observableListOrgansAvailable.removeIf(removeStrings::contains);
+        if (getWindowType() == OrganSelectEnum.PROCEDURE) {
+            for (OrganEnum organ : currentProfile.getOrgansDonating()) {
+                if (!observableListOrgansSelected.contains(organ.getNamePlain())) {
+                    observableListOrgansAvailable.add(organ.getNamePlain());
+                }
+            }
+        } else {
+            observableListOrgansAvailable.addAll(OrganEnum.toArrayList());
+            observableListOrgansAvailable.removeIf(removeStrings::contains);
+        }
     }
 
     /**
      * Support function to populate an observable list with organs from an organ set.
      *
      * @param destinationList list to populate
-     * @param organs          source list of organs to populate from
+     * @param organs source list of organs to populate from
      */
     protected void populateOrganList(ObservableList<String> destinationList,
             Set<OrganEnum> organs) {
         destinationList.clear();
 
-        if (organs != null) {
-            for (OrganEnum organ : organs) {
+        if (getWindowType() == OrganSelectEnum.PROCEDURE) {
+            for (OrganEnum organ : procedure.getOrgansAffected()) {
                 destinationList.add(organ.getNamePlain());
             }
-            Collections.sort(destinationList);
+        } else {
+            if (organs != null) {
+                for (OrganEnum organ : organs) {
+                    destinationList.add(organ.getNamePlain());
+                }
+            }
         }
+        Collections.sort(destinationList);
     }
 
     /**
@@ -143,6 +166,9 @@ public class OrganEdit extends OrganCommon {
             case REQUIRED:
                 lblSelected.setText("Required");
                 organs = currentProfile.getOrgansRequired();
+                break;
+            case PROCEDURE:
+                lblSelected.setText("Affected Organs");
                 break;
             default:
                 // noop
@@ -178,9 +204,9 @@ public class OrganEdit extends OrganCommon {
     }
 
     /**
-     * Click Handler to handle Click actions on the ListViews.
-     * - A single click will clear the selection from the opposing ListView.
-     * - A double click will move the organ from the ListView to the opposing ListView.
+     * Click Handler to handle Click actions on the ListViews. - A single click will clear the
+     * selection from the opposing ListView. - A double click will move the organ from the ListView
+     * to the opposing ListView.
      *
      * @param event the MouseEvent
      * @param model the SelectionModel to operate against
@@ -218,10 +244,16 @@ public class OrganEdit extends OrganCommon {
             case REQUIRED:
                 controller.caseRequired(getCurrentProfile());
                 break;
+            case PROCEDURE:
+                List<OrganEnum> organs = new ArrayList<>(getOrgansAdded());
+                procedure.setOrgansAffected(organs);
+                break;
             default:
                 // noop
         }
-        controller.saveOrgans(getCurrentProfile());
+        if (getWindowType() != OrganSelectEnum.PROCEDURE) {
+            controller.saveOrgans(getCurrentProfile());
+        }
         Stage stage = (Stage) btnSave.getScene().getWindow();
         stage.close();
     }
@@ -243,18 +275,27 @@ public class OrganEdit extends OrganCommon {
      * @param event the JavaFX event.
      */
     private void switchOrgans(Event event) {
-        if (viewOrgansAvailable.getFocusModel().getFocusedIndex() != -1) {
-            String item = viewOrgansAvailable.getSelectionModel().getSelectedItem();
-            observableListOrgansAvailable.remove(item);
-            observableListOrgansSelected.add(item);
-        } else if (viewOrgansSelected.getSelectionModel().getSelectedIndex() != -1) {
-            String item = viewOrgansSelected.getSelectionModel().getSelectedItem();
-            giveReasonForRemoval(event, item);
-        }
-        refreshListViews();
+        if (currentProfile.getBloodType() != null) {
+            if (viewOrgansAvailable.getFocusModel().getFocusedIndex() != -1) {
+                String item = viewOrgansAvailable.getSelectionModel().getSelectedItem();
+                observableListOrgansAvailable.remove(item);
+                observableListOrgansSelected.add(item);
+            } else if (viewOrgansSelected.getSelectionModel().getSelectedIndex() != -1) {
+                String item = viewOrgansSelected.getSelectionModel().getSelectedItem();
+                if (getWindowType() == OrganSelectEnum.PROCEDURE) {
+                    observableListOrgansAvailable.add(item);
+                    observableListOrgansSelected.remove(item);
+                } else {
+                    giveReasonForRemoval(event, item);
+                }
+            }
+            refreshListViews();
 
-        viewOrgansAvailable.getSelectionModel().clearSelection();
-        viewOrgansSelected.getSelectionModel().clearSelection();
+            viewOrgansAvailable.getSelectionModel().clearSelection();
+            viewOrgansSelected.getSelectionModel().clearSelection();
+        } else {
+            AlertController.invalidEntry("Must set a blood type before allocating an organ.");
+        }
     }
 
     /**
@@ -281,7 +322,7 @@ public class OrganEdit extends OrganCommon {
             stage.setOnHiding(ob -> refreshListViews());
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -289,9 +330,13 @@ public class OrganEdit extends OrganCommon {
         return currentProfile;
     }
 
-    public Set getOrgansAdded() {
+    public Set<OrganEnum> getOrgansAdded() {
         return observableListStringsToOrgans(
                 new HashSet<>(observableListOrgansSelected)
         );
+    }
+
+    public void setProcedure(Procedure procedure) {
+        this.procedure = procedure;
     }
 }

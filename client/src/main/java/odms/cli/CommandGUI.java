@@ -9,8 +9,9 @@ import java.nio.charset.Charset;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 public class CommandGUI {
 
     private final PrintStream out;
@@ -22,9 +23,9 @@ public class CommandGUI {
     /**
      * Create a command line with the give text area as input/output
      *
-     * @param textArea
+     * @param textArea the text area object
      */
-    public CommandGUI(TextArea textArea) {
+    public CommandGUI(TextArea textArea) throws UnsupportedEncodingException {
         this.displayTextArea = textArea;
 
         displayTextArea.setWrapText(true);
@@ -33,11 +34,7 @@ public class CommandGUI {
         Charset charset = Charset.defaultCharset();
         final TextInputControlStream stream = new TextInputControlStream(this.displayTextArea,
                 Charset.defaultCharset());
-        try {
-            this.out = new PrintStream(stream.getOut(), true, charset.name());
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        this.out = new PrintStream(stream.getOut(), true, charset.name());
         this.in = stream.getIn();
     }
 
@@ -48,28 +45,27 @@ public class CommandGUI {
      */
     public void initHistory(CommandLine commandLine) {
         displayTextArea.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-            int textLen = 0;
+            int textLen;
             try {
-                switch (event.getCode()) {
-                    case UP:
-                        textLen = displayTextArea.getText().length();
-                        displayTextArea
-                                .deleteText(textLen - commandLine.getHistory().current().length(),
-                                        textLen);
-                        commandLine.getHistory().previous();
-                        displayTextArea.appendText(commandLine.getHistory().current());
-                        break;
-                    case DOWN:
-                        textLen = displayTextArea.getText().length();
-                        displayTextArea
-                                .deleteText(textLen - commandLine.getHistory().current().length(),
-                                        textLen);
-                        commandLine.getHistory().next();
-                        displayTextArea.appendText(commandLine.getHistory().current());
-                        break;
+                if (event.getCode() == javafx.scene.input.KeyCode.UP) {
+                    textLen = displayTextArea.getText().length();
+                    displayTextArea
+                            .deleteText(textLen - commandLine.getHistory().current().length(),
+                                    textLen);
+                    commandLine.getHistory().previous();
+                    displayTextArea.appendText(commandLine.getHistory().current());
+
+                } else if (event.getCode() == javafx.scene.input.KeyCode.DOWN) {
+                    textLen = displayTextArea.getText().length();
+                    displayTextArea
+                            .deleteText(textLen - commandLine.getHistory().current().length(),
+                                    textLen);
+                    commandLine.getHistory().next();
+                    displayTextArea.appendText(commandLine.getHistory().current());
+
                 }
-            } catch (IndexOutOfBoundsException exception) {
-                exception.printStackTrace();
+            } catch (IndexOutOfBoundsException e) {
+                log.error(e.getMessage(), e);
             }
         });
     }

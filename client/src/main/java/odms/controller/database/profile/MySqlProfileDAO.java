@@ -1,6 +1,5 @@
 package odms.controller.database.profile;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -13,13 +12,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.Condition;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
@@ -29,10 +28,11 @@ import odms.controller.database.condition.ConditionDAO;
 import odms.controller.database.medication.MedicationDAO;
 import odms.controller.database.organ.OrganDAO;
 import odms.controller.database.procedure.ProcedureDAO;
-import odms.controller.http.Request;
-import odms.controller.http.Response;
+import org.apache.commons.lang3.StringUtils;
 
+@Slf4j
 public class MySqlProfileDAO implements ProfileDAO {
+
     String insertQuery = "insert into profiles (NHI, Username, IsDonor, IsReceiver, GivenNames,"
             + " LastNames, Dob, Dod, Gender, Height, Weight, BloodType, IsSmoker, AlcoholConsumption,"
             + " BloodPressureSystolic, BloodPressureDiastolic, Address, StreetNo, StreetName, Neighbourhood,"
@@ -45,24 +45,18 @@ public class MySqlProfileDAO implements ProfileDAO {
     @Override
     public List<Profile> getAll() throws SQLException {
         String query = "select * from profiles;";
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         List<Profile> result = new ArrayList<>();
-        Connection conn = connectionInstance.getConnection();
-        Statement stmt = conn.createStatement();
-        try {
 
-            ResultSet allProfiles = stmt.executeQuery(query);
+        try (Connection conn = DatabaseConnection.getConnection();
+                Statement stmt = conn.createStatement();
+                ResultSet allProfiles = stmt.executeQuery(query)) {
 
             while (allProfiles.next()) {
-                Profile newProfile  = parseProfile(allProfiles);
+                Profile newProfile = parseProfile(allProfiles);
                 result.add(newProfile);
             }
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            conn.close();
-            stmt.close();
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
         }
         return result;
     }
@@ -73,22 +67,57 @@ public class MySqlProfileDAO implements ProfileDAO {
     @Override
     public List<Profile> getDead() throws SQLException {
         String query = "SELECT * FROM `profiles` JOIN organs on profiles.ProfileId=organs.ProfileId WHERE Dod IS NOT NULL AND ToDonate = 1 AND Expired IS NULL";
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
+
         List<Profile> result = new ArrayList<>();
-        Connection conn = connectionInstance.getConnection();
-        Statement stmt = conn.createStatement();
+        try (Connection conn = DatabaseConnection.getConnection();
+                Statement stmt = conn.createStatement();
+                ResultSet allProfiles = stmt.executeQuery(query);) {
+            ArrayList<Integer> existingIds = new ArrayList<>();
+
+            while (allProfiles.next()) {
+                Profile newProfile = parseProfile(allProfiles);
+                if (!existingIds.contains(newProfile.getId())) {
+                    result.add(newProfile);
+                    existingIds.add(newProfile.getId());
+                }
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        }
+        return result;
+    }
+
+    /**
+     * Gets all profiles from the database where the person is dead and matches the given search
+     * string
+     */
+    @Override
+    public List<Profile> getDeadFiltered(String searchString) throws SQLException {
+
+        String query =
+                "SELECT * FROM profiles JOIN organs on profiles.ProfileId=organs.ProfileId WHERE " +
+                        "CONCAT(GivenNames, LastNames) LIKE ? AND Dod IS NOT NULL AND ToDonate = 1 AND Expired IS NULL;";
+
+        List<Profile> result = new ArrayList<>();
+        Connection conn = DatabaseConnection.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY);
+
+        stmt.setString(1, "%" + searchString + "%");
+        stmt.setString(2, "%" + searchString + "%");
+
         ArrayList<Integer> existingIds = new ArrayList<>();
         try {
             ResultSet allProfiles = stmt.executeQuery(query);
             while (allProfiles.next()) {
-                Profile newProfile  = parseProfile(allProfiles);
-                if(!existingIds.contains(newProfile.getId())) {
+                Profile newProfile = parseProfile(allProfiles);
+                if (!existingIds.contains(newProfile.getId())) {
                     result.add(newProfile);
-                    existingIds.add(newProfile.getId());}
+                    existingIds.add(newProfile.getId());
+                }
             }
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
         } finally {
             conn.close();
             stmt.close();
@@ -96,8 +125,10 @@ public class MySqlProfileDAO implements ProfileDAO {
         return result;
     }
 
+
     /**
      * Get a single profile from the database.
+     *
      * @return a profile.
      */
     @Override
@@ -105,22 +136,19 @@ public class MySqlProfileDAO implements ProfileDAO {
         String query = "select * from profiles where ProfileId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Profile profile = null;
-        Connection conn = instance.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(query);
-        try {
+        try (Connection conn = instance.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
+            try {
+                stmt.setInt(1, profileId);
+                try (ResultSet rs = stmt.executeQuery()) {
 
-            stmt.setInt(1, profileId);
-            ResultSet rs = stmt.executeQuery();
+                    rs.next();
+                    profile = parseProfile(rs);
+                }
 
-            rs.next();
-            profile = parseProfile(rs);
-
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            conn.close();
-            stmt.close();
+            } catch (SQLException e) {
+                log.error(e.getMessage(), e);
+            }
         }
 
         return profile;
@@ -128,6 +156,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     /**
      * Get a single profile from the database by username.
+     *
      * @param username of the profile.
      * @return a profile.
      */
@@ -136,22 +165,19 @@ public class MySqlProfileDAO implements ProfileDAO {
         String query = "select * from profiles where Username = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
         Profile profile = null;
-        System.out.println(username);
-        Connection conn = instance.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(query);
-        stmt.setString(1, username);
-        ResultSet rs = stmt.executeQuery();
+        try (Connection conn = instance.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, username);
+            try (ResultSet rs = stmt.executeQuery()) {
 
-        try {
-            while(rs.next()) {
-                profile = parseProfile(rs);
+                try {
+                    while (rs.next()) {
+                        profile = parseProfile(rs);
+                    }
+                } catch (SQLException e) {
+                    log.error(e.getMessage(), e);
+                }
             }
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            stmt.close();
-            conn.close();
         }
 
         return profile;
@@ -159,6 +185,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     /**
      * Parses the profile information from the rows returned from the database.
+     *
      * @param profiles the rows returned from the database.
      * @return a profile.
      * @throws SQLException error.
@@ -172,7 +199,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         String givenNames = profiles.getString("GivenNames");
         String lastNames = profiles.getString("LastNames");
         LocalDate dob = null;
-        if (!(profiles.getDate("Dob") == null)) {
+        if (profiles.getDate("Dob") != null) {
             dob = profiles.getDate("Dob").toLocalDate();
         }
 
@@ -203,18 +230,25 @@ public class MySqlProfileDAO implements ProfileDAO {
         String regionOfDeath = profiles.getString("RegionOfDeath");
         String cityOfDeath = profiles.getString("CityOfDeath");
 
+        int bloodDonationPoints = profiles.getInt("BloodDonationPoints");
+
         LocalDateTime created = null;
-        if (!(profiles.getTimestamp("Created") == null)) {
+        if (profiles.getTimestamp("Created") != null) {
             created = profiles.getTimestamp("Created").toLocalDateTime();
         }
         LocalDateTime updated = null;
-        if (!(profiles.getTimestamp("Created") == null)) {
+        if (profiles.getTimestamp("Created") != null) {
             updated = profiles.getTimestamp("LastUpdated").toLocalDateTime();
+        }
+        LocalDateTime lastBloodDonation = null;
+        if (profiles.getTimestamp("LastBloodDonation") != null) {
+            lastBloodDonation = profiles.getTimestamp("LastBloodDonation").toLocalDateTime();
         }
         Profile profile = new Profile(id, nhi, username, isDonor, isReceiver, givenNames, lastNames,
                 dob, dod, gender, height, weight, bloodType, isSmoker, alcoholConsumption,
-                bpSystolic, bpDiastolic, address, region, phone, email, country, city, countryOfDeath, regionOfDeath, cityOfDeath, created, updated,
-                preferredName, preferredGender, imageName);
+                bpSystolic, bpDiastolic, address, region, phone, email, country, city,
+                countryOfDeath, regionOfDeath, cityOfDeath, created, updated,
+                preferredName, preferredGender, imageName, lastBloodDonation, bloodDonationPoints);
 
         try {
             profile = setOrgans(profile);
@@ -222,7 +256,7 @@ public class MySqlProfileDAO implements ProfileDAO {
             profile = setProcedures(profile);
             profile = setConditions(profile);
         } catch (OrganConflictException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         return profile;
@@ -232,7 +266,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         OrganDAO database = DAOFactory.getOrganDao();
         profile.addOrgansDonating(database.getDonating(profile));
         profile.addOrgansDonated(database.getDonations(profile));
-        profile.addOrgansRequired((HashSet<OrganEnum>) database.getRequired(profile));
+        profile.addOrgansRequired(database.getRequired(profile));
         profile.addOrgansReceived(database.getReceived(profile));
 
         return profile;
@@ -250,8 +284,8 @@ public class MySqlProfileDAO implements ProfileDAO {
     private Profile setProcedures(Profile profile) {
         ProcedureDAO database = DAOFactory.getProcedureDao();
 
-        profile.setPendingProcedures((ArrayList<Procedure>) database.getAll(profile, true));
-        profile.setPreviousProcedures((ArrayList<Procedure>) database.getAll(profile, false));
+        profile.setPendingProcedures(database.getAll(profile, true));
+        profile.setPreviousProcedures(database.getAll(profile, false));
 
         return profile;
     }
@@ -265,6 +299,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     /**
      * Prepares a statement for adding a profile to the database.
+     *
      * @param profile profile to be added.
      * @param stmt statement with the connection to be handled.
      * @return The prepared statement.
@@ -275,14 +310,13 @@ public class MySqlProfileDAO implements ProfileDAO {
         stmt.setString(1, profile.getNhi());
         stmt.setString(2, profile.getNhi());
         stmt.setBoolean(3, profile.getDonor());
-        stmt.setBoolean(4, profile.getReceiver());
+        stmt.setBoolean(4, profile.isReceiver());
         stmt.setString(5, profile.getGivenNames());
         stmt.setString(6, profile.getLastNames());
         stmt.setString(7, profile.getDateOfBirth().toString());
         if (profile.getDateOfDeath() == null) {
             stmt.setString(8, null);
-        }
-        else {
+        } else {
             stmt.setString(8, profile.getDateOfDeath().toString());
         }
         stmt.setString(9, profile.getGender());
@@ -291,8 +325,7 @@ public class MySqlProfileDAO implements ProfileDAO {
         stmt.setString(12, profile.getBloodType());
         if (profile.getIsSmoker() == null) {
             stmt.setBoolean(13, false);
-        }
-        else {
+        } else {
             stmt.setBoolean(13, profile.getIsSmoker());
         }
         stmt.setString(14, profile.getAlcoholConsumption());
@@ -370,41 +403,38 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     /**
      * Adds a new profile to the database.
+     *
      * @param profile to add.
      */
     @Override
     public void add(Profile profile) throws SQLException {
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = instance.getConnection();
-
-        PreparedStatement stmt = conn.prepareStatement(insertQuery);
-        try {
-            stmt = prepareStatement(profile, stmt);
-            stmt.executeUpdate();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            stmt.close();
-            conn.close();
+        try (Connection conn = instance.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(insertQuery)) {
+            try {
+                PreparedStatement statement = prepareStatement(profile, stmt);
+                statement.executeUpdate();
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
         }
     }
 
     /**
      * Adds a profile to a transaction.
+     *
      * @param conn Connection to add to.
      * @param profile Profile to add.
      * @throws SQLException thrown if you can't add the profile.
      */
     public void addToTransaction(Connection conn, Profile profile) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement(insertQuery);
-        stmt = prepareStatement(profile, stmt);
-        stmt.executeUpdate();
+        prepareStatement(profile, stmt).executeUpdate();
     }
 
     /**
      * Gets a connection instance.
+     *
      * @return The connection.
      * @throws SQLException Thrown when connection can't be made.
      */
@@ -417,6 +447,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     /**
      * Commits a transaction and closes the connection.
+     *
      * @param conn Connection to close with the transaction.
      * @throws SQLException Thrown when transaction can't be committed.
      */
@@ -427,6 +458,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     /**
      * Rolls back a transaction and closes the connection.
+     *
      * @param conn connection with transaction to rollback.
      */
     public void rollbackTransaction(Connection conn) {
@@ -434,12 +466,13 @@ public class MySqlProfileDAO implements ProfileDAO {
             conn.rollback();
             conn.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
     /**
      * Checks if a username already exists in the database.
+     *
      * @param username to check.
      * @return true is the username does not already exist.
      */
@@ -447,28 +480,26 @@ public class MySqlProfileDAO implements ProfileDAO {
     public boolean isUniqueUsername(String username) throws SQLException {
         String query = "select Username from profiles where Username = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = instance.getConnection();
-
-        PreparedStatement stmt = conn.prepareStatement(query);
-        try {
-            stmt.setString(1, username);
-            ResultSet result = stmt.executeQuery();
-            if (result.last()) {
-                result.beforeFirst();
-                return (result.next());
+        try (Connection conn = instance.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
+            try {
+                stmt.setString(1, username);
+                try (ResultSet result = stmt.executeQuery()) {
+                    if (result.last()) {
+                        result.beforeFirst();
+                        return (result.next());
+                    }
+                }
+            } catch (SQLException e) {
+                log.error(e.getMessage(), e);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            conn.close();
-            stmt.close();
         }
         return false;
     }
 
-
     /**
      * Checks if a nhi already exists in the database.
+     *
      * @param nhi to check.
      * @return true is the nhi does not already exist.
      */
@@ -477,30 +508,25 @@ public class MySqlProfileDAO implements ProfileDAO {
         int id = 0;
         String query = "select * from profiles where NHI = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = instance.getConnection();
-
-        PreparedStatement stmt = conn.prepareStatement(query);
-        try {
-
-            stmt.setString(1, nhi);
-
-            ResultSet result = stmt.executeQuery();
-
-            while (result.next()) {
-                id = result.getInt("ProfileId");
-                return id;
+        try (Connection conn = instance.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
+            try {
+                stmt.setString(1, nhi);
+                try (ResultSet result = stmt.executeQuery()) {
+                    result.next();
+                    id = result.getInt("ProfileId");
+                    return id;
+                }
+            } catch (SQLException e) {
+                log.error(e.getMessage(), e);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            conn.close();
-            stmt.close();
         }
         return id;
     }
 
     /**
      * Removes a profile from the database.
+     *
      * @param profile to remove.
      */
     @Override
@@ -508,24 +534,21 @@ public class MySqlProfileDAO implements ProfileDAO {
         String query = "delete from profiles where ProfileId = ?;";
 
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = instance.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(query);
-        try {
+        try (Connection conn = instance.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
+            try {
+                stmt.setInt(1, profile.getId());
 
-            stmt.setInt(1, profile.getId());
+                removeOrgans(profile);
+                removeMedications(profile);
+                removeProcedures(profile);
+                removeConditions(profile);
 
-            removeOrgans(profile);
-            removeMedications(profile);
-            removeProcedures(profile);
-            removeConditions(profile);
+                stmt.executeUpdate();
 
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            conn.close();
-            stmt.close();
+            } catch (SQLException e) {
+                log.error(e.getMessage(), e);
+            }
         }
     }
 
@@ -580,6 +603,7 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     /**
      * Updates a profiles information in the database.
+     *
      * @param profile to update.
      */
     @Override
@@ -592,17 +616,16 @@ public class MySqlProfileDAO implements ProfileDAO {
                 + "RegionOfDeath = ?, CityOfDeath = ?, StreetNo = ?, StreetName = ?, "
                 + "Neighbourhood = ?, Created = ?, LastUpdated = ?, PreferredName = ?, "
                 + "PreferredGender = ?, ImageName = ?, City = ? "
-                +  "where ProfileId = ?;";
+                + "where ProfileId = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = instance.getConnection();
 
-        PreparedStatement stmt = conn.prepareStatement(query);
-        try {
+        try (Connection conn = instance.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, profile.getNhi());
             stmt.setString(2, profile.getNhi());
             stmt.setBoolean(3, profile.getDonor());
-            stmt.setBoolean(4, profile.getReceiver());
+            stmt.setBoolean(4, profile.isReceiver());
             stmt.setString(5, profile.getGivenNames());
             stmt.setString(6, profile.getLastNames());
             stmt.setDate(7, Date.valueOf(profile.getDateOfBirth()));
@@ -643,14 +666,12 @@ public class MySqlProfileDAO implements ProfileDAO {
 
         } catch (SQLException e) {
             throw new SQLException();
-        } finally {
-            conn.close();
-            stmt.close();
         }
     }
 
     /**
      * Searches for a sublist of profiles based on criteria.
+     *
      * @param searchString filter based on search field.
      * @param ageSearchInt filter based on age.
      * @param ageRangeSearchInt filter based on age range.
@@ -664,15 +685,14 @@ public class MySqlProfileDAO implements ProfileDAO {
     public List<Profile> search(String searchString, int ageSearchInt, int ageRangeSearchInt,
             String region, String gender, String type, Set<OrganEnum> organs) throws SQLException {
         String query = "select distinct p.* from profiles p";
-        if (organs.size() > 0) {
+        if (!organs.isEmpty()) {
             query += " join organs o on p.ProfileId = o.ProfileId";
             int index = 0;
             for (OrganEnum organ : organs) {
                 if (index > 0) {
                     query += " or o.Organ = '" + organ.getNamePlain() + "'";
                     index++;
-                }
-                else {
+                } else {
                     query += " and (o.Organ = '" + organ.getNamePlain() + "'";
                     index++;
                 }
@@ -681,18 +701,19 @@ public class MySqlProfileDAO implements ProfileDAO {
                 query += ")";
             }
         }
-        query += " where ((p.PreferredName is not null and CONCAT(p.GivenNames, p.PreferredName, p.LastNames) LIKE ?) or "
-                + "(CONCAT(p.GivenNames, p.LastNames) LIKE ?)) and p.Region like ?";
+        query +=
+                " where ((p.PreferredName is not null and CONCAT(p.GivenNames, p.PreferredName, p.LastNames) LIKE ?) or "
+                        + "(CONCAT(p.GivenNames, p.LastNames) LIKE ?)) and p.Region like ?";
         if (!gender.equals("any")) {
             query += " and p.Gender = ?";
         }
         if (ageSearchInt > 0) {
             if (ageRangeSearchInt == -999) {
                 query += " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) = ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) = ?))";
-            }
-            else {
-                query += " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) >= ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) >= ?))"
-                        + " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) <= ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) <= ?))";
+            } else {
+                query +=
+                        " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) >= ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) >= ?))"
+                                + " and (((floor(datediff(CURRENT_DATE, p.dob) / 365.25) <= ?) and p.Dod IS NULL) or (floor(datediff(p.Dod, p.Dob) / 365.25) <= ?))";
             }
         }
         if (type.equalsIgnoreCase("donor")) {
@@ -707,12 +728,10 @@ public class MySqlProfileDAO implements ProfileDAO {
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         List<Profile> result = new ArrayList<>();
 
-        Connection conn = connectionInstance.getConnection();
-
-        PreparedStatement stmt = conn.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
-                ResultSet.CONCUR_READ_ONLY);
-
-        try {
+        try (Connection conn = connectionInstance.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query,
+                        ResultSet.TYPE_SCROLL_INSENSITIVE,
+                        ResultSet.CONCUR_READ_ONLY)) {
             stmt.setString(1, "%" + searchString + "%");
             stmt.setString(2, "%" + searchString + "%");
             stmt.setString(3, "%" + region + "%");
@@ -729,8 +748,7 @@ public class MySqlProfileDAO implements ProfileDAO {
                     index++;
                     stmt.setInt(index, ageSearchInt);
                     index++;
-                }
-                else {
+                } else {
                     stmt.setInt(index, ageSearchInt);
                     index++;
                     stmt.setInt(index, ageSearchInt);
@@ -750,59 +768,47 @@ public class MySqlProfileDAO implements ProfileDAO {
                 index++;
             }
 
-            ResultSet allProfiles = stmt.executeQuery();
-            int size;
-            allProfiles.last();
-            size = allProfiles.getRow();
-            allProfiles.beforeFirst();
+            try (ResultSet allProfiles = stmt.executeQuery()) {
+                int size;
+                allProfiles.last();
+                size = allProfiles.getRow();
+                allProfiles.beforeFirst();
 
-            if (size > 250) {
-                for (int i = 0; i <250; i++) {
-                    allProfiles.next();
-                    Profile newProfile  = parseProfile(allProfiles);
-                    result.add(newProfile);
-                }
-            } else {
-                while (allProfiles.next()) {
-                    Profile newProfile  = parseProfile(allProfiles);
-                    result.add(newProfile);
+                if (size > 250) {
+                    for (int i = 0; i < 250; i++) {
+                        allProfiles.next();
+                        Profile newProfile = parseProfile(allProfiles);
+                        result.add(newProfile);
+                    }
+                } else {
+                    while (allProfiles.next()) {
+                        Profile newProfile = parseProfile(allProfiles);
+                        result.add(newProfile);
+                    }
                 }
             }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            conn.close();
-            stmt.close();
-
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return result;
     }
 
     /**
      * Gets the number of profiles in the database.
+     *
      * @return the number of profiles.
      */
     @Override
-    public Integer size() throws SQLException {
+    public Integer size() {
         String query = "select count(*) from profiles;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = instance.getConnection();
-        Statement stmt = conn.createStatement();
-        try {
-
-
-            ResultSet result = stmt.executeQuery(query);
-
-            while (result.next()) {
-                return result.getInt(1);
-            }
-            conn.close();
+        try (Connection conn = instance.getConnection();
+                Statement stmt = conn.createStatement();
+                ResultSet result = stmt.executeQuery(query)) {
+            result.next();
+            return result.getInt(1);
         } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            conn.close();
-            stmt.close();
+            log.error(e.getMessage(), e);
         }
         return 0;
     }
@@ -815,24 +821,28 @@ public class MySqlProfileDAO implements ProfileDAO {
 
     @Override
     public List<Entry<Profile, OrganEnum>> searchReceiving(String searchString) {
-        String query = "select * from organs left join profiles on organs.ProfileId = profiles.ProfileId "
-                + "where GivenNames like '%" + searchString + "%' or LastNames like '%" + searchString
-                + "%' or Region like '%" + searchString + "%' or Organ like '%" + searchString + "%';";
+        String query =
+                "select * from organs left join profiles on organs.ProfileId = profiles.ProfileId "
+                        + "where GivenNames like '%" + searchString + "%' or LastNames like '%"
+                        + searchString
+                        + "%' or Region like '%" + searchString + "%' or Organ like '%"
+                        + searchString + "%';";
         return getReceivers(query);
     }
 
     /**
      * Get list of receivers that could be recipients of a selected organ.
+     *
      * @param organ type of organ that is being donated
-     * @param bloodType blood type recipient needs to have
+     * @param bloodTypes blood type recipient needs to have
      * @param lowerAgeRange lowest age the recipient can have
      * @param upperAgeRange highest age the recipient can have
      * @return list of profile objects
      */
     @Override
-    public List<Profile> getOrganReceivers(String organ, String bloodType,
+    public List<Profile> getOrganReceivers(String organ, String bloodTypes,
             Integer lowerAgeRange, Integer upperAgeRange) {
-        String query = "SELECT p.* FROM profiles p WHERE p.BloodType = ? AND "
+        String query = "SELECT p.* FROM profiles p WHERE p.BloodType in ? AND "
                 + "FLOOR(datediff(CURRENT_DATE, p.dob) / 365.25) BETWEEN ? AND ? "
                 + "AND p.IsReceiver = 1 AND ("
                 + "SELECT o.Organ FROM organs o WHERE o.ProfileId = p.ProfileId AND o.Organ = ? AND "
@@ -840,24 +850,22 @@ public class MySqlProfileDAO implements ProfileDAO {
 
         DatabaseConnection instance = DatabaseConnection.getInstance();
         List<Profile> receivers = new ArrayList<>();
-        try {
-            Connection conn = instance.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
+        try (Connection conn = instance.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setString(1, bloodType.toString());
+            stmt.setString(1, bloodTypes);
             stmt.setInt(2, lowerAgeRange);
             stmt.setInt(3, upperAgeRange);
             stmt.setString(4, organ.toString());
             stmt.setString(5, organ.toString());
-            ResultSet result = stmt.executeQuery();
-            while (result.next()) {
-                Profile profile = parseProfile(result);
-                receivers.add(profile);
+            try (ResultSet result = stmt.executeQuery()) {
+                while (result.next()) {
+                    Profile profile = parseProfile(result);
+                    receivers.add(profile);
+                }
             }
-            conn.close();
-            stmt.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return receivers;
     }
@@ -881,20 +889,18 @@ public class MySqlProfileDAO implements ProfileDAO {
         DatabaseConnection instance = DatabaseConnection.getInstance();
         List<Entry<Profile, OrganEnum>> receivers = new ArrayList<>();
 
-        try {
-            Connection conn = instance.getConnection();
-            Statement stmt = conn.createStatement();
-            ResultSet result = stmt.executeQuery(query);
+        try (Connection conn = instance.getConnection();
+                Statement stmt = conn.createStatement();
+                ResultSet result = stmt.executeQuery(query)) {
 
             while (result.next()) {
                 Profile profile = parseProfile(result);
-                OrganEnum organ = OrganEnum.valueOf(result.getString("Organ").toUpperCase().replace(" ", "_"));
+                OrganEnum organ = OrganEnum
+                        .valueOf(result.getString("Organ").toUpperCase().replace(" ", "_"));
                 receivers.add(new SimpleEntry<>(profile, organ));
             }
-            conn.close();
-            stmt.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return receivers;
     }
