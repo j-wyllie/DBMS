@@ -71,7 +71,7 @@ public class ConditionController {
         int profileId;
 
         try {
-            profileId = Integer.valueOf(req.queryParams(KeyEnum.ID.toString()));
+            profileId = Integer.valueOf(req.params(KeyEnum.ID.toString()));
             newCondition = gson.fromJson(req.body(), Condition.class);
         } catch (Exception e) {
             res.status(400);

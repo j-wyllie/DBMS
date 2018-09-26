@@ -116,7 +116,7 @@ public class ConditionControllerTest extends CommonTestUtils {
 
     @Test
     public void testDeleteValid() {
-        when(requestA.queryParams(KeyEnum.ID.toString())).thenReturn(String.valueOf(conditionA.getId()));
+        when(requestA.params(KeyEnum.ID.toString())).thenReturn(String.valueOf(conditionA.getId()));
         ConditionController.delete(requestA, responseA);
         assertEquals(200, responseA.status());
     }
