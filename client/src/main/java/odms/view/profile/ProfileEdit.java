@@ -147,26 +147,6 @@ public class ProfileEdit extends CommonView {
     private User currentUser;
 
     /**
-     * Button handler to undo last action.
-     *
-     * @param event clicking on the undo button.
-     */
-    @FXML
-    private void handleUndoButtonClicked(ActionEvent event) {
-        controller.undo();
-    }
-
-    /**
-     * Button handler to redo last undo action.
-     *
-     * @param event clicking on the redo button.
-     */
-    @FXML
-    private void handleRedoButtonClicked(ActionEvent event) {
-        controller.redo();
-    }
-
-    /**
      * Button handler to save the changes made to the fields.
      *
      * @param event clicking on the save (tick) button.

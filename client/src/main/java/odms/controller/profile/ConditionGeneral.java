@@ -17,12 +17,6 @@ import odms.view.profile.ProfileMedicalHistory;
 
 public class ConditionGeneral {
 
-    private ProfileMedicalHistory view;
-
-    public ConditionGeneral(ProfileMedicalHistory profileMedicalHistoryView) {
-        view = profileMedicalHistoryView;
-    }
-
     /**
      * Gets all the cured conditions of the user.
      * @return the cured conditions of the user
@@ -85,17 +79,10 @@ public class ConditionGeneral {
      *
      */
     @FXML
-    public void delete(Profile p) throws IOException {
-        List<Condition> conditions = view.getSelectedConditions();
+    public void delete(Profile p, List<Condition> conditions) throws IOException {
         for (Condition condition : conditions) {
             if (condition != null) {
                 removeCondition(condition,p);
-                LocalDateTime currentTime = LocalDateTime.now();
-                History action = new History("profile", p.getId(),
-                        " removed condition", "(" + condition.getName() +
-                        "," + condition.getDateOfDiagnosis() + "," + condition.getChronic() + "," +
-                        condition.getDateCuredString() + ")", getCurrentConditions(p).indexOf(condition), currentTime);
-                CurrentHistory.updateHistory(action);
             }
         }
     }
@@ -152,7 +139,7 @@ public class ConditionGeneral {
     public void addCondition(Condition condition,Profile p) {
         p.getAllConditions().add(condition);
         ConditionDAO server = DAOFactory.getConditionDao();
-        server.add(view.getCurrentProfile(), condition);
+        server.add(p, condition);
     }
 
 }

@@ -27,9 +27,8 @@ import odms.view.CommonView;
 public class TransplantWaitingList extends CommonView {
 
     private User currentUser;
-    private ObservableList<Entry<Profile, OrganEnum>> receiverObservableList;
     private odms.controller.user.TransplantWaitingList controller = new
-            odms.controller.user.TransplantWaitingList(this);
+            odms.controller.user.TransplantWaitingList();
 
     @FXML
     private TableView transplantTable;
@@ -47,7 +46,8 @@ public class TransplantWaitingList extends CommonView {
         transplantTable.getColumns().clear();
 
         transplantTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        receiverObservableList = FXCollections.observableList(receivers);
+        ObservableList<Entry<Profile, OrganEnum>> receiverObservableList = FXCollections
+                .observableList(receivers);
 
         TableColumn<Entry<Profile, OrganEnum>, String> transplantOrganRequiredCol = new TableColumn<>(
                 "Organs Required");
@@ -119,6 +119,6 @@ public class TransplantWaitingList extends CommonView {
     }
 
     public void handleSearchWaitingList(KeyEvent keyEvent) {
-        //todo copy working method from other branch.
+        // TODO copy working method from other branch.
     }
 }

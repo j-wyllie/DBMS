@@ -36,8 +36,7 @@ public class OrganExpired extends OrganCommon {
     private Profile currentProfile;
     private User currentUser;
     private List<ExpiredOrgan> organs = new ArrayList<>();
-    private odms.controller.profile.OrganExpired controller =
-            new odms.controller.profile.OrganExpired(this);
+    private odms.controller.profile.OrganExpired controller = new odms.controller.profile.OrganExpired();
 
     @FXML
     private Button btnCancel;
