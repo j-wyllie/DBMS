@@ -104,7 +104,7 @@ public class HttpProfileDAO implements ProfileDAO {
     @Override
     public void removeByNhi(Profile profile) {
         String url = "http://localhost:6969/api/v1/profiles/" + profile.getNhi();
-        Request request = new Request(url, 0, new HashMap<>());
+        Request request = new Request(url, new HashMap<>());
         try {
             request.delete();
         } catch (IOException e) {

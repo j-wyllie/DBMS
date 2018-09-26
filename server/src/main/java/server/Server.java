@@ -1,5 +1,6 @@
 package server;
 
+import static spark.Spark.before;
 import static spark.Spark.delete;
 import static spark.Spark.get;
 import static spark.Spark.initExceptionHandler;
@@ -196,11 +197,16 @@ public class Server {
             });
 
             // countries api endpoints.
-            path("/countries", () -> {
-                before("", Middleware::isAdminAuthenticated);
+            path("/settings", () -> {
+                before("/*", Middleware::isAdminAuthenticated);
 
-                get("", CountriesController::getAll);
-                patch("", CountriesController::edit);
+                // countries api endpoints.
+                get("/countries", SettingsController::getAllCountries);
+                patch("/countries", SettingsController::editCountries);
+
+                // locale api endpoints.
+                get("/locale", SettingsController::getLocale);
+                post("/locale", SettingsController::setLocale);
             });
 
             // hospitals api endpoints.

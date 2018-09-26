@@ -3,6 +3,7 @@ package odms;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Locale;
 import java.util.Map.Entry;
+import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
@@ -19,7 +20,6 @@ public class Session {
     public Session () {
         throw new UnsupportedOperationException();
     }
-
 
     public static Entry<Object, UserType> getCurrentUser() {
         if (currentUser != null) {
@@ -51,7 +51,7 @@ public class Session {
     public static int getCurrentId() {
         if (currentUser != null) {
             User user = (User) currentUser;
-            return user.getStaffID();
+            return user.getId();
         } else if (currentProfile != null) {
             Profile profile = (Profile) currentProfile;
             return profile.getId();
@@ -71,18 +71,15 @@ public class Session {
      * Generates the default location of the current session.
      * @return the settings of location.
      */
-    public static String getDefaultLocation() {
-        String country;
+    public static CountriesEnum getDefaultLocation() {
         if (currentUser != null) {
             User user = (User) currentUser;
-            country = user.getCountry().toString();
+            return user.getCountry() != null ? user.getCountry()
+                    : CountriesEnum.getEnumByString(Locale.getDefault().getDisplayCountry());
         } else {
             Profile profile = (Profile) currentProfile;
-            country = profile.getCountry();
+            return profile.getCountry() != null ? profile.getCountry()
+                    : CountriesEnum.getEnumByString(Locale.getDefault().getDisplayCountry());
         }
-        if (country == null) {
-            country = Locale.getDefault().getDisplayCountry();
-        }
-        return country;
     }
 }

@@ -197,7 +197,7 @@ public class Request {
             UserType userType = Session.getCurrentUser().getValue();
             if (userType == UserType.ADMIN || userType == UserType.CLINICIAN) {
                 User user = (User) Session.getCurrentUser().getKey();
-                id = user.getStaffID() == null ? 0 : user.getStaffID();
+                id = user.getId() == null ? 0 : user.getId();
             } else if (userType == UserType.PROFILE || userType == UserType.DONOR) {
                 Profile profile = (Profile) Session.getCurrentUser().getKey();
                 id = profile.getId();

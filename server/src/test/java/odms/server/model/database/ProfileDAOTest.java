@@ -1,4 +1,4 @@
-package odms.controller.data.database;
+package odms.server.model.database;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -26,7 +26,7 @@ import server.model.database.organ.MySqlOrganDAO;
 import server.model.database.organ.OrganDAO;
 import server.model.database.profile.MySqlProfileDAO;
 
-public class MySqlProfileDAOTest extends CommonTestUtils {
+public class ProfileDAOTest extends CommonTestUtils {
     private MySqlProfileDAO mySqlProfileDAO;
 
     private Profile testProfileLong0 = new Profile(1, "DSF5422", "JackONZ", true, false,

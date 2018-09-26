@@ -21,7 +21,11 @@ public final class DefaultLocale {
     }
 
     private static Locale getDefaultLocale() {
-        return LocaleUtils.toLocale(Session.getDefaultLocation());
+        Locale locale = LocaleUtils.localeLookupList(
+                new Locale("en", Session.getDefaultLocation().toString())
+        ).get(0);
+
+        return LocaleUtils.toLocale(locale.toString());
     }
 
     public static Locale getDatetimeLocale() {

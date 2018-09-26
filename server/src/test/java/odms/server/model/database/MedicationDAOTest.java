@@ -1,4 +1,4 @@
-package odms.controller.data.database;
+package odms.server.model.database;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,7 +14,7 @@ import org.junit.Test;
 import server.model.database.medication.MySqlMedicationDAO;
 import server.model.database.profile.MySqlProfileDAO;
 
-public class MySqlMedicationDAOTest extends CommonTestUtils {
+public class MedicationDAOTest extends CommonTestUtils {
     private MySqlMedicationDAO mySqlMedicationDAO;
     private MySqlProfileDAO mySqlProfileDAO;
 

@@ -212,6 +212,7 @@ public class LoginView extends CommonController {
             stage.show();
             closeCurrentStage();
         } catch (IOException e) {
+            log.error(e.getMessage(), e);
             invalidUsername();
         }
     }

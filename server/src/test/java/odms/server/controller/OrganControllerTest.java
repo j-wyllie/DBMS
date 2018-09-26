@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.ExpiredOrgan;
@@ -141,7 +140,7 @@ public class OrganControllerTest extends CommonTestUtils {
         when(requestC.queryParams("organ")).thenReturn(String.valueOf(organC.getOrganEnum()));
         when(requestC.queryParams("expired")).thenReturn(String.valueOf(1));
         when(requestC.queryParams("note")).thenReturn(String.valueOf(profileA.getId()));
-        when(requestC.queryParams("userId")).thenReturn(String.valueOf(userA.getStaffID()));
+        when(requestC.queryParams("userId")).thenReturn(String.valueOf(userA.getId()));
         responseC = mock(Response.class);
     }
 
@@ -251,7 +250,7 @@ public class OrganControllerTest extends CommonTestUtils {
 
     @Test
     public void testGetExpiredValid() throws SQLException {
-        organDAO.setExpired(profileA, organC.getOrganEnum(), 1, "Test", userA.getStaffID());
+        organDAO.setExpired(profileA, organC.getOrganEnum(), 1, "Test", userA.getId());
         List<String> testResult = gson.fromJson(OrganController.getExpired(requestB, responseB), List.class);
         assertEquals(1, testResult.size());
     }

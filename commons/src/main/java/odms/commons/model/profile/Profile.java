@@ -287,14 +287,6 @@ public class Profile implements Comparable<Profile> {
     }
 
     /**
-     * Instantiates a profile with only the username for quick instantiation.
-     * @param username of the profile.
-     */
-    public Profile(String username) {
-        this.username = username;
-    }
-
-    /**
      * Compares the profile object to another profile object. Result is determined by
      * lexicographical order of profile full name.
      *

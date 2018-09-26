@@ -34,7 +34,6 @@
            <TabPane prefHeight="200.0" prefWidth="1202.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="3">
                <Tab fx:id="generalTab" onSelectionChanged="#handleGeneralTabClicked" text="General" />
                <Tab fx:id="consoleTab" onSelectionChanged="#handleConsoleTabClicked" text="Console" />
-               <Tab fx:id="dataManagementTab" onSelectionChanged="#handleTabDataManagementClicked" text="Data Management" />
                <Tab fx:id="searchTab" onSelectionChanged="#handleSearchTabClicked" text="Search"/>
                <Tab fx:id="socialFeedTab" onSelectionChanged="#handleSocialFeedTabClicked" text="Social Feed"/>
                <Tab fx:id="organMapTab" onSelectionChanged="#handleTabOrganMapClicked" text="Organ Map" />

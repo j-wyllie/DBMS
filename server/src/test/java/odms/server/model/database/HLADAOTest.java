@@ -1,4 +1,4 @@
-package odms.controller.data.database;
+package odms.server.model.database;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,7 +19,7 @@ import server.model.database.profile.ProfileDAO;
 /**
  * Tests: HLA Database Access Object.
  */
-public class MySQLHLADAOTest {
+public class HLADAOTest {
 
     private Profile testProfile1 = new Profile(
             "Jack",

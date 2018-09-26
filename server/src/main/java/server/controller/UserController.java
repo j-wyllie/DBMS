@@ -212,10 +212,10 @@ public class UserController {
             try {
                 User user = database.get(username);
                 Map<String, Integer> body = Middleware.authenticate(
-                        user.getStaffID(), user.getUserType());
+                        user.getId(), user.getUserType());
                 res.type(DataTypeEnum.JSON.toString());
                 res.status(200);
-                return gson.toJson(body);
+                return new Gson().toJson(body);
             } catch (Exception e) {
                 res.status(500);
                 return e.getMessage();

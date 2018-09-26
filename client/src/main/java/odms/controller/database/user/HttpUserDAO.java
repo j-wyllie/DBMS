@@ -70,7 +70,7 @@ public class HttpUserDAO implements UserDAO {
 
     @Override
     public void remove(User user) {
-        String url = USERS + user.getStaffID();
+        String url = USERS + user.getId();
         Request request = new Request(url, new HashMap<>());
         try {
             request.delete();
@@ -127,7 +127,7 @@ public class HttpUserDAO implements UserDAO {
                 JsonObject body = parser.parse(response.getBody()).getAsJsonObject();
 
                 User user = new User(null, (String) null);
-                user.setStaffID(body.get("id").getAsInt());
+                user.setId(body.get("id").getAsInt());
                 Session.setCurrentUser(user, UserType.ADMIN);
 
                 Session.setToken(body.get("Token").getAsInt());
@@ -150,13 +150,10 @@ public class HttpUserDAO implements UserDAO {
     private User getSingleRequest(String url, Map<String, Object> queryParams)
             throws UserNotFoundException {
         Gson parser = new Gson();
-        Response response = null;
+        Response response;
         Request request = new Request(url, queryParams);
         try {
             response = request.get();
-
-            System.out.println(response.getBody());
-
             if (response.getStatus() == 200) {
                 return parser.fromJson(response.getBody(), User.class);
             } else if (response.getStatus() == 400) {

@@ -64,7 +64,7 @@ public class HttpSettingsDAO implements SettingsDAO {
 
         String responseBody = gson.toJson(body);
 
-        Request request = new Request(COUNTRIES_URL, 0, new HashMap<>(), responseBody);
+        Request request = new Request(COUNTRIES_URL, new HashMap<>(), responseBody);
         try {
             request.patch();
         } catch (IOException e) {
@@ -81,7 +81,7 @@ public class HttpSettingsDAO implements SettingsDAO {
     private List<String> getListRequest(Map<String, Object> queryParams) {
         JsonParser parser = new JsonParser();
         Response response = null;
-        Request request = new Request(COUNTRIES_URL, 0, queryParams);
+        Request request = new Request(COUNTRIES_URL, queryParams);
         try {
             response = request.get();
         } catch (IOException e) {
@@ -104,7 +104,7 @@ public class HttpSettingsDAO implements SettingsDAO {
     public void getLocale() {
         JsonParser parser = new JsonParser();
 
-        Request request = new Request(LOCALE_URL, 0, getLocaleQueryParams());
+        Request request = new Request(LOCALE_URL, getLocaleQueryParams());
         Response response = null;
         try {
             response = request.get();
@@ -133,7 +133,7 @@ public class HttpSettingsDAO implements SettingsDAO {
 
         String requestBody = gson.toJson(body);
 
-        Request request = new Request(LOCALE_URL, 0, getLocaleQueryParams(), requestBody);
+        Request request = new Request(LOCALE_URL, getLocaleQueryParams(), requestBody);
         try {
             request.post();
         } catch (IOException e) {

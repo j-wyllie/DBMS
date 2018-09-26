@@ -4,10 +4,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Map;
-
 import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
@@ -21,7 +21,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.sonar.api.server.authentication.UnauthorizedException;
 import server.controller.Middleware;
 import server.model.database.DAOFactory;
 import server.model.database.PasswordUtilities;
@@ -111,11 +110,11 @@ public class MiddlewareTest extends CommonTestUtils {
         when(requestA.headers(KeyEnum.USERTYPE.toString())).thenReturn(String.valueOf(UserType.PROFILE));
 
         requestB = mock(Request.class);
-        when(requestB.headers(KeyEnum.ID.toString())).thenReturn(userA.getStaffID().toString());
+        when(requestB.headers(KeyEnum.ID.toString())).thenReturn(userA.getId().toString());
         when(requestB.headers(KeyEnum.USERTYPE.toString())).thenReturn(String.valueOf(UserType.ADMIN));
 
         requestC = mock(Request.class);
-        when(requestC.headers(KeyEnum.ID.toString())).thenReturn(userB.getStaffID().toString());
+        when(requestC.headers(KeyEnum.ID.toString())).thenReturn(userB.getId().toString());
         when(requestC.headers(KeyEnum.USERTYPE.toString())).thenReturn(String.valueOf(UserType.CLINICIAN));
 
         responseA = mock(Response.class);
@@ -143,7 +142,7 @@ public class MiddlewareTest extends CommonTestUtils {
 
     @Test
     public void testAdminAuthenticateValid() throws SQLException {
-        Map<String, Integer> auth = Middleware.authenticate(userA.getStaffID(), UserType.ADMIN);
+        Map<String, Integer> auth = Middleware.authenticate(userA.getId(), UserType.ADMIN);
         // Add token to mocked request.
         when(requestB.headers(KeyEnum.AUTH.toString())).thenReturn(String.valueOf(auth.get("Token")));
         assertTrue(Middleware.isAdminAuthenticated(requestB, responseB));
@@ -161,7 +160,7 @@ public class MiddlewareTest extends CommonTestUtils {
 
     @Test
     public void testClinicianAuthenticateValid() throws SQLException {
-        Map<String, Integer> auth = Middleware.authenticate(userB.getStaffID(), UserType.CLINICIAN);
+        Map<String, Integer> auth = Middleware.authenticate(userB.getId(), UserType.CLINICIAN);
         // Add token to mocked request.
         when(requestC.headers(KeyEnum.AUTH.toString())).thenReturn(String.valueOf(auth.get("Token")));
         assertTrue(Middleware.isAdminAuthenticated(requestC, responseC));
@@ -197,7 +196,7 @@ public class MiddlewareTest extends CommonTestUtils {
 
     @Test
     public void testIsAdminAuthenticatedValid() throws SQLException {
-        Map<String, Integer> auth = Middleware.authenticate(userA.getStaffID(), UserType.ADMIN);
+        Map<String, Integer> auth = Middleware.authenticate(userA.getId(), UserType.ADMIN);
         // Add token to mocked request.
         when(requestB.headers(KeyEnum.AUTH.toString())).thenReturn(String.valueOf(auth.get("Token")));
         assertTrue(Middleware.isAdminAuthenticated(requestB, responseB));
@@ -239,12 +238,12 @@ public class MiddlewareTest extends CommonTestUtils {
 
     @Test (expected = HaltException.class)
     public void testLogoutAdminValid() throws SQLException {
-        Map<String, Integer> auth = Middleware.authenticate(userA.getStaffID(), UserType.ADMIN);
+        Map<String, Integer> auth = Middleware.authenticate(userA.getId(), UserType.ADMIN);
         // Add token to mocked request.
         when(requestB.headers(KeyEnum.AUTH.toString())).thenReturn(String.valueOf(auth.get("Token")));
         assertTrue(Middleware.isAdminAuthenticated(requestB, responseB));
 
-        Middleware.logout(userA.getStaffID(), UserType.ADMIN, auth.get("Token"));
+        Middleware.logout(userA.getId(), UserType.ADMIN, auth.get("Token"));
         assertFalse(Middleware.isAdminAuthenticated(requestB, responseB));
     }
 
