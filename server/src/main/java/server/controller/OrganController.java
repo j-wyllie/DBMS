@@ -133,13 +133,13 @@ public class OrganController {
         Gson gson = new Gson();
 
         if (req.queryParams(DONATED) != null) {
-            return gson.toJson(database.getDonations(profile.getId()));
+            return gson.toJson(database.getDonations(profile));
         }
-        if (req.queryMap().hasKey(DONATING)) {
-            return database.getDonating(profile.getId());
+        if (req.queryParams(DONATING) != null) {
+            return gson.toJson(database.getDonating(profile));
         }
         if (req.queryParams(RECEIVED) != null) {
-            return gson.toJson(database.getReceived(profile.getId()));
+            return gson.toJson(database.getReceived(profile));
         }
         if (req.queryParams(REQUIRED) != null) {
             return gson.toJson(database.getRequired(profile));
