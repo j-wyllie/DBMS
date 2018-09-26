@@ -13,8 +13,11 @@ import server.model.database.DAOFactory;
 import server.model.database.country.CountryDAO;
 import server.model.database.profile.ProfileDAO;
 import server.model.enums.KeyEnum;
+import server.model.enums.ResponseMsgEnum;
 import spark.Request;
 import spark.Response;
+
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +45,7 @@ public class CountriesControllerTest extends CommonTestUtils {
     Gson gson = new Gson();
 
     @Before
-    public void setup() {
+    public void setup() throws SQLException {
         requestA = mock(Request.class);
         when(requestA.body()).thenReturn(gson.toJson(new HashMap<>()));
         responseA = mock(Response.class);
@@ -97,15 +100,10 @@ public class CountriesControllerTest extends CommonTestUtils {
         assertTrue(testResult.contains(CountriesEnum.NZ.getName()));
     }
 
-    @Test ()
+    @Test
     public void testEditInvalid() {
         // Required fields are missing from the body.
-        CountriesController.edit(requestA, responseA);
-        assertEquals(400, responseA.status());
-    }
-
-    @After
-    public void tearDown() {
-
+        String body = CountriesController.edit(requestA, responseA);
+        assertEquals(ResponseMsgEnum.BAD_REQUEST.toString(), body);
     }
 }

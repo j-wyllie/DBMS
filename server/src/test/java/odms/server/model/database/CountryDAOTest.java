@@ -14,7 +14,7 @@ public class CountryDAOTest extends CommonTestUtils {
     private MySqlCountryDAO mySqlCountryDAO;
 
     @Before
-    public void setup() {
+    public void setup() throws SQLException {
         mySqlCountryDAO = new MySqlCountryDAO();
         mySqlCountryDAO.update(CountriesEnum.NZ, false);
     }
@@ -33,7 +33,7 @@ public class CountryDAOTest extends CommonTestUtils {
     }
 
     @Test
-    public void testUpdate() {
+    public void testUpdate() throws SQLException {
         mySqlCountryDAO.update(CountriesEnum.NZ, true);
         List<String> countries = mySqlCountryDAO.getAll(false);
         assertEquals(0, countries.size());

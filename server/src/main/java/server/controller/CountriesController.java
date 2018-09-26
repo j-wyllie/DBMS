@@ -1,11 +1,14 @@
 package server.controller;
 
+import java.sql.SQLException;
 import java.util.List;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.CountriesEnum;
-import org.sonar.api.internal.google.gson.Gson;
-import org.sonar.api.internal.google.gson.JsonObject;
-import org.sonar.api.internal.google.gson.JsonParser;
 import server.model.database.DAOFactory;
 import server.model.database.country.CountryDAO;
 import server.model.enums.DataTypeEnum;
@@ -71,9 +74,15 @@ public class CountriesController {
 
         try {
             JsonObject body = parser.parse(req.body()).getAsJsonObject();
-            name = CountriesEnum.valueOf(body.get(KeyEnum.NAME.toString()).getAsString());
-            valid = body.get(KeyEnum.VALID.toString()).getAsBoolean();
-        } catch (Exception e) {
+            JsonElement country = body.get(KeyEnum.NAME.toString());
+            JsonElement validCountry = body.get(KeyEnum.VALID.toString());
+            if (country == null || validCountry == null) {
+                throw new IllegalArgumentException("required fields missing from body.");
+            }
+            name = CountriesEnum.valueOf(country.getAsString());
+            valid = validCountry.getAsBoolean();
+
+        } catch (IllegalArgumentException e) {
             log.error(e.getMessage(), e);
             res.status(400);
             return ResponseMsgEnum.BAD_REQUEST.toString();
@@ -82,7 +91,7 @@ public class CountriesController {
             countryDAO.update(name, valid);
             res.status(200);
             return "Country Updated";
-        } catch (Exception e) {
+        } catch (SQLException e) {
             res.status(500);
             return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
