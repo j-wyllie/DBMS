@@ -170,7 +170,8 @@ CREATE TABLE IF NOT EXISTS `procedures` (
   `Description` varchar(200) NOT NULL,
   `ProcedureDate` datetime DEFAULT NULL,
   `Pending` BOOLEAN DEFAULT NULL,
-  `Previous` BOOLEAN DEFAULT NULL
+  `Previous` BOOLEAN DEFAULT NULL,
+  `Hospital` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -220,8 +221,7 @@ CREATE TABLE IF NOT EXISTS `profiles` (
   `ImageName` varchar(50) DEFAULT NULL,
   `LastBloodDonation` datetime DEFAULT CURRENT_TIMESTAMP,
   `BloodDonationPoints` int(11) DEFAULT NULL,
-  `Token` int(11) DEFAULT NULL,
-  INDEX (ProfileId)
+  `Token` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -242,10 +242,9 @@ CREATE TABLE IF NOT EXISTS `users` (
   `Country` varchar(50) DEFAULT NULL,
   `Created` datetime DEFAULT CURRENT_TIMESTAMP,
   `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
-  `IsDefault` tinyint(1) DEFAULT '0',
+  `IsDefault` BOOLEAN DEFAULT FALSE,
   `ImageName` varchar(50) DEFAULT NULL,
-  `Token` int(11) DEFAULT NULL,
-  INDEX (UserId)
+  `Token` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -318,6 +317,7 @@ ALTER TABLE `organs`
 ALTER TABLE `procedures`
   ADD PRIMARY KEY (`Id`),
   ADD KEY `ProfileId` (`ProfileId`);
+  ADD KEY `Hospitals` (`Hospital`);
 
 --
 -- Indexes for table `profiles`
@@ -332,10 +332,6 @@ ALTER TABLE `profiles`
 ALTER TABLE `users`
   ADD PRIMARY KEY (`UserId`),
   ADD KEY (`UserId`);
-
---
--- AUTO_INCREMENT for dumped tables
---
 
 --
 -- AUTO_INCREMENT for table `affected_organs`
@@ -448,14 +444,8 @@ ALTER TABLE `organs`
 --
 ALTER TABLE `procedures`
   ADD CONSTRAINT `procedures_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
-
-
-DELETE FROM `users` WHERE Username IN ('Username', 'Pleb');
-
-INSERT INTO `users` (`Username`, `Name`, `UserType`, `Address`, `Region`) VALUES
-  ('Username', 'Tim Hamblin', 'ADMIN', '69 Yeetville', 'Yeetus'),
-  ('Pleb', 'Brooke rasdasdk', 'ADMIN', '68 Yeetville', 'Yeetskeet');
-
+ALTER TABLE `procedures`
+  ADD CONSTRAINT `procedures_ibfk_2` FOREIGN KEY (`Hospital`) REFERENCES `Hospitals` (`Id`);
 
 INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (1, 'NZ', 1),

@@ -21,21 +21,26 @@ public class MySqlHospitalDAO implements HospitalDAO {
      * Get all hospitals in database.
      *
      * @return list of hospitals
+     * @throws SQLException thrown when there is a server error.
      */
     @Override
-    public List<Hospital> getAll() {
+    public List<Hospital> getAll() throws SQLException {
         String query = "SELECT * FROM hospitals";
         List<Hospital> result = new ArrayList<>();
 
+
         try (Connection conn = DatabaseConnection.getConnection();
-                Statement stmt = conn.createStatement();
-                ResultSet allHospitals = stmt.executeQuery(query)) {
-            while (allHospitals.next()) {
-                Hospital newHospital = parseHospital(allHospitals);
-                result.add(newHospital);
+                Statement stmt = conn.createStatement()) {
+
+            try (ResultSet allHospitals = stmt.executeQuery(query)) {
+                while (allHospitals.next()) {
+                    Hospital newHospital = parseHospital(allHospitals);
+                    result.add(newHospital);
+                }
             }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
+            throw e;
         }
         return result;
     }
@@ -45,29 +50,59 @@ public class MySqlHospitalDAO implements HospitalDAO {
      *
      * @param name the name of the hospital to retrieve
      * @return hospital object
+     * @throws SQLException thrown when there is a server error.
      */
     @Override
-    public Hospital get(String name) {
+    public Hospital get(String name) throws SQLException {
+        Hospital result = null;
         String query = "SELECT * FROM hospitals WHERE Name = ?";
 
-        Hospital result = null;
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, name);
+
             try (ResultSet allHospitals = stmt.executeQuery()) {
                 while (allHospitals.next()) {
                     result = parseHospital(allHospitals);
                 }
             }
+
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
+            throw e;
+        }
+        return result;
+    }
+
+    /**
+     * Get a hospital from the database by id.
+     *
+     * @param id the id of the database
+     * @return the hospital object
+     * @throws SQLException thrown when there is a server error.
+     */
+    public Hospital get(int id) throws SQLException {
+        Hospital result = null;
+        String query = "SELECT * FROM hospitals WHERE Id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            try (ResultSet allHospitals = stmt.executeQuery()) {
+                while (allHospitals.next()) {
+                    result = parseHospital(allHospitals);
+                }
+            }
+
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+            throw e;
         }
         return result;
     }
 
     /**
      * Creates a hospital object from a result set.
-     *
      * @param resultSet query results, contains hospital data
      * @return hospital object
      * @throws SQLException thrown when there is a server error.
@@ -90,8 +125,9 @@ public class MySqlHospitalDAO implements HospitalDAO {
     @Override
     public void add(Hospital hospital) throws SQLException {
         String query = "INSERT INTO hospitals (Name, Address, Latitude, Longitude) VALUES (?,?,?,?)";
-        Connection conn = DatabaseConnection.getConnection();
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, hospital.getName());
             stmt.setString(2, hospital.getAddress());
@@ -101,14 +137,12 @@ public class MySqlHospitalDAO implements HospitalDAO {
             stmt.executeUpdate();
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
-        } finally {
-            conn.close();
+            throw e;
         }
     }
 
-    private void setDouble(int index, PreparedStatement preparedStatement, Double val)
-            throws SQLException {
-        if (val == null) {
+    private void setDouble(int index, PreparedStatement preparedStatement, Double val) throws SQLException {
+        if (val == null ) {
             preparedStatement.setNull(index, java.sql.Types.NULL);
         } else {
             preparedStatement.setDouble(index, val);
@@ -125,8 +159,9 @@ public class MySqlHospitalDAO implements HospitalDAO {
     public void edit(Hospital hospital) throws SQLException {
         String query = "UPDATE hospitals SET Name = ?, Address = ?, Latitude = ?, Longitude = ?" +
                 "WHERE Id = ?";
-        Connection conn = DatabaseConnection.getConnection();
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, hospital.getName());
             stmt.setString(2, hospital.getAddress());
@@ -137,8 +172,7 @@ public class MySqlHospitalDAO implements HospitalDAO {
             stmt.executeUpdate();
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
-        } finally {
-            conn.close();
+            throw e;
         }
     }
 
@@ -151,15 +185,15 @@ public class MySqlHospitalDAO implements HospitalDAO {
     @Override
     public void remove(String name) throws SQLException {
         String query = "DELETE FROM hospitals WHERE Name = ?";
-        Connection conn = DatabaseConnection.getConnection();
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
 
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, name);
+
             stmt.executeUpdate();
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
-        } finally {
-            conn.close();
+            throw new SQLException(e);
         }
     }
 }

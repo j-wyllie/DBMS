@@ -164,7 +164,7 @@ public class Procedure {
     }
 
     public String getLongDescription() {
-        return this.longDescription;
+        return longDescription;
     }
 
     public List<OrganEnum> getOrgansAffected() {
@@ -202,5 +202,9 @@ public class Procedure {
 
     public Hospital getHospital() {
         return hospital;
+    }
+
+    public void setHospital(Hospital hospital) {
+        this.hospital = hospital;
     }
 }

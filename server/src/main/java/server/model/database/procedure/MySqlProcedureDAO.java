@@ -1,19 +1,27 @@
 package server.model.database.procedure;
 
+import lombok.extern.slf4j.Slf4j;
+import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.Procedure;
+import server.model.database.DAOFactory;
+import server.model.database.DatabaseConnection;
+import server.model.database.locations.HospitalDAO;
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
-import odms.commons.model.enums.OrganEnum;
-import odms.commons.model.profile.Procedure;
-import server.model.database.DatabaseConnection;
 
+/**
+ * Data access object for procedures.
+ */
 @Slf4j
 public class MySqlProcedureDAO implements ProcedureDAO {
 
@@ -26,7 +34,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
     @Override
     public List<Procedure> getAll(int profile, Boolean pending) {
         String query = "SELECT Id, ProfileId, Summary, Description, ProcedureDate, Pending, " +
-                "Previous FROM procedures WHERE ProfileId = ? AND Pending = ?;";
+                "Previous, Hospital FROM procedures WHERE ProfileId = ? AND Pending = ?;";
         List<Procedure> result = new ArrayList<>();
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -55,8 +63,9 @@ public class MySqlProcedureDAO implements ProcedureDAO {
      */
     @Override
     public void add(int profile, Procedure procedure) {
-        String query = "INSERT INTO procedures (ProfileId, Summary, Description, ProcedureDate, " +
-                "Pending) VALUES (?, ?, ?, ?, ?);";
+        String query =
+                "insert into procedures (ProfileId, Summary, Description, ProcedureDate, " +
+                        "Pending, Hospital) values (?, ?, ?, ?, ?, ?);";
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(
@@ -65,12 +74,28 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             stmt.setInt(1, profile);
             stmt.setString(2, procedure.getSummary());
             stmt.setString(3, procedure.getLongDescription());
-            stmt.setDate(4, Date.valueOf(procedure.getDate()));
 
-            if (LocalDate.now().isBefore(procedure.getDate())) {
-                stmt.setBoolean(5, true);
+            if (procedure.getDateTime() != null) {
+                // Date time is only used in scheduling a procedure so it must be pending
+                stmt.setTimestamp(4, Timestamp.valueOf(procedure.getDateTime()));
+                stmt.setInt(5, 1);
             } else {
-                stmt.setBoolean(5, false);
+                stmt.setDate(4, Date.valueOf(procedure.getDate()));
+                if (LocalDate.now().isBefore(procedure.getDate())) {
+                    stmt.setInt(5, 1);
+                } else {
+                    stmt.setInt(5, 0);
+                }
+            }
+
+            if (procedure.getHospital() != null) {
+                if (procedure.getHospital().getId() != null) {
+                    stmt.setInt(6, procedure.getHospital().getId());
+                } else {
+                    stmt.setNull(6, Types.INTEGER);
+                }
+            } else {
+                stmt.setNull(6, Types.INTEGER);
             }
 
             stmt.executeUpdate();
@@ -133,7 +158,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
     public void update(Procedure procedure, boolean pending) {
         String query =
                 "UPDATE procedures SET Summary = ?, Description = ?, ProcedureDate = ?, " +
-                        "Pending = ? WHERE Id = ?;";
+                        "Pending = ?, Hospital = ? WHERE Id = ?;";
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -141,9 +166,25 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             stmt.setString(2, procedure.getLongDescription());
             stmt.setDate(3, Date.valueOf(procedure.getDate()));
             stmt.setBoolean(4, pending);
-            stmt.setInt(5, procedure.getId());
+            if (procedure.getHospital().getId() == -1) {
+                stmt.setNull(5, Types.INTEGER);
+            } else {
+                stmt.setInt(5, procedure.getHospital().getId());
+            }
+            stmt.setInt(6, procedure.getId());
 
             stmt.executeUpdate();
+
+            /* The user could have completely changed the organs for the procedure so
+            we need to remove them all and add the current organs. */
+            List<OrganEnum> currentOrgans = getAffectedOrgans(procedure.getId());
+            for (OrganEnum organ : currentOrgans) {
+                removeAffectedOrgan(procedure, organ);
+            }
+
+            for (OrganEnum organ : procedure.getOrgansAffected()) {
+                addAffectedOrgan(procedure, organ);
+            }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
@@ -202,7 +243,15 @@ public class MySqlProcedureDAO implements ProcedureDAO {
         LocalDate procedureDate = procedures.getDate("ProcedureDate").toLocalDate();
         String description = procedures.getString("Description");
         List<OrganEnum> affectedOrgans = getAffectedOrgans(id);
-        return new Procedure(id, summary, procedureDate, description, affectedOrgans);
+        Integer hospitalId = procedures.getInt("Hospital");
+        Procedure procedure = new Procedure(
+            id, summary, procedureDate, description, affectedOrgans);
+
+        if (hospitalId != null) {
+            HospitalDAO hospitalDAO = DAOFactory.getHospitalDAO();
+            procedure.setHospital(hospitalDAO.get(hospitalId));
+        }
+        return procedure;
     }
 
     /**

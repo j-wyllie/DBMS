@@ -107,21 +107,6 @@ CREATE TABLE IF NOT EXISTS `hla_type` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hospitals`
---
-
-DROP TABLE IF EXISTS `hospitals`;
-CREATE TABLE IF NOT EXISTS `hospitals` (
-  `Id` int(11) NOT NULL,
-  `Name` varchar(50) DEFAULT NULL,
-  `Address` varchar(100) DEFAULT NULL,
-  `Latitude` double DEFAULT NULL,
-  `Longitude` double DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `locale`
 --
 
@@ -170,7 +155,8 @@ CREATE TABLE IF NOT EXISTS `procedures` (
   `Description` varchar(200) NOT NULL,
   `ProcedureDate` datetime DEFAULT NULL,
   `Pending` BOOLEAN DEFAULT NULL,
-  `Previous` BOOLEAN DEFAULT NULL
+  `Previous` BOOLEAN DEFAULT NULL,
+  `Hospital` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -220,8 +206,7 @@ CREATE TABLE IF NOT EXISTS `profiles` (
   `ImageName` varchar(50) DEFAULT NULL,
   `LastBloodDonation` datetime DEFAULT CURRENT_TIMESTAMP,
   `BloodDonationPoints` int(11) DEFAULT NULL,
-  `Token` int(11) DEFAULT NULL,
-  INDEX (ProfileId)
+  `Token` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -244,8 +229,35 @@ CREATE TABLE IF NOT EXISTS `users` (
   `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
   `IsDefault` tinyint(1) DEFAULT '0',
   `ImageName` varchar(50) DEFAULT NULL,
-  `Token` int(11) DEFAULT NULL,
-  INDEX (UserId)
+  `Token` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hospitals`
+--
+
+DROP TABLE IF EXISTS `hospitals`;
+CREATE TABLE IF NOT EXISTS `hospitals` (
+  `Id` INT(11),
+  `Name` VARCHAR(50) UNIQUE DEFAULT NULL,
+  `Address` VARCHAR(100) DEFAULT NULL,
+  `Latitude` DOUBLE DEFAULT NULL,
+  `Longitude` DOUBLE DEFAULT NULL,
+  `Bone` BOOLEAN DEFAULT FALSE,
+  `Bone-marrow` BOOLEAN DEFAULT FALSE,
+  `Connective-tissue` BOOLEAN DEFAULT FALSE,
+  `Cornea` BOOLEAN DEFAULT FALSE,
+  `Heart` BOOLEAN DEFAULT FALSE,
+  `Intestine` BOOLEAN DEFAULT FALSE,
+  `Kidney` BOOLEAN DEFAULT FALSE,
+  `Liver` BOOLEAN DEFAULT FALSE,
+  `Lung` BOOLEAN DEFAULT FALSE,
+  `Middle-ear` BOOLEAN DEFAULT FALSE,
+  `Pancreas` BOOLEAN DEFAULT FALSE,
+  `Skin` BOOLEAN DEFAULT FALSE,
+  INDEX (Name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -297,6 +309,8 @@ ALTER TABLE `hla_type`
 --
 ALTER TABLE `hospitals`
   ADD PRIMARY KEY (`Id`),
+  ADD KEY `Name` (`Name`),
+  ADD KEY `Id` (`Id`),
   ADD UNIQUE KEY `Id` (`Id`);
 
 --
@@ -317,7 +331,8 @@ ALTER TABLE `organs`
 --
 ALTER TABLE `procedures`
   ADD PRIMARY KEY (`Id`),
-  ADD KEY `ProfileId` (`ProfileId`);
+  ADD KEY `ProfileId` (`ProfileId`),
+  ADD KEY `Hospital` (`Hospital`);
 
 --
 -- Indexes for table `profiles`
@@ -331,11 +346,8 @@ ALTER TABLE `profiles`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`UserId`),
-  ADD KEY (`UserId`);
-
---
--- AUTO_INCREMENT for dumped tables
---
+  ADD KEY (`UserId`),
+  ADD KEY (`Username`);
 
 --
 -- AUTO_INCREMENT for table `affected_organs`
@@ -448,14 +460,8 @@ ALTER TABLE `organs`
 --
 ALTER TABLE `procedures`
   ADD CONSTRAINT `procedures_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
-
-
-DELETE FROM `users` WHERE Username IN ('Username', 'Pleb');
-
-INSERT INTO `users` (`Username`, `Name`, `UserType`, `Address`, `Region`) VALUES
-  ('Username', 'Tim Hamblin', 'ADMIN', '69 Yeetville', 'Yeetus'),
-  ('Pleb', 'Brooke rasdasdk', 'ADMIN', '68 Yeetville', 'Yeetskeet');
-
+ALTER TABLE `procedures`
+  ADD CONSTRAINT `procedures_ibfk_2` FOREIGN KEY (`Hospital`) REFERENCES `hospitals` (`Id`) ON DELETE SET NULL;
 
 INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (1, 'NZ', 1),
@@ -659,4 +665,5 @@ INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (199, 'YE', 1),
   (200, 'ZM', 1),
   (201, 'ZW', 1);
+
 

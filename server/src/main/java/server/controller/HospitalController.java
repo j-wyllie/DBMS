@@ -1,5 +1,6 @@
 package server.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.locations.Hospital;
 import org.sonar.api.internal.google.gson.Gson;
 import org.sonar.api.internal.google.gson.JsonObject;
@@ -12,6 +13,7 @@ import spark.Response;
 import java.sql.SQLException;
 import java.util.List;
 
+@Slf4j
 public class HospitalController {
 
     /**
@@ -28,7 +30,7 @@ public class HospitalController {
             hospitals = hospitalDAO.getAll();
         } catch (SQLException e) {
             res.status(500);
-            return e.getMessage();
+            return "Database Error";
         }
 
         Gson gson = new Gson();
@@ -50,11 +52,21 @@ public class HospitalController {
     public static String get(Request req, Response res) {
         HospitalDAO database = DAOFactory.getHospitalDAO();
         Hospital hospital;
-        try {
-            hospital = database.get(req.queryParams("name"));
-        } catch (SQLException e) {
-            res.status(500);
-            return e.getMessage();
+
+        if (req.queryMap().hasKey("name")) {
+            try {
+                hospital = database.get(req.queryParams("name"));
+            } catch (SQLException e) {
+                res.status(500);
+                return "Database Error";
+            }
+        } else {
+            try {
+                hospital = database.get(Integer.valueOf(req.queryParams("id")));
+            } catch (SQLException e) {
+                res.status(500);
+                return "Database Error";
+            }
         }
 
         Gson gson = new Gson();
@@ -84,7 +96,7 @@ public class HospitalController {
 
         try {
             JsonObject body = parser.parse(req.body()).getAsJsonObject();
-            id = Integer.valueOf(req.queryParams("id"));
+            id = body.get("id").getAsInt();
             name = body.get("name").getAsString();
             address = body.get("address").getAsString();
             lat = body.get("latitude").getAsDouble();
@@ -92,7 +104,7 @@ public class HospitalController {
 
             hospital = new Hospital(name, lat, lon, address, null, id);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             res.status(400);
             return "Bad Request";
         }
@@ -102,7 +114,7 @@ public class HospitalController {
             return "Hospital Updated";
         } catch (SQLException e) {
             res.status(500);
-            return e.getMessage();
+            return "Database Error";
         }
     }
 
@@ -128,7 +140,7 @@ public class HospitalController {
             database.remove(name);
         } catch (SQLException e) {
             res.status(500);
-            return e.getMessage();
+            return "Database Error";
         }
 
         res.status(200);
@@ -159,7 +171,7 @@ public class HospitalController {
                 database.add(newHospital);
             } catch (SQLException e) {
                 res.status(500);
-                return e.getMessage();
+                return "Database Error";
             }
         }
         res.status(201);
