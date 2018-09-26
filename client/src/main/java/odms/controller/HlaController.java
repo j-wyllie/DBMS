@@ -1,12 +1,9 @@
 package odms.controller;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.saxon.ma.arrays.ArrayFunctionSet.ArrayRemove;
 import odms.commons.model.profile.HLAType;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.hla.HLADAO;
@@ -121,5 +118,4 @@ public class HlaController {
 
         return matchScore(hlaA, hlaB);
     }
-
 }
