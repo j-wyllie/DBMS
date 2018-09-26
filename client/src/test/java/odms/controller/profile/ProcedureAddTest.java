@@ -4,14 +4,22 @@ import static org.junit.Assert.assertEquals;
 
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
+import odms.controller.database.organ.HttpOrganDAO;
+import odms.controller.database.procedure.HttpProcedureDAO;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(HttpProcedureDAO.class)
 public class ProcedureAddTest {
     public odms.view.profile.ProcedureAdd view;
     public odms.controller.profile.ProcedureAdd controller;
@@ -29,9 +37,10 @@ public class ProcedureAddTest {
         controller = new odms.controller.profile.ProcedureAdd(view);
     }
 
-    @Ignore
     @Test
     public void testAddValidProcedure() {
+        PowerMockito.stub(PowerMockito.method(HttpProcedureDAO.class, "add"))
+                .toReturn(true);
         Procedure testProcedure = new Procedure("ABC", LocalDate.now());
         List<String> organs = new ArrayList<>();
         controller.add(currentProfile,organs,testProcedure);
