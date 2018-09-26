@@ -218,6 +218,7 @@ public class HospitalMap extends CommonView implements Initializable,
                 travelInfo.setText("Created: " + location.getName());
                 hospitalList.add(location);
                 setMarkersTable();
+
             });
 
 
@@ -439,7 +440,8 @@ public class HospitalMap extends CommonView implements Initializable,
 
             DirectionsRequest directionsRequest = new DirectionsRequest(originLatLong,
                     destinationLatLong, TravelModes.DRIVING);
-            directionsService.getRoute(directionsRequest, this, directionsRenderer);
+
+            directionsService.getRoute(directionsRequest, this::directionsReceived, directionsRenderer);
 
         } else {
 
@@ -471,28 +473,34 @@ public class HospitalMap extends CommonView implements Initializable,
     public void directionsReceived(DirectionsResult directionsResult, DirectionStatus
             directionStatus) {
 
-        DirectionsLeg ourRoute = directionsResult.getRoutes().get(0).getLegs().get(0);
 
-        String originName = hospitalSelected1.getName();
-        String destinationName = hospitalSelected2.getName();
+        if (directionStatus.equals(DirectionStatus.OK)) {
 
-        Double orignLat = hospitalSelected1.getLatitude();
-        Double orignLong = hospitalSelected1.getLongitude();
-        Double destinationLat = hospitalSelected2.getLatitude();
-        Double destinationLong = hospitalSelected2.getLongitude();
+            DirectionsLeg ourRoute = directionsResult.getRoutes().get(0).getLegs().get(0);
 
-        String time;
-        try {
-            // Using the google distance matrix API
-            time = decimalFormat.format(new GoogleDistanceMatrix().getDuration(
-                    orignLat, orignLong, destinationLat, destinationLong));
-        } catch (IOException e) {
-            log.error("Invalid duration for travel, duration set to string: 'NA' ");
-            log.error(e.getMessage(), e);
-            time = "NA";
+            String originName = hospitalSelected1.getName();
+            String destinationName = hospitalSelected2.getName();
+
+            Double orignLat = hospitalSelected1.getLatitude();
+            Double orignLong = hospitalSelected1.getLongitude();
+            Double destinationLat = hospitalSelected2.getLatitude();
+            Double destinationLong = hospitalSelected2.getLongitude();
+
+            String time;
+            try {
+                // Using the google distance matrix API
+                time = decimalFormat.format(new GoogleDistanceMatrix().getDuration(
+                        orignLat, orignLong, destinationLat, destinationLong));
+            } catch (IOException e) {
+                log.error("Invalid duration for travel, duration set to string: 'NA' ");
+                log.error(e.getMessage(), e);
+                time = "NA";
+            }
+
+            showTravelDetails(originName, destinationName, ourRoute.getDistance().getText(), time);
+
         }
 
-        showTravelDetails(originName, destinationName, ourRoute.getDistance().getText(), time);
     }
 
     /**
@@ -549,6 +557,7 @@ public class HospitalMap extends CommonView implements Initializable,
             stage.setResizable(false);
             stage.setOnHiding(ob -> mapInitialized());
             stage.show();
+            clearRoutesAndSelection();
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
@@ -588,6 +597,7 @@ public class HospitalMap extends CommonView implements Initializable,
             stage.setResizable(false);
             stage.setOnHiding(ob -> mapInitialized());
             stage.show();
+            clearRoutesAndSelection();
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
@@ -613,6 +623,7 @@ public class HospitalMap extends CommonView implements Initializable,
         if (confirmation && !controller.deleteHospital(hospital)) {
             AlertController.guiPopup("Error deleting Hospital");
         }
+        clearRoutesAndSelection();
         mapInitialized();
     }
 
