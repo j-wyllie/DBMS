@@ -59,7 +59,6 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
         profile.getUpdateActions().add(output);
     }
 
-
     /**
      * Calls the relevant method to set the attribute.
      *
@@ -75,71 +74,72 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
         if (parts[1] != null) {
             value = parts[1].replace("\"", "");
         }
-        if (attrName.equals(Attribute.GIVENNAMES.getText())) {
+        if (attrName.equalsIgnoreCase(Attribute.GIVEN_NAMES.getText())) {
             profile.setGivenNames(value);
-        } else if (attrName.equals(Attribute.LASTNAMES.getText())) {
+
+        } else if (attrName.equalsIgnoreCase(Attribute.LAST_NAMES.getText())) {
             profile.setLastNames(value);
-        } else if (attrName.equals(Attribute.DATEOFBIRTH.getText())) {
-            String[] dates = value.split("-");
-            LocalDate date = LocalDate.of(
+
+        } else if (attrName.equalsIgnoreCase(Attribute.DATE_OF_BIRTH.getText())) {
+            String[] dates = value != null ? value.split("-") : null;
+            LocalDate date = dates != null ? LocalDate.of(
                     Integer.valueOf(dates[2]),
                     Integer.valueOf(dates[1]),
                     Integer.valueOf(dates[0])
-            );
-            if (date.isAfter(LocalDate.now())) {
+            ) : null;
+            if (date != null && date.isAfter(LocalDate.now())) {
                 throw new IllegalArgumentException(
                         "Date of birth cannot be a future date."
                 );
             }
             profile.setDateOfBirth(date);
-        } else if (attrName.equals(Attribute.DATEOFDEATH.getText())) {
-            if (value.equals("null")) {
+
+        } else if (attrName.equalsIgnoreCase(Attribute.DATE_OF_DEATH.getText())) {
+            if ("null".equalsIgnoreCase(value)) {
                 profile.setDateOfDeath(null);
             } else {
-                String[] dates = value.split("-");
-                LocalDate date = LocalDate.of(
+                String[] dates = value != null ? value.split("-") : null;
+                LocalDate date = dates != null ? LocalDate.of(
                         Integer.valueOf(dates[2]),
                         Integer.valueOf(dates[1]),
                         Integer.valueOf(dates[0])
-                );
+                ) : null;
                 profile.setDateOfDeath(LocalDateTime.of(date, LocalTime.MIN));
                 profile.setCountryOfDeath(profile.getCountry().getName()); // TODO fix properly
                 profile.setCityOfDeath(profile.getCity());
                 profile.setRegionOfDeath(profile.getRegion());
             }
-        } else if (attrName.equals(Attribute.GENDER.getText())) {
-            profile.setGender(value.toLowerCase());
-        } else if (attrName.equals(Attribute.HEIGHT.getText())) {
+
+        } else if (attrName.equalsIgnoreCase(Attribute.GENDER.getText())) {
+            profile.setGender(value != null ? value.toLowerCase() : null);
+
+        } else if (attrName.equalsIgnoreCase(Attribute.HEIGHT.getText()) ||
+                attrName.equalsIgnoreCase(Attribute.WEIGHT.getText())) {
             try {
-                if (value.equals("null")) {
-                    value = "0";
-                }
+                value = value == null || "null".equalsIgnoreCase(value) ? "0" : value;
                 profile.setHeight(Double.valueOf(value));
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid height entered.");
-            }
-        } else if (attrName.equals(Attribute.WEIGHT.getText())) {
-            try {
-                if (value.equals("null")) {
-                    value = "0";
+                if (attrName.equals(Attribute.HEIGHT.getText())) {
+                    throw new IllegalArgumentException("Invalid height entered.");
+                } else {
+                    throw new IllegalArgumentException("Invalid weight entered.");
                 }
-                profile.setWeight(Double.valueOf(value));
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid weight entered.");
             }
-        } else if (attrName.equals(Attribute.BLOODTYPE.getText())) {
-            if (value.equals("null") || value.equals("")) {
-                value = null;
-            }
+
+        } else if (attrName.equalsIgnoreCase(Attribute.BLOOD_TYPE.getText())) {
+            value = "null".equalsIgnoreCase(value) || "".equalsIgnoreCase(value) ? null : value;
             profile.setBloodType(value);
-        } else if (attrName.equals(Attribute.ADDRESS.getText())) {
+
+        } else if (attrName.equalsIgnoreCase(Attribute.ADDRESS.getText())) {
             profile.setAddress(value);
-        } else if (attrName.equals(Attribute.COUNTRY.getText())) {
+
+        } else if (attrName.equalsIgnoreCase(Attribute.COUNTRY.getText())) {
             if (!DAOFactory.getSettingsDAO().getAllCountries(true).contains(value)) {
                 throw new IllegalArgumentException("Must be a valid country!");
             }
             profile.setCountry(CountriesEnum.getEnumByString(value));
-        } else if (attrName.equals(Attribute.REGION.getText())) {
+
+        } else if (attrName.equalsIgnoreCase(Attribute.REGION.getText())) {
             if (profile.getCountry() != null && (profile.getCountry().getName().toLowerCase()
                     .equalsIgnoreCase(CountriesEnum.NZ.getName()) ||
                     profile.getCountry().getName()
@@ -148,32 +148,34 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
                 throw new IllegalArgumentException("Must be a region within New Zealand.");
             }
             profile.setRegion(value);
-        } else if (attrName.equals(Attribute.NHI.getText())) {
+
+        } else if (attrName.equalsIgnoreCase(Attribute.NHI.getText())) {
             try {
                 profile.setNhi(value);
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException("Invalid NHI entered.");
             }
-        } else if (attrName.equals("isSmoker")) {
+
+        } else if (attrName.equalsIgnoreCase(Attribute.IS_SMOKER.getText())) {
             profile.setIsSmoker(Boolean.valueOf(value));
-        } else if (attrName.equals("alcoholConsumption")) {
+
+        } else if (attrName.equalsIgnoreCase(Attribute.ALCOHOL_CONSUMPTION.getText())) {
             profile.setAlcoholConsumption(value);
-        } else if (attrName.equals("bloodPressureSystolic")) {
-            if (value.equals("null")) {
-                profile.setBloodPressureSystolic(null);
-            } else {
-                profile.setBloodPressureSystolic(Integer.valueOf(value));
-            }
-        } else if (attrName.equals("bloodPressureDiastolic")) {
-            if (value.equals("null")) {
-                profile.setBloodPressureDiastolic(null);
-            } else {
-                profile.setBloodPressureDiastolic(Integer.valueOf(value));
-            }
-        } else if (attrName.equals("phone")) {
+
+        } else if (attrName.equalsIgnoreCase(Attribute.BLOOD_PRESSURE_SYSTOLIC.getText())) {
+            value = "null".equalsIgnoreCase(value) ? null : value;
+            profile.setBloodPressureSystolic(value == null ? null : Integer.valueOf(value));
+
+        } else if (attrName.equalsIgnoreCase(Attribute.BLOOD_PRESSURE_DIASTOLIC.getText())) {
+            value = "null".equalsIgnoreCase(value) ? null : value;
+            profile.setBloodPressureDiastolic(value == null ? null : Integer.valueOf(value));
+
+        } else if (attrName.equalsIgnoreCase(Attribute.PHONE.getText())) {
             profile.setPhone(value);
-        } else if (attrName.equals("email")) {
+
+        } else if (attrName.equalsIgnoreCase(Attribute.EMAIL.getText())) {
             profile.setEmail(value);
+
         } else {
             throw new IllegalArgumentException("Invalid field '" + attrName + "'.");
         }

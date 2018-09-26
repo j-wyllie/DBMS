@@ -14,13 +14,13 @@ public interface OrganDAO {
      * Gets all organs that a profile has donated in the past.
      * @param profile to get the organs for.
      */
-    Set<OrganEnum> getDonations(int profile);
+    Set<OrganEnum> getDonations(Profile profile);
 
     /**
      * Gets all organs that a profile has registered to donate.
      * @param profile to get the organs for.
      */
-    Set<OrganEnum> getDonating(int profile);
+    Set<OrganEnum> getDonating(Profile profile);
 
     /**
      * Gets all organs that a profile requires.
@@ -32,7 +32,7 @@ public interface OrganDAO {
      * Gets all organs that a profile has received in the past.
      * @param profile to get the organs for.
      */
-    Set<OrganEnum> getReceived(int profile);
+    Set<OrganEnum> getReceived(Profile profile);
 
     /**
      * Adds an organ to a profiles past donations.
@@ -101,7 +101,7 @@ public interface OrganDAO {
      * @param note Clinician's reason to updateCountries.
      * @param userId Clinician's user Id.
      */
-    void setExpired(Profile profile, String organ, Integer expired, String note, Integer userId)
+    void setExpired(Profile profile, OrganEnum organ, Integer expired, String note, Integer userId)
             throws SQLException;
 
     /**
@@ -110,8 +110,7 @@ public interface OrganDAO {
      * @param profileId to revert organ expired.
      * @param organ to revert.
      */
-    void revertExpired(Integer profileId, String organ) throws SQLException;
-
+    void revertExpired(Integer profileId, OrganEnum organ) throws SQLException;
 
     /**
      * Gets all organs that have expired from a profile.

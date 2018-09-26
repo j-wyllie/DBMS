@@ -11,6 +11,7 @@ import static spark.Spark.post;
 import lombok.extern.slf4j.Slf4j;
 import server.controller.ConditionController;
 import server.controller.DrugController;
+import server.controller.HospitalController;
 import server.controller.OrganController;
 import server.controller.ProcedureController;
 import server.controller.ProfileController;
@@ -157,6 +158,15 @@ public class Server {
                 // locale api endpoints.
                 get("/locale", SettingsController::getLocale);
                 post("/locale", SettingsController::setLocale);
+            });
+
+            // hospitals api endpoints.
+            path("/hospitals", () -> {
+                get("/all", HospitalController::getAll);
+                get("", HospitalController::get);
+                post("", HospitalController::create);
+                patch("", HospitalController::edit);
+                delete("", HospitalController::delete);
             });
         });
     }

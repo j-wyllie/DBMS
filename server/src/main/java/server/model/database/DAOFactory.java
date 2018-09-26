@@ -6,6 +6,8 @@ import server.model.database.condition.ConditionDAO;
 import server.model.database.condition.MySqlConditionDAO;
 import server.model.database.settings.SettingsDAO;
 import server.model.database.settings.MySqlSettingsDAO;
+import server.model.database.locations.HospitalDAO;
+import server.model.database.locations.MySqlHospitalDAO;
 import server.model.database.medication.MedicationDAO;
 import server.model.database.medication.MySqlMedicationDAO;
 import server.model.database.middleware.MiddlewareDAO;
@@ -71,6 +73,14 @@ public class DAOFactory {
      */
     public static SettingsDAO getSettingsDAO() {
         return new MySqlSettingsDAO();
+    }
+
+    /**
+     * Gives the data access object class for the Hospital object.
+     * @return dao for particular database type.
+     */
+    public static HospitalDAO getHospitalDAO() {
+        return new MySqlHospitalDAO();
     }
 
     /**

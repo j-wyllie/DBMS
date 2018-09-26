@@ -1,5 +1,19 @@
 package odms.controller.user;
 
+import static java.lang.Math.abs;
+
+import java.sql.SQLException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -11,14 +25,7 @@ import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.organ.OrganDAO;
 import odms.controller.database.profile.ProfileDAO;
-
-import java.sql.SQLException;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.Map.Entry;
-
-import static java.lang.Math.abs;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Controller for the available organs tab.
@@ -35,7 +42,6 @@ public class AvailableOrgans {
     private static final int EXPIRED_ORGANS_DELAY = 15000;
 
     private List<Entry<Profile, OrganEnum>> donaters = new ArrayList<>();
-    private List<ExpiredOrgan> expiredList = new ArrayList<>();
     private Timer timer;
     private odms.view.user.AvailableOrgans view;
 
@@ -163,11 +169,15 @@ public class AvailableOrgans {
      *
      * @param organ Organ to check.
      * @param profile Current profile.
+     * @return Boolean true if organ is expired
      */
-    public void checkOrganExpired(OrganEnum organ, Profile profile) {
+    public Boolean checkOrganExpired(OrganEnum organ, Profile profile) {
         if (LocalDateTime.now()
                 .isAfter(getExpiryTime(organ, profile))) {
             setOrganExpired(organ, profile);
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -180,18 +190,20 @@ public class AvailableOrgans {
      */
     private void checkOrganExpiredListRemoval(OrganEnum organ, Profile profile,
             Map.Entry<Profile, OrganEnum> m) {
+
         if (LocalDateTime.now()
                 .isAfter(getExpiryTime(organ, profile))) {
             view.removeItem(m);
             setOrganExpired(organ, profile);
         }
+        List<ExpiredOrgan> expiredList = new ArrayList<>();
         try {
             expiredList = DAOFactory.getOrganDao().getExpired(profile);
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
         for (ExpiredOrgan currentOrgan : expiredList) {
-            if (currentOrgan.getOrgan().equalsIgnoreCase(organ.getNamePlain())) {
+            if (currentOrgan.getOrganName().equalsIgnoreCase(organ.getNamePlain())) {
                 view.removeItem(m);
             }
         }
@@ -307,7 +319,7 @@ public class AvailableOrgans {
     }
 
     /**
-     * Calculates how long a Organ has til expiry, returns in formatted string
+     * Calculates how long a Organ has til expiry, returns in formatted string.
      *
      * @param organ Given organ
      * @param profile Given profile the organ belongs to
@@ -509,6 +521,57 @@ public class AvailableOrgans {
                 potentialOrganMatchesUnfiltered);
 
         return potentialOrganMatches;
+    }
+
+    /**
+     * Returns list of donors who meet the are able to receive the organ.
+     *
+     * @param organsAvailable the organs up for donation
+     * @param donorProfile the donor profile
+     * @return the list of profiles that match this organ donation
+     */
+    public static ObservableList<Profile> getSuitableRecipients(Set<OrganEnum> organsAvailable,
+            Profile donorProfile) {
+        ObservableList<Profile> potentialOrganMatchesUnfiltered = FXCollections
+                .observableArrayList();
+
+        String organBloodType = donorProfile.getBloodType();
+
+        Integer minAge;
+        Integer maxAge;
+
+        if (donorProfile.getAge() >= 12) {
+            minAge = donorProfile.getAge() - 15;
+
+            if (minAge < 12) {
+                minAge = 12;
+            }
+            maxAge = donorProfile.getAge() + 15;
+        } else {
+            minAge = 0;
+            maxAge = 12;
+        }
+
+        List<String> compatibleBloodTypes = getCompatibleOrganBloodTypes(organBloodType);
+        String bloodTypes = StringUtils.join(compatibleBloodTypes, ',');
+
+        StringBuilder organs = new StringBuilder("");
+        int count = 1;
+        for (OrganEnum o : organsAvailable) {
+            String name = o.getName().replace('-', '+');
+            if (count == organsAvailable.size()) {
+                organs.append(name);
+            } else {
+                organs.append(name);
+                organs.append(",");
+            }
+            count++;
+        }
+
+        potentialOrganMatchesUnfiltered.addAll(DAOFactory.getProfileDao()
+                .getOrganReceivers(organs.toString(), bloodTypes, minAge, maxAge));
+
+        return potentialOrganMatchesUnfiltered;
     }
 
     /**
@@ -739,14 +802,27 @@ public class AvailableOrgans {
      * @throws SQLException error in sql.
      */
     public List<Map.Entry<Profile, OrganEnum>> getAllOrgansAvailable() throws SQLException {
+        donaters.clear();
         ProfileDAO database = DAOFactory.getProfileDao();
 
         List<Profile> allDonators = database.getDead();
         for (Profile profile : allDonators) {
+            checkForManuallyExpiredOrgans(profile);
+        }
+        return donaters;
+    }
 
-            for (OrganEnum organ : profile.getOrgansDonatingNotExpired()) {
-                final List<ExpiredOrgan> expired = DAOFactory.getOrganDao().getExpired(profile);
+    /**
+     * Check to make sure no manually expired organs are in the list of available organs.
+     * @param profile profile organs are being checked for
+     * @throws SQLException database error
+     */
+    private void checkForManuallyExpiredOrgans(Profile profile) throws SQLException {
+        List<ExpiredOrgan> expired = DAOFactory.getOrganDao().getExpired(profile);
+        Set<OrganEnum> organsDonating = new HashSet<>(profile.getOrgansDonating());
 
+        for (OrganEnum organ : organsDonating) {
+            if (!checkOrganExpired(organ, profile)) {
                 if (expired.isEmpty()) {
                     Map.Entry<Profile, OrganEnum> pair = new AbstractMap.SimpleEntry<>(profile,
                             organ);
@@ -758,7 +834,6 @@ public class AvailableOrgans {
                 }
             }
         }
-        return donaters;
     }
 
     /**
@@ -771,7 +846,7 @@ public class AvailableOrgans {
     private void addExpiredOrganToPair(Profile profile, OrganEnum organ,
             List<ExpiredOrgan> expired) {
         for (ExpiredOrgan expiredOrgan : expired) {
-            if (!expiredOrgan.getOrgan().equals(organ.getNamePlain())) {
+            if (!expiredOrgan.getOrganName().equals(organ.getNamePlain())) {
                 Entry<Profile, OrganEnum> pair = new AbstractMap.SimpleEntry<>(profile,
                         organ);
                 if (!donaters.contains(pair)) {
@@ -797,11 +872,10 @@ public class AvailableOrgans {
 
         timer.schedule(new TimerTask() {
             public void run() {
-                List<Entry<Profile, OrganEnum>> toRemove = new ArrayList<>(
-                        view.getListOfAvailableOrgans());
-
-                for (Map.Entry<Profile, OrganEnum> m : toRemove) {
-                    checkOrganExpiredListRemoval(m.getValue(), m.getKey(), m);
+                try {
+                    view.setAvailableOrgansList();
+                } catch (SQLException e) {
+                    log.error(e.getMessage(), e);
                 }
             }
         }, 0, EXPIRED_ORGANS_DELAY);

@@ -8,6 +8,8 @@ import odms.controller.database.settings.SettingsDAO;
 import odms.controller.database.settings.HttpSettingsDAO;
 import odms.controller.database.interactions.JsonMedicationInteractionsDAO;
 import odms.controller.database.interactions.MedicationInteractionsDAO;
+import odms.controller.database.locations.HospitalDAO;
+import odms.controller.database.locations.HttpHospitalDAO;
 import odms.controller.database.medication.HttpMedicationDAO;
 import odms.controller.database.medication.MedicationDAO;
 import odms.controller.database.organ.HttpOrganDAO;
@@ -19,7 +21,9 @@ import odms.controller.database.profile.ProfileDAO;
 import odms.controller.database.user.HttpUserDAO;
 import odms.controller.database.user.UserDAO;
 
-
+/**
+ * Factory method to get new HTTPDAO's.
+ */
 public class DAOFactory {
 
     /**
@@ -78,4 +82,11 @@ public class DAOFactory {
      */
     public static MedicationInteractionsDAO getMedicalInteractionsDao() { return new JsonMedicationInteractionsDAO(); }
 
+    /**
+     * Gives the data access object class for the hospital object.
+     * @return dao for particular http type.
+     */
+    public static HospitalDAO getHospitalDAO() {
+        return new HttpHospitalDAO();
+    }
 }

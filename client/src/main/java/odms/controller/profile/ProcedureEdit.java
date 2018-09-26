@@ -1,17 +1,12 @@
 package odms.controller.profile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.history.History;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
-import odms.controller.database.procedure.HttpProcedureDAO;
 import odms.controller.database.procedure.ProcedureDAO;
-import odms.view.profile.ProcedureDetailed;
 import odms.controller.history.CurrentHistory;
+import odms.view.profile.ProcedureDetailed;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,6 +15,8 @@ import java.time.LocalDateTime;
  * Controller for the procedure edit scene.
  */
 public class ProcedureEdit {
+    private static final String COMMA = ",";
+    private static final String CLOSE_BACKET = ")";
 
     private ProcedureDetailed view;
     private ProcedureDAO server = DAOFactory.getProcedureDao();
@@ -36,20 +33,19 @@ public class ProcedureEdit {
      * Saves the updated procedure.
      * @throws IllegalArgumentException thrown if procedure date is before profiles dob
      */
-    public void save() throws IllegalArgumentException {
+    public void save() {
         Profile profile = view.getProfile();
         Procedure procedure = view.getCurrentProcedure();
-        List<OrganEnum> oldAffectedOrgans = procedure.getOrgansAffected();
-        List<OrganEnum> newAffectedOrgans = view.getAffectedOrgansListView();
+
         History action = new History("profile ", profile.getId(), "EDITED",
                 "",
                 profile.getAllProcedures().indexOf(procedure),
                 LocalDateTime.now());
         String oldValues =
-                " PREVIOUS(" + procedure.getSummary() + "," + procedure.getDate()
-                        + "," +
-                        procedure.getLongDescription() + ")" + " OLDORGANS"
-                        + procedure.getOrgansAffected();
+                " PREVIOUS(" + procedure.getSummary() + COMMA + procedure.getDate() +
+                        COMMA + procedure.getLongDescription() +
+                        CLOSE_BACKET + " OLDORGANS" + procedure.getOrgansAffected();
+
         procedure.setLongDescription(view.getDescEntry());
         procedure.setSummary(view.getSummaryEntry());
 
@@ -57,49 +53,20 @@ public class ProcedureEdit {
         LocalDate dateOfProcedure = view.getDateOfProcedure();
         LocalDate dob = profile.getDateOfBirth();
         if (dob.isAfter(dateOfProcedure)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid date");
         } else {
             procedure.setDate(dateOfProcedure);
         }
 
-        procedure.setOrgansAffected(view.getAffectedOrgansListView());
+        procedure.setHospital(view.getSelectedHospital());
+
         String newValues =
-                " CURRENT(" + procedure.getSummary() + "," + procedure.getDate() + ","
-                        +
-                        procedure.getLongDescription() + ")" + " NEWORGANS"
-                        + procedure.getOrgansAffected();
+                " CURRENT(" + procedure.getSummary() + COMMA + procedure.getDate() + COMMA +
+                        procedure.getLongDescription() + CLOSE_BACKET + " NEWORGANS" +
+                        procedure.getOrgansAffected();
         action.setHistoryData(oldValues + newValues);
         CurrentHistory.updateHistory(action);
 
         server.update(profile, procedure);
-        updateAffectedOrgans(newAffectedOrgans, oldAffectedOrgans);
-    }
-
-    /**
-     * Checks what affected organs have be added and removed from the procedure, and applies these
-     * changes to the database.
-     * @param newAffectedOrgans List of the affected organs after the edit
-     * @param oldAffectedOrgans List of the affected organs before the edit
-     */
-    private void updateAffectedOrgans(
-            List<OrganEnum> newAffectedOrgans,
-            List<OrganEnum> oldAffectedOrgans) {
-        Procedure procedure = view.getCurrentProcedure();
-        ProcedureDAO procedureDAO = DAOFactory.getProcedureDao();
-        List<OrganEnum> organsToBeAdded = new ArrayList<>(newAffectedOrgans);
-        organsToBeAdded.removeAll(oldAffectedOrgans);
-        List<OrganEnum> organsToBeRemoved = new ArrayList<>(oldAffectedOrgans);
-        organsToBeRemoved.removeAll(newAffectedOrgans);
-
-        for (OrganEnum organEnum : organsToBeRemoved) {
-            procedureDAO.removeAffectedOrgan(procedure, organEnum);
-        }
-        for (OrganEnum organEnum : organsToBeAdded) {
-            procedureDAO.addAffectedOrgan(procedure, organEnum);
-        }
-    }
-
-    public Set<OrganEnum> getDonatedOrgans() {
-        return view.getProfile().getOrgansDonated();
     }
 }
