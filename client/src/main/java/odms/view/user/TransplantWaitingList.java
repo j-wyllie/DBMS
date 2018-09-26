@@ -56,7 +56,7 @@ public class TransplantWaitingList extends CommonView {
                 "Organs Required");
 
         transplantOrganRequiredCol.setCellValueFactory(
-                cdf -> new SimpleStringProperty(cdf.getValue().getValue().getName()));
+                cdf -> new SimpleStringProperty(cdf.getValue().getValue().getNamePlain()));
 
         TableColumn<Map.Entry<Profile, OrganEnum>, String> transplantReceiverNameCol = new TableColumn<>(
                 "Name");
@@ -73,7 +73,7 @@ public class TransplantWaitingList extends CommonView {
         transplantDateCol.setCellValueFactory(
                 cdf -> new SimpleStringProperty(
                         (cdf.getValue().getKey().getOrganDate(cdf.getValue().getValue().getName()))
-                                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))));
+                                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
 
         transplantTable.getColumns().add(transplantOrganRequiredCol);
         transplantTable.getColumns().add(transplantReceiverNameCol);

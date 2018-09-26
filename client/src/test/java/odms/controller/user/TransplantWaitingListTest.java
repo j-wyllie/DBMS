@@ -14,7 +14,7 @@ import org.junit.Test;
 
 public class TransplantWaitingListTest {
 
-    private TransplantWaitingList controller;
+    private static final TransplantWaitingList CONTROLLER = new TransplantWaitingList();
     private String searchString1;
     private String searchString2;
     private String searchString3;
@@ -26,7 +26,6 @@ public class TransplantWaitingListTest {
 
     @Before
     public void setUp() {
-        controller = new TransplantWaitingList();
         searchString1 = "b";
         searchString2 = "Jane";
         searchString3 = "";
@@ -47,30 +46,30 @@ public class TransplantWaitingListTest {
     @Test
     public void searchWaitingListSingleLetter() {
         List<Entry<Profile, OrganEnum>> result =
-                controller.searchWaitingList(receiverList, searchString1);
+                CONTROLLER.searchWaitingList(receiverList, searchString1);
 
         assertTrue(result.contains(new SimpleEntry<>(testProfile1, OrganEnum.BONE)));
         assertTrue(result.contains(new SimpleEntry<>(testProfile2, OrganEnum.LIVER)));
         assertTrue(result.contains(new SimpleEntry<>(testProfile2, OrganEnum.BONE)));
         assertTrue(result.contains(new SimpleEntry<>(testProfile3, OrganEnum.HEART)));
-        assertTrue(result.size() == 4);
+        assertEquals(4, result.size());
     }
 
     @Test
     public void searchWaitingListName() {
         List<Entry<Profile, OrganEnum>> result =
-                controller.searchWaitingList(receiverList, searchString2);
+                CONTROLLER.searchWaitingList(receiverList, searchString2);
 
         assertTrue(result.contains(new SimpleEntry<>(testProfile4, OrganEnum.SKIN)));
-        assertTrue(result.size() == 1);
+        assertEquals(1, result.size());
     }
 
     @Test
     public void searchWaitingListEmptyString() {
         List<Entry<Profile, OrganEnum>> result =
-                controller.searchWaitingList(receiverList, searchString3);
+                CONTROLLER.searchWaitingList(receiverList, searchString3);
 
         assertEquals(receiverList, result);
-        assertTrue(result.size() == 5);
+        assertEquals(5, result.size());
     }
 }
