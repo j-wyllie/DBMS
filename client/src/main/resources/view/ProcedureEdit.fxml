@@ -1,168 +1,139 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<AnchorPane prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.profile.ProcedureDetailed">
+
+<AnchorPane prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.profile.ProcedureDetailed">
     <children>
-        <GridPane AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
-            <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
-            <RowConstraints />
-            <RowConstraints />
-            </rowConstraints>
-            <children>
-                <TilePane style="-fx-background-color: #1fa98c;" GridPane.columnSpan="2">
-                    <children>
-                        <GridPane prefHeight="116.0" prefWidth="803.0">
-                            <columnConstraints>
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="517.0" minWidth="10.0" percentWidth="80.0" prefWidth="475.0" />
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="0.0" prefWidth="42.0" />
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="0.0" prefWidth="43.0" />
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="102.0" minWidth="0.0" prefWidth="40.0" />
-                            </columnConstraints>
-                            <rowConstraints>
-                                <RowConstraints maxHeight="27.0" minHeight="10.0" prefHeight="26.0" vgrow="SOMETIMES" />
-                                <RowConstraints maxHeight="63.0" minHeight="10.0" prefHeight="63.0" vgrow="SOMETIMES" />
-                                <RowConstraints maxHeight="52.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
-                                <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                            </rowConstraints>
-                            <children>
-                                <Label fx:id="procedureLabel" prefHeight="34.0" prefWidth="927.0" text="Procedure" textFill="WHITE" GridPane.rowIndex="2">
-                                    <font>
-                                        <Font size="28.0" />
-                                    </font>
-                                    <GridPane.margin>
-                                        <Insets left="40.0" />
-                                    </GridPane.margin>
-                                </Label>
-                                <Label fx:id="procedureSummaryLabel" prefHeight="49.0" prefWidth="916.0" textFill="WHITE" GridPane.rowIndex="1">
-                                    <GridPane.margin>
-                                        <Insets left="40.0" />
-                                    </GridPane.margin>
-                                    <font>
-                                        <Font name="System Bold" size="40.0" />
-                                    </font>
-                                </Label>
-                                <TextField fx:id="summaryEntry" maxWidth="888.0" prefHeight="25.0" prefWidth="888.0" GridPane.rowIndex="1">
-                                    <GridPane.margin>
-                                        <Insets left="40.0" />
-                                    </GridPane.margin>
-                                </TextField>
-                            </children>
-                        </GridPane>
-                    </children>
-                </TilePane>
-                <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #e3e3e5;" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="3">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="251.0" minWidth="10.0" prefWidth="228.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="196.0" minWidth="10.0" prefWidth="139.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="182.0" minWidth="10.0" prefWidth="134.0" />
-                        <ColumnConstraints />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
-                        <RowConstraints />
-                    </rowConstraints>
-                    <children>
-                        <Label text="Date:" GridPane.halignment="RIGHT">
-                            <font>
-                                <Font size="22.0" />
-                            </font>
-                            <GridPane.margin>
-                                <Insets right="20.0" />
-                            </GridPane.margin>
-                        </Label>
-                        <Label text="Organs Affected:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
-                            <font>
-                                <Font size="22.0" />
-                            </font>
-                            <GridPane.margin>
-                                <Insets right="20.0" />
-                            </GridPane.margin>
-                        </Label>
-                        <Label alignment="TOP_LEFT" text="Description:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
-                            <font>
-                                <Font size="22.0" />
-                            </font>
-                            <GridPane.margin>
-                                <Insets right="20.0" />
-                            </GridPane.margin>
-                        </Label>
-                        <TextArea fx:id="descEntry" prefHeight="85.0" prefWidth="473.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2">
-                            <GridPane.margin>
-                                <Insets bottom="20.0" right="20.0" />
-                            </GridPane.margin>
-                        </TextArea>
-                        <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonClicked" prefHeight="35.0" prefWidth="105.0" text="Save" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="TOP">
-                            <GridPane.margin>
-                                <Insets right="20.0" />
-                            </GridPane.margin>
-                        </Button>
-                        <ListView fx:id="affectedOrgansListView" prefHeight="74.0" prefWidth="473.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
-                     <GridPane.margin>
-                        <Insets bottom="20.0" right="20.0" />
-                     </GridPane.margin></ListView>
-                        <DatePicker fx:id="dateOfProcedureDatePicker" maxWidth="1.7976931348623157E308" promptText="Date of Procedure" GridPane.columnIndex="1" GridPane.columnSpan="3">
-                     <GridPane.margin>
-                        <Insets bottom="20.0" right="20.0" top="20.0" />
-                     </GridPane.margin></DatePicker>
-                        <Label fx:id="warningLabel" text="Invalid Date" textAlignment="CENTER" textFill="RED" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="TOP">
-                     <GridPane.margin>
-                        <Insets top="10.0" />
-                     </GridPane.margin></Label>
-                  <Button fx:id="editButton" mnemonicParsing="false" onAction="#handleEditButtonClicked" prefHeight="35.0" prefWidth="105.0" text="Edit" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="TOP">
-                     <GridPane.margin>
-                        <Insets bottom="20.0" right="20.0" />
-                     </GridPane.margin>
+          <GridPane layoutX="-1.0" layoutY="-1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #e3e3e5;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="3">
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="251.0" minWidth="10.0" prefWidth="228.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="196.0" minWidth="10.0" prefWidth="139.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="182.0" minWidth="10.0" prefWidth="134.0" />
+                  <ColumnConstraints />
+              </columnConstraints>
+              <rowConstraints>
+            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
+                  <RowConstraints />
+              </rowConstraints>
+              <children>
+                  <Label styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Date:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                      <font>
+                          <Font size="22.0" />
+                      </font>
+                      <GridPane.margin>
+                          <Insets right="20.0" />
+                      </GridPane.margin>
+                  </Label>
+                  <Label styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Organs Affected:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                      <font>
+                          <Font size="22.0" />
+                      </font>
+                      <GridPane.margin>
+                          <Insets right="20.0" />
+                      </GridPane.margin>
+                  </Label>
+                  <Label alignment="TOP_LEFT" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Description:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                      <font>
+                          <Font size="22.0" />
+                      </font>
+                      <GridPane.margin>
+                          <Insets right="20.0" />
+                      </GridPane.margin>
+                  </Label>
+                  <TextArea fx:id="descEntry" prefHeight="85.0" prefWidth="473.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3">
+                      <GridPane.margin>
+                          <Insets bottom="20.0" right="20.0" />
+                      </GridPane.margin>
+                  </TextArea>
+                  <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonClicked" prefHeight="35.0" prefWidth="105.0" text="Save" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="TOP">
+                      <GridPane.margin>
+                          <Insets right="20.0" />
+                      </GridPane.margin>
                   </Button>
-                  <Label text="Hospital:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="TOP">
-                     <font>
-                        <Font size="22.0" />
-                     </font>
-                     <GridPane.margin>
-                        <Insets right="20.0" />
-                     </GridPane.margin>
-                  </Label>
-                  <ChoiceBox fx:id="hospitalChoiceBox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" GridPane.valignment="TOP">
-                     <GridPane.margin>
-                        <Insets bottom="20.0" right="20.0" />
-                     </GridPane.margin>
-                  </ChoiceBox>
-                  <Label fx:id="procedureDateLabel" text="Place holder" GridPane.columnIndex="1" GridPane.columnSpan="3">
-                     <font>
-                        <Font size="22.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="procedureDescriptionLabel" alignment="TOP_LEFT" text="Description:" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.valignment="TOP">
-                     <font>
-                        <Font size="22.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="hospitalLabel" text="Hospital:" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" GridPane.valignment="TOP">
-                     <font>
-                        <Font size="22.0" />
-                     </font>
-                  </Label>
-                  <Button fx:id="editOrgansAffectedButton" mnemonicParsing="false" onAction="#handleEditOrgansAffected" prefHeight="35.0" text="HELP ME OBI-WAN" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
-                     <GridPane.margin>
-                        <Insets bottom="20.0" right="20.0" />
-                     </GridPane.margin>
-                  </Button>
-                    </children>
-                </GridPane>
-            </children>
-        </GridPane>
+                  <ListView fx:id="affectedOrgansListView" prefHeight="74.0" prefWidth="473.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets bottom="20.0" right="20.0" />
+               </GridPane.margin>
+            </ListView>
+                  <DatePicker fx:id="dateOfProcedureDatePicker" maxWidth="1.7976931348623157E308" promptText="Date of Procedure" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="20.0" right="20.0" top="20.0" />
+               </GridPane.margin>
+            </DatePicker>
+                  <Label fx:id="warningLabel" text="Invalid Date" textAlignment="CENTER" textFill="RED" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="TOP">
+               <GridPane.margin>
+                  <Insets top="10.0" />
+               </GridPane.margin>
+            </Label>
+            <Button fx:id="editButton" mnemonicParsing="false" onAction="#handleEditButtonClicked" prefHeight="35.0" prefWidth="105.0" text="Edit" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="TOP">
+               <GridPane.margin>
+                  <Insets bottom="20.0" right="20.0" />
+               </GridPane.margin>
+            </Button>
+            <Label styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Hospital:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="TOP">
+               <font>
+                  <Font size="22.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets right="20.0" />
+               </GridPane.margin>
+            </Label>
+            <ChoiceBox fx:id="hospitalChoiceBox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" GridPane.valignment="TOP">
+               <GridPane.margin>
+                  <Insets bottom="20.0" right="20.0" />
+               </GridPane.margin>
+            </ChoiceBox>
+            <Label fx:id="procedureDateLabel" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Place holder" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Label fx:id="procedureDescriptionLabel" alignment="TOP_LEFT" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Description:" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" GridPane.valignment="TOP">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Label fx:id="hospitalLabel" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Hospital:" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" GridPane.valignment="TOP">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Button fx:id="editOrgansAffectedButton" mnemonicParsing="false" onAction="#handleEditOrgansAffected" prefHeight="35.0" text="Edit Organs" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+               <GridPane.margin>
+                  <Insets bottom="20.0" right="20.0" />
+               </GridPane.margin>
+            </Button>
+                    <Label fx:id="procedureSummaryLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" stylesheets="@../styles/Common.css" textFill="WHITE" GridPane.columnSpan="2147483647">
+                        <GridPane.margin>
+                            <Insets />
+                        </GridPane.margin>
+                        <font>
+                            <Font name="System Bold" size="40.0" />
+                        </font>
+               <styleClass>
+                  <String fx:value="banner-default" />
+                  <String fx:value="banner" />
+               </styleClass>
+                    </Label>
+                    <TextField fx:id="summaryEntry" maxWidth="1.7976931348623157E308" stylesheets="@../styles/Common.css" GridPane.columnSpan="2147483647">
+                        <GridPane.margin>
+                            <Insets left="100.0" right="100.0" />
+                        </GridPane.margin>
+               <font>
+                  <Font size="24.0" />
+               </font>
+                    </TextField>
+              </children>
+          </GridPane>
     </children>
 </AnchorPane>

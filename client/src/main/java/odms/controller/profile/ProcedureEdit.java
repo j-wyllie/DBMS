@@ -1,6 +1,5 @@
 package odms.controller.profile;
 
-import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.history.History;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
@@ -11,7 +10,6 @@ import odms.view.profile.ProcedureDetailed;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 /**
  * Controller for the procedure edit scene.
@@ -55,7 +53,7 @@ public class ProcedureEdit {
         LocalDate dateOfProcedure = view.getDateOfProcedure();
         LocalDate dob = profile.getDateOfBirth();
         if (dob.isAfter(dateOfProcedure)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid date");
         } else {
             procedure.setDate(dateOfProcedure);
         }
@@ -70,9 +68,5 @@ public class ProcedureEdit {
         CurrentHistory.updateHistory(action);
 
         server.update(profile, procedure);
-    }
-
-    public Set<OrganEnum> getDonatedOrgans() {
-        return view.getProfile().getOrgansDonated();
     }
 }

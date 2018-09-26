@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -112,6 +113,7 @@ public class ProcedureDetailed extends CommonView {
         dateOfProcedureDatePicker.setVisible(false);
         summaryEntry.setDisable(true);
         summaryEntry.setVisible(false);
+        summaryEntry.setAlignment(Pos.CENTER);
         saveButton.setDisable(true);
         saveButton.setVisible(false);
         editOrgansAffectedButton.setDisable(true);
@@ -150,9 +152,11 @@ public class ProcedureDetailed extends CommonView {
         dateOfProcedureDatePicker.setValue(currentProcedure.getDate());
         summaryEntry.setText(currentProcedure.getSummary());
 
-        procedureSummaryLabel.setVisible(false);
+        procedureSummaryLabel.setText("");
         procedureDateLabel.setVisible(false);
         procedureDescriptionLabel.setVisible(false);
+        procedureDescriptionLabel.setText(currentProcedure.getLongDescription());
+
         hospitalLabel.setVisible(false);
         editOrgansAffectedButton.setDisable(false);
         editOrgansAffectedButton.setVisible(true);
@@ -166,34 +170,39 @@ public class ProcedureDetailed extends CommonView {
      * Button handler for save button.
      */
     public void handleSaveButtonClicked() {
-        controller.save();
-        descEntry.setDisable(true);
-        descEntry.setVisible(false);
-        dateOfProcedureDatePicker.setDisable(true);
-        dateOfProcedureDatePicker.setVisible(false);
-        saveButton.setDisable(true);
-        saveButton.setVisible(false);
-        summaryEntry.setDisable(true);
-        summaryEntry.setVisible(false);
-        hospitalChoiceBox.setVisible(false);
-        hospitalChoiceBox.setDisable(true);
+        try {
+            controller.save();
+            descEntry.setDisable(true);
+            descEntry.setVisible(false);
+            dateOfProcedureDatePicker.setDisable(true);
+            dateOfProcedureDatePicker.setVisible(false);
+            saveButton.setDisable(true);
+            saveButton.setVisible(false);
+            summaryEntry.setDisable(true);
+            summaryEntry.setVisible(false);
+            hospitalChoiceBox.setVisible(false);
+            hospitalChoiceBox.setDisable(true);
 
-        procedureSummaryLabel.setVisible(true);
-        procedureDateLabel.setVisible(true);
-        procedureDescriptionLabel.setVisible(true);
-        hospitalLabel.setVisible(true);
-        editOrgansAffectedButton.setDisable(true);
-        editOrgansAffectedButton.setVisible(false);
+            procedureDateLabel.setVisible(true);
+            procedureDescriptionLabel.setVisible(true);
+            hospitalLabel.setVisible(true);
+            editOrgansAffectedButton.setDisable(true);
+            editOrgansAffectedButton.setVisible(false);
 
-        editButton.setVisible(true);
-        editButton.setDisable(false);
+            editButton.setVisible(true);
+            editButton.setDisable(false);
 
-        procedureSummaryLabel.setText(currentProcedure.getSummary());
-        procedureDateLabel.setText(currentProcedure.getDate().toString());
-        procedureDescriptionLabel.setText(currentProcedure.getLongDescription());
-        hospitalLabel.setText(currentProcedure.getHospital().getName());
+            warningLabel.setVisible(false);
 
-        parent.refreshProcedureTable();
+            procedureSummaryLabel.setText(currentProcedure.getSummary());
+            procedureDateLabel.setText(currentProcedure.getDate().toString());
+            procedureDescriptionLabel.setText(currentProcedure.getLongDescription());
+            hospitalLabel.setText(currentProcedure.getHospital().getName());
+
+            parent.refreshProcedureTable();
+        } catch (IllegalArgumentException e) {
+            warningLabel.setVisible(true);
+        }
     }
 
     public Profile getProfile() {

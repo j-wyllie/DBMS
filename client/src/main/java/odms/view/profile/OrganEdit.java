@@ -34,7 +34,7 @@ import java.util.Set;
  */
 @Slf4j
 public class OrganEdit extends OrganCommon {
-    private ObservableList<String> observableListOrgansSelected = FXCollections
+    protected ObservableList<String> observableListOrgansSelected = FXCollections
             .observableArrayList();
     private Profile currentProfile;
     private odms.controller.profile.OrganEdit controller = new odms.controller.profile.OrganEdit(
