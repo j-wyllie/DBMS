@@ -178,7 +178,7 @@ public class AvailableOrgans extends CommonView {
                 "Countdown"
         );
         countdownCol.setCellValueFactory(
-                cdf -> new SimpleStringProperty(getTimeToExpiryHoursSeconds(
+                cdf -> new SimpleStringProperty(getTimeToExpiryStd(
                         cdf.getValue().getValue(), cdf.getValue().getKey())
                 )
         );
