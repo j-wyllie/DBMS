@@ -301,7 +301,7 @@ ALTER TABLE `history`
 -- Indexes for table `hla_type`
 --
 ALTER TABLE `hla_type`
-  ADD KEY `ProfileId` (`ProfileId`);
+  ADD PRIMARY KEY `ProfileId` (`ProfileId`);
 
 --
 -- Indexes for table `hospitals`
@@ -341,8 +341,8 @@ ALTER TABLE `profiles`
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`UserId`),
-  ADD KEY (`UserId`);
+  ADD PRIMARY KEY (`UserId`);
+
 --
 -- AUTO_INCREMENT for table `affected_organs`
 --

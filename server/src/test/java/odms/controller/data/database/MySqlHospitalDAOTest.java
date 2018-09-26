@@ -101,4 +101,20 @@ public class MySqlHospitalDAOTest extends MySqlCommonTests {
         hospitals = hospitalDAO.getAll();
         assertEquals(size - 1, hospitals.size());
     }
+
+    @Test
+    public void removeById() throws SQLException {
+        Integer id = -1;
+        hospitalDAO.add(testHospital3);
+        List<Hospital> hospitals = hospitalDAO.getAll();
+        int size = hospitals.size();
+        for (Hospital hospital : hospitals) {
+            if (hospital.getName().equals(testHospital3.getName())) {
+                id = hospital.getId();
+            }
+        }
+        hospitalDAO.remove(id);
+        hospitals = hospitalDAO.getAll();
+        assertEquals(size - 1, hospitals.size());
+    }
 }

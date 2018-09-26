@@ -1,7 +1,5 @@
 package odms.controller.database.locations;
 
-import odms.commons.model.locations.Hospital;
-import odms.commons.model.profile.Profile;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -10,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.locations.Hospital;
-import odms.commons.model.locations.Hospital;
-import odms.commons.model.profile.Profile;
 import odms.controller.http.Request;
 import odms.controller.http.Response;
 import org.sonar.api.internal.google.gson.Gson;
@@ -26,7 +22,9 @@ import org.sonar.api.internal.google.gson.JsonParser;
 public class HttpHospitalDAO implements HospitalDAO {
 
     private static final Integer PORTNUMBER = 6969;
-    private static final String URL = "http://localhost:%s/api/v1/hospitals/all";
+    private static final String URL_ALL = "http://localhost:%s/api/v1/hospitals/all";
+    private static final String URL = "http://localhost:%s/api/v1/hospitals";
+
 
     /**
      * Get all hospitals in database.
@@ -35,7 +33,7 @@ public class HttpHospitalDAO implements HospitalDAO {
      */
     @Override
     public List<Hospital> getAll() throws SQLException {
-        String url = String.format(URL, PORTNUMBER);
+        String url = String.format(URL_ALL, PORTNUMBER);
         Map<String, Object> queryParams = new HashMap<>();
         JsonParser parser = new JsonParser();
         Gson gson = new Gson();
