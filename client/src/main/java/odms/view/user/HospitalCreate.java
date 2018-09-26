@@ -57,6 +57,8 @@ public class HospitalCreate {
         try {
             address = addressField.getText();
             name = nameField.getText();
+            if (name.length() < 1) throw new Exception("Name not provided!");
+            if (address.length() < 1) throw new Exception("Address not provided!");
         } catch (Exception e) {
             warningLabel.setVisible(true);
             warningServerLabel.setVisible(false);
