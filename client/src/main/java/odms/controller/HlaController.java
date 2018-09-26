@@ -11,11 +11,11 @@ import odms.controller.database.hla.HLADAO;
 @Slf4j
 public class HlaController {
     /**
-     * Returns the best match of the given antigens of the given gene
-     * @param gene the gene to be matched
-     * @param hlaA the first antigen
-     * @param hlaB the second antigen
-     * @return number of matching antigens (0-2)
+     * Returns the best match of the given antigens of the given gene.
+     * @param gene the gene to be matched.
+     * @param hlaA the first antigen.
+     * @param hlaB the second antigen.
+     * @return number of matching antigens (0-2).
      */
     private static Integer calcMatch(String gene, HLAType hlaA, HLAType hlaB) {
         Integer xa = hlaA.getGroupX().get(gene);
@@ -52,7 +52,7 @@ public class HlaController {
      * @return match fit as a percentage
      */
     private static Integer matchCalcScore(HLAType hlaA, HLAType hlaB) {
-        final float MATCH_MULTIPLIER = 100f / 12f;
+        final float matchMultiplier = 100f / 12f;
         float score;
         int numMatchingAnitgens = 0;
 
@@ -64,9 +64,7 @@ public class HlaController {
             return null;
         }
 
-        score = numMatchingAnitgens * MATCH_MULTIPLIER;
-        System.out.println(hlaA.getGroupX());
-        System.out.println(score);
+        score = numMatchingAnitgens * matchMultiplier;
         return (int) score;
     }
 
@@ -128,7 +126,7 @@ public class HlaController {
      * @param profileIdB the profile ID of the second HLA
      * @return arraylist of two HLATypes to be compared.
      */
-    private static ArrayList<HLAType> getDatabaseHLA(Integer profileIdA, Integer profileIdB){
+    private static ArrayList<HLAType> getDatabaseHLA(Integer profileIdA, Integer profileIdB) {
         ArrayList<HLAType> hlas = new ArrayList<>();
         HLADAO hladao = DAOFactory.getHlaDAO();
         hlas.add(hladao.get(profileIdA));
