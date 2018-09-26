@@ -122,7 +122,7 @@ public class Display extends CommonView {
                 currentProfile.setReceiver(true);
             }
 
-            if (currentProfile.isReceiver()) {
+            if (!currentProfile.getOrgansReceived().isEmpty() || !currentProfile.getOrgansRequired().isEmpty()) {
                 receiverStatusLabel.setText("Receiver Status: Registered");
             }
 
