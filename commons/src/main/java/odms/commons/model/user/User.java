@@ -30,7 +30,7 @@ public class User {
      */
     public User(UserType userType, List<String> attrArray) {
         this.userType = userType;
-        setExtraAttributes(attrArray, this);
+        setExtraAttributes(attrArray);
         timeOfCreation = LocalDateTime.now();
     }
 
@@ -119,10 +119,10 @@ public class User {
      * @param attributes the attributes given in the constructor.
      * @throws IllegalArgumentException when a required attribute is not included or spelt wrong.
      */
-    public void setExtraAttributes(List<String> attributes, User user) throws IllegalArgumentException {
+    public void setExtraAttributes(List<String> attributes) throws IllegalArgumentException {
         for (String val : attributes) {
             String[] parts = val.split("=");
-            setGivenAttribute(parts, user);
+            setGivenAttribute(parts);
         }
     }
 
@@ -131,9 +131,9 @@ public class User {
      * @param parts a string containing the users new attribute to be set.
      * @throws IllegalArgumentException
      */
-    private void setGivenAttribute(String[] parts, odms.commons.model.user.User user) throws IllegalArgumentException {
+    private void setGivenAttribute(String[] parts) throws IllegalArgumentException {
         String attrName = parts[0];
-        String value = parts[1].replace("\"", ""); // get rid of the speech marks;
+        String value = parts[1].replace("\"", "");
 
         if (attrName.startsWith(" ")) {
             attrName = attrName.substring(1);

@@ -19,17 +19,6 @@ import java.util.Set;
 @Slf4j
 public class OrganDisplay extends CommonController {
 
-    private final odms.view.profile.OrganDisplay view;
-
-    /**
-     * Constructs a OrganDisplay object. Sets the view variable.
-     *
-     * @param view the OrganDisplay view.
-     */
-    public OrganDisplay(odms.view.profile.OrganDisplay view) {
-        this.view = view;
-    }
-
     /**
      * Gets profile data from the database. This is to confirm is the donating organs are expired or
      * not.

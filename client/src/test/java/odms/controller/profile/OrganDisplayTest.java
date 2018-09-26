@@ -36,7 +36,7 @@ public class OrganDisplayTest {
         profileOneAttr.add("dob=\"17-01-1998\"");
         profileOneAttr.add("nhi=\"123456879\"");
         currentProfile = new Profile(profileOneAttr);
-        controller = new OrganDisplay(new odms.view.profile.OrganDisplay());
+        controller = new OrganDisplay();
         currentProfile.setId(99999);
     }
 

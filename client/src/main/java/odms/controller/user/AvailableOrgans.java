@@ -108,7 +108,7 @@ public class AvailableOrgans {
      * @param waitTime Current wait time.
      * @return The formatted duration string.
      */
-    private static String formatDuration(String duration, Long waitTime) {
+    public static String formatDuration(String duration, Long waitTime) {
         long temp;
         if (waitTime >= ONE_SECOND) {
             temp = waitTime / ONE_DAY;
@@ -132,7 +132,7 @@ public class AvailableOrgans {
      * @param waitTime Current wait time.
      * @return the duration.
      */
-    private static String checkWaitTimeMinutesHours(String duration, Long waitTime) {
+    public static String checkWaitTimeMinutesHours(String duration, Long waitTime) {
         long temp;
         temp = waitTime / ONE_HOUR;
         if (temp > 0) {
@@ -182,32 +182,16 @@ public class AvailableOrgans {
     }
 
     /**
-     * Removes for organs in the expired organ list.
+     * Get remaining time in standard '5y 4d 3h 2m 1s' format.
      *
-     * @param organ Organ to remove.
-     * @param profile Current profile.
-     * @param m Expired organs list.
+     * @param organ the organ being checked against.
+     * @param profile the selected profile.
+     * @return formatted string.
      */
-    private void checkOrganExpiredListRemoval(OrganEnum organ, Profile profile,
-            Map.Entry<Profile, OrganEnum> m) {
-
-        if (LocalDateTime.now()
-                .isAfter(getExpiryTime(organ, profile))) {
-            view.removeItem(m);
-            setOrganExpired(organ, profile);
-        }
-        List<ExpiredOrgan> expiredList = new ArrayList<>();
-        try {
-            expiredList = DAOFactory.getOrganDao().getExpired(profile);
-        } catch (SQLException e) {
-            log.error(e.getMessage(), e);
-        }
-        for (ExpiredOrgan currentOrgan : expiredList) {
-            if (currentOrgan.getOrganName().equalsIgnoreCase(organ.getNamePlain())) {
-                view.removeItem(m);
-            }
-        }
+    public static String getTimeToExpiryStd(OrganEnum organ, Profile profile) {
+        return getTimeToExpiryFormatted(organ, profile, true);
     }
+
 
     /**
      * Gets the expiry time for an organ.
@@ -216,7 +200,7 @@ public class AvailableOrgans {
      * @param profile Current profile.
      * @return LocalDateTime of the expiry time.
      */
-    private static LocalDateTime getExpiryTime(OrganEnum organ, Profile profile) {
+    public static LocalDateTime getExpiryTime(OrganEnum organ, Profile profile) {
         LocalDateTime expiryTime;
         switch (organ) {
             case HEART:
@@ -294,17 +278,6 @@ public class AvailableOrgans {
         }
 
         return Double.valueOf(expiryTime);
-    }
-
-    /**
-     * Get remaining time in standard '5y 4d 3h 2m 1s' format.
-     *
-     * @param organ the organ being checked against.
-     * @param profile the selected profile.
-     * @return formatted string.
-     */
-    public static String getTimeToExpiryStd(OrganEnum organ, Profile profile) {
-        return getTimeToExpiryFormatted(organ, profile, true);
     }
 
     /**
