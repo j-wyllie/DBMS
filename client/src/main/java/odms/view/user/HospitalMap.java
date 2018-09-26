@@ -357,7 +357,7 @@ public class HospitalMap extends CommonView implements
 
             travelInfo.setText("Closest hospital to " + hospitalSelected1.getName() + ": " +
                     closest.getName() + ", " + closest.getAddress() +
-                    ".\n Approximately " + decimalFormat.format(distance) + "km away.");
+                    ".\nApproximately " + decimalFormat.format(distance) + "km away.");
         }
     }
 
