@@ -1,6 +1,5 @@
 package odms.controller.profile;
 
-import java.net.MalformedURLException;
 import java.time.format.DateTimeFormatter;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;

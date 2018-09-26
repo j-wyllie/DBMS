@@ -37,7 +37,7 @@ public class Server {
         log.info("Listening on port: " + port);
 
         port(port);
-        initExceptionHandler((e) -> {
+        initExceptionHandler(e -> {
             log.error("Server init failed");
             log.error(e.getMessage(), e);
         });

@@ -179,31 +179,10 @@ public class MySqlProfileDAOTest extends CommonTestUtils {
         assertEquals("Whitely", mySqlProfileDAO.getDeadFiltered("White").get(1).getLastNames());
     }
 
-    @Ignore
-    public void testHasPassword() throws SQLException, UserNotFoundException {
-        mySqlProfileDAO.add(testProfile0);
-        mySqlProfileDAO.savePassword(testProfile0.getNhi(), "password");
-        assertTrue(mySqlProfileDAO.hasPassword(testProfile0.getNhi()));
-    }
-
     @Test
     public void testDoesntHavePassword() throws SQLException {
         mySqlProfileDAO.add(testProfile0);
         assertFalse(mySqlProfileDAO.hasPassword(testProfile0.getNhi()));
-    }
-
-    @Ignore
-    public void testCheckCredentialsCorrect() throws SQLException, UserNotFoundException {
-        mySqlProfileDAO.add(testProfile0);
-        mySqlProfileDAO.savePassword(testProfile0.getNhi(), "password");
-        assertTrue(mySqlProfileDAO.checkCredentials(testProfile0.getNhi(), "password"));
-    }
-
-    @Ignore
-    public void testCheckCredentialsIncorrect() throws SQLException, UserNotFoundException {
-        mySqlProfileDAO.add(testProfile0);
-        mySqlProfileDAO.savePassword(testProfile0.getNhi(), "password");
-        assertFalse(mySqlProfileDAO.checkCredentials(testProfile0.getNhi(), "wrong"));
     }
 
     @After

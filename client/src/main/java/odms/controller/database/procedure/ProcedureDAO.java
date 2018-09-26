@@ -1,7 +1,5 @@
 package odms.controller.database.procedure;
 
-
-import java.io.IOException;
 import java.util.List;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Procedure;

@@ -14,11 +14,11 @@ import java.sql.SQLException;
  */
 public class PasswordPrompt {
 
-    private static Integer PW_MIN_LENGTH = 5;
+    private static final Integer PW_MIN_LENGTH = 5;
 
-    private static String PW_BASE_ERROR = "Invalid password: ";
-    private static String PW_NOT_MATCHING = "Passwords do not match.";
-    private static String PW_TOO_SHORT = "Password is less than 5 characters.";
+    private static final String PW_BASE_ERROR = "Invalid password: ";
+    private static final String PW_NOT_MATCHING = "Passwords do not match.";
+    private static final String PW_TOO_SHORT = "Password is less than 5 characters.";
 
     private Profile currentProfile;
 

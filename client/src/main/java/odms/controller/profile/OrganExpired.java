@@ -11,15 +11,6 @@ import odms.controller.database.DAOFactory;
  * Control access for items around the organ lists.
  */
 public class OrganExpired extends CommonController {
-    private odms.view.profile.OrganExpired view;
-
-    /**
-     * Constructs the OrganExpired controller. Sets the view.
-     * @param view The OrganExpired view
-     */
-    public OrganExpired(odms.view.profile.OrganExpired view) {
-        this.view = view;
-    }
 
     /**
      * Gets all manually expired organs for the given profile.
