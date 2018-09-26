@@ -1,17 +1,14 @@
 package server.controller;
 
+import java.sql.SQLException;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.locations.Hospital;
 import org.sonar.api.internal.google.gson.Gson;
-import org.sonar.api.internal.google.gson.JsonObject;
-import org.sonar.api.internal.google.gson.JsonParser;
 import server.model.database.DAOFactory;
 import server.model.database.locations.HospitalDAO;
 import spark.Request;
 import spark.Response;
-
-import java.sql.SQLException;
-import java.util.List;
 
 /**
  * Controller for hospital endpoints.

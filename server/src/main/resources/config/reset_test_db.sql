@@ -105,6 +105,23 @@ CREATE TABLE IF NOT EXISTS `hla_type` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
+--
+-- Table structure for table `procedures`
+--
+
+DROP TABLE IF EXISTS `procedures`;
+CREATE TABLE IF NOT EXISTS `procedures` (
+  `Id` int(11) NOT NULL,
+  `ProfileId` int(11) NOT NULL,
+  `Summary` varchar(100) DEFAULT NULL,
+  `Description` varchar(200) NOT NULL,
+  `ProcedureDate` datetime DEFAULT NULL,
+  `Pending` BOOLEAN DEFAULT NULL,
+  `Previous` BOOLEAN DEFAULT NULL,
+  `Hospital` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `hospitals`
@@ -166,24 +183,6 @@ CREATE TABLE IF NOT EXISTS `organs` (
   `ExpiryDate` datetime DEFAULT NULL,
   `Note` varchar(200) DEFAULT NULL,
   `DateRegistered` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `procedures`
---
-
-DROP TABLE IF EXISTS `procedures`;
-CREATE TABLE IF NOT EXISTS `procedures` (
-  `Id` int(11) NOT NULL,
-  `ProfileId` int(11) NOT NULL,
-  `Summary` varchar(100) DEFAULT NULL,
-  `Description` varchar(200) NOT NULL,
-  `ProcedureDate` datetime DEFAULT NULL,
-  `Pending` BOOLEAN DEFAULT NULL,
-  `Previous` BOOLEAN DEFAULT NULL,
-  `Hospital` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -307,10 +306,7 @@ ALTER TABLE `hla_type`
 -- Indexes for table `hospitals`
 --
 ALTER TABLE `hospitals`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `Name` (`Name`),
-  ADD KEY `Id` (`Id`),
-  ADD UNIQUE KEY `Id` (`Id`);
+  ADD PRIMARY KEY (`Id`);
 
 --
 -- Indexes for table `locale`

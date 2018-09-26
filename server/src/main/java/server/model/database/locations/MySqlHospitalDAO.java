@@ -136,6 +136,7 @@ public class MySqlHospitalDAO implements HospitalDAO {
      * @throws SQLException thrown when there is a server error.
      */
     public void add(Hospital hospital) throws SQLException {
+
         String query = "INSERT INTO hospitals (Name, Address, Latitude, Longitude, Bone," +
                 "`BoneMarrow`, `ConnectiveTissue`, Cornea, Heart, Intestine, Kidney, Liver, " +
                 "Lung, `MiddleEar`, Pancreas, Skin) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
