@@ -171,17 +171,21 @@ public class ProfileController {
         Profile profile;
 
         try {
-            if (req.queryMap().hasKey(KeyEnum.ID.toString())) {
+            if (req.queryParams(KeyEnum.ID.toString()) != null) {
                 profile = database.get(Integer.valueOf(req.queryParams(KeyEnum.ID.toString())));
             } else {
                 profile = database.get(req.queryParams("username"));
             }
+
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
             res.status(500);
-            return e.getMessage();
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
+        } catch (NumberFormatException e) {
+            log.error(e.getMessage(), e);
+            res.status(400);
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
-
         String responseBody = new Gson().toJson(profile);
 
         res.type(DataTypeEnum.JSON.toString());
@@ -204,6 +208,12 @@ public class ProfileController {
 
         try {
             newProfile = gson.fromJson(req.body(), Profile.class);
+            if (newProfile == null) {
+                throw new IllegalArgumentException("Profile body missing.");
+            }
+        } catch (IllegalArgumentException e) {
+            res.status(400);
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         } catch (Exception e) {
             res.status(400);
             return ResponseMsgEnum.BAD_REQUEST.toString();
@@ -326,12 +336,17 @@ public class ProfileController {
         ProfileDAO database = DAOFactory.getProfileDao();
         Boolean hasPassword = false;
         try {
-            if (req.queryMap().hasKey("nhi")) {
+            if (req.queryParams("nhi") != null) {
                 hasPassword = database.hasPassword(req.queryParams("nhi"));
+            } else {
+                throw new IllegalArgumentException("Required fields missing.");
             }
         } catch (SQLException e) {
             res.status(500);
             return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
+        } catch (IllegalArgumentException e) {
+            res.status(400);
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         res.status(200);
@@ -353,10 +368,16 @@ public class ProfileController {
         String username = request.queryParams("username");
         String password = request.queryParams("password");
         try {
+            if (username == null || password == null) {
+                throw new IllegalArgumentException("Missing required fields.");
+            }
             valid = database.checkCredentials(username, password);
         } catch (UserNotFoundException e) {
             response.status(404);
             return "Profile not found";
+        } catch (IllegalArgumentException e) {
+            response.status(400);
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         if (valid) {
@@ -386,19 +407,27 @@ public class ProfileController {
     public static String savePassword(Request request, Response response) {
         ProfileDAO profileDAO = DAOFactory.getProfileDao();
         Boolean valid;
+
+        String username = request.queryParams("username");
+        String password = request.queryParams("password");
         try {
-            valid = profileDAO.savePassword(request.queryParams("username"),
-                    request.queryParams("password"));
+            if (username == null || password == null) {
+                throw new IllegalArgumentException("Missing required fields.");
+            }
+            valid = profileDAO.savePassword(username, password);
         } catch (UserNotFoundException e) {
-            response.status(500);
-            return e.getMessage();
+            response.status(404);
+            return "Profile not found";
+        } catch (IllegalArgumentException e) {
+            response.status(400);
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
         if (valid) {
             response.status(200);
             return "Password Set";
         } else {
-            response.status(400);
-            return ResponseMsgEnum.BAD_REQUEST.toString();
+            response.status(404);
+            return "Profile not found";
         }
     }
 }
