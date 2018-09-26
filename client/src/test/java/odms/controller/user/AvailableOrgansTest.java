@@ -79,4 +79,26 @@ public class AvailableOrgansTest {
         AvailableOrgans controller = new AvailableOrgans();
         assert(!controller.checkOrganExpired(OrganEnum.BONE, profile1));
     }
+
+    @Test
+    public void testGetExpiryTime() {
+        profile1.setDateOfBirth(LocalDate.MIN);
+        profile1.setDateOfDeath(LocalDateTime.MIN.plusYears(1));
+        LocalDateTime expiryTime = AvailableOrgans.getExpiryTime(OrganEnum.BONE, profile1);
+        assertEquals(LocalDateTime.MIN.plusYears(6), expiryTime);
+    }
+
+    @Test
+    public void testGetTimeRemaining() {
+        profile1.setDateOfBirth(LocalDate.MIN);
+        profile1.setDateOfDeath(LocalDateTime.MIN.plusYears(1000000000));
+        assert(AvailableOrgans.getTimeRemaining(OrganEnum.BONE, profile1) == Duration.between(LocalDateTime.now(), AvailableOrgans.getExpiryTime(OrganEnum.BONE, profile1))
+                .toMillis());
+    }
+
+    @Test
+    public void testGetExpiryLength() {
+        Double num = AvailableOrgans.getExpiryLength(OrganEnum.BONE);
+        assert(1.5768E11 == num);
+    }
 }

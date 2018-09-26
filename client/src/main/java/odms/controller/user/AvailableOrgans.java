@@ -182,34 +182,6 @@ public class AvailableOrgans {
     }
 
     /**
-     * Removes for organs in the expired organ list.
-     *
-     * @param organ Organ to remove.
-     * @param profile Current profile.
-     * @param m Expired organs list.
-     */
-    private void checkOrganExpiredListRemoval(OrganEnum organ, Profile profile,
-            Map.Entry<Profile, OrganEnum> m) {
-
-        if (LocalDateTime.now()
-                .isAfter(getExpiryTime(organ, profile))) {
-            view.removeItem(m);
-            setOrganExpired(organ, profile);
-        }
-        List<ExpiredOrgan> expiredList = new ArrayList<>();
-        try {
-            expiredList = DAOFactory.getOrganDao().getExpired(profile);
-        } catch (SQLException e) {
-            log.error(e.getMessage(), e);
-        }
-        for (ExpiredOrgan currentOrgan : expiredList) {
-            if (currentOrgan.getOrganName().equalsIgnoreCase(organ.getNamePlain())) {
-                view.removeItem(m);
-            }
-        }
-    }
-
-    /**
      * Gets the expiry time for an organ.
      *
      * @param organ Expired organ.
@@ -294,17 +266,6 @@ public class AvailableOrgans {
         }
 
         return Double.valueOf(expiryTime);
-    }
-
-    /**
-     * Get remaining time in standard '5y 4d 3h 2m 1s' format.
-     *
-     * @param organ the organ being checked against.
-     * @param profile the selected profile.
-     * @return formatted string.
-     */
-    public static String getTimeToExpiryStd(OrganEnum organ, Profile profile) {
-        return getTimeToExpiryFormatted(organ, profile, true);
     }
 
     /**
