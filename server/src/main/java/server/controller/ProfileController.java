@@ -27,6 +27,7 @@ import spark.Response;
 @Slf4j
 public class ProfileController {
 
+    private static final String KEY_ORGANS = "organs";
     private static final String KEY_SEARCH = "searchString";
 
     /**
@@ -45,12 +46,7 @@ public class ProfileController {
      */
     public static String getAll(Request req, Response res) {
         String profiles;
-        try {
-            profiles = getAll(req);
-        } catch (SQLException e) {
-            res.status(500);
-            return e.getMessage();
-        }
+        profiles = getAll(req);
         res.type(DataTypeEnum.JSON.toString());
         res.status(200);
 
@@ -72,8 +68,8 @@ public class ProfileController {
                 String searchString = req.queryParams(KEY_SEARCH);
                 List<Entry<Profile, OrganEnum>> result = database.searchReceiving(searchString);
                 profiles = gson.toJson(result);
-            } else if (req.queryMap().hasKey("organs")) {
-                String organs = req.queryParams("organs");
+            } else if (req.queryMap().hasKey(KEY_ORGANS)) {
+                String organs = req.queryParams(KEY_ORGANS);
                 String bloodTypes = req.queryParams("bloodTypes");
                 Integer lowerAgeRange = Integer.valueOf(req.queryParams("lowerAgeRange"));
                 Integer upperAgeRange = Integer.valueOf(req.queryParams("upperAgeRange"));
@@ -131,9 +127,8 @@ public class ProfileController {
      *
      * @param req received.
      * @return json string of profiles.
-     * @throws SQLException error.
      */
-    private static String getAll(Request req) throws SQLException {
+    private static String getAll(Request req) {
         ProfileDAO database = DAOFactory.getProfileDao();
         Gson gson = new Gson();
         String profiles;
@@ -147,7 +142,7 @@ public class ProfileController {
             String type = req.queryParams("type");
 
             Set<OrganEnum> organs = new HashSet<>();
-            List<String> organArray = gson.fromJson(req.queryParams("organs"), List.class);
+            List<String> organArray = gson.fromJson(req.queryParams(KEY_ORGANS), List.class);
             for (String organ : organArray) {
                 organs.add(OrganEnum.valueOf(organ));
             }
