@@ -108,7 +108,7 @@ public class AvailableOrgans {
      * @param waitTime Current wait time.
      * @return The formatted duration string.
      */
-    private static String formatDuration(String duration, Long waitTime) {
+    public static String formatDuration(String duration, Long waitTime) {
         long temp;
         if (waitTime >= ONE_SECOND) {
             temp = waitTime / ONE_DAY;
@@ -132,7 +132,7 @@ public class AvailableOrgans {
      * @param waitTime Current wait time.
      * @return the duration.
      */
-    private static String checkWaitTimeMinutesHours(String duration, Long waitTime) {
+    public static String checkWaitTimeMinutesHours(String duration, Long waitTime) {
         long temp;
         temp = waitTime / ONE_HOUR;
         if (temp > 0) {
@@ -216,7 +216,7 @@ public class AvailableOrgans {
      * @param profile Current profile.
      * @return LocalDateTime of the expiry time.
      */
-    private static LocalDateTime getExpiryTime(OrganEnum organ, Profile profile) {
+    public static LocalDateTime getExpiryTime(OrganEnum organ, Profile profile) {
         LocalDateTime expiryTime;
         switch (organ) {
             case HEART:
