@@ -112,7 +112,7 @@ public class HttpProfileDAO implements ProfileDAO {
         String url = "http://localhost:6969/api/v1/profiles/all";
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("searchString", searchString);
+        queryParams.put("searchString", searchString.replace(' ', '+'));
         queryParams.put("ageSearchInt", ageSearchInt);
         queryParams.put("ageRangeSearchInt", ageRangeSearchInt);
         queryParams.put("region", region);

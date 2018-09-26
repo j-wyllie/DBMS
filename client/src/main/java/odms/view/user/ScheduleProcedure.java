@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.locations.Hospital;
 import odms.commons.model.profile.Profile;
+import odms.controller.AlertController;
 import odms.controller.DateTimePicker;
 import odms.view.CommonView;
 
@@ -40,8 +41,6 @@ public class ScheduleProcedure extends CommonView {
     private ChoiceBox<Hospital> locationDropdown;
     @FXML
     private DateTimePicker dateOfProcedurePicker;
-    @FXML
-    private Label errorLabel;
     @FXML
     private CheckBox receiverEmailCheck;
     @FXML
@@ -108,8 +107,7 @@ public class ScheduleProcedure extends CommonView {
                 }
             });
         } catch (SQLException e) {
-            errorLabel.setText(e.getMessage());
-            errorLabel.setVisible(true);
+            AlertController.invalidEntry(e.getMessage());
             log.error(e.getMessage());
         }
     }
@@ -124,8 +122,7 @@ public class ScheduleProcedure extends CommonView {
             Stage stage = (Stage) donorNameLabel.getScene().getWindow();
             stage.close();
         } catch (IllegalArgumentException e) {
-            errorLabel.setText(e.getMessage());
-            errorLabel.setVisible(true);
+            AlertController.invalidEntry(e.getMessage());
             log.error(e.getMessage());
         }
     }

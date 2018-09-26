@@ -170,7 +170,8 @@ CREATE TABLE IF NOT EXISTS `procedures` (
   `Description` varchar(200) NOT NULL,
   `ProcedureDate` datetime DEFAULT NULL,
   `Pending` BOOLEAN DEFAULT NULL,
-  `Previous` BOOLEAN DEFAULT NULL
+  `Previous` BOOLEAN DEFAULT NULL,
+  `Hospital` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -316,6 +317,7 @@ ALTER TABLE `organs`
 ALTER TABLE `procedures`
   ADD PRIMARY KEY (`Id`),
   ADD KEY `ProfileId` (`ProfileId`);
+  ADD KEY `Hospitals` (`Hospital`);
 
 --
 -- Indexes for table `profiles`
@@ -442,6 +444,8 @@ ALTER TABLE `organs`
 --
 ALTER TABLE `procedures`
   ADD CONSTRAINT `procedures_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
+ALTER TABLE `procedures`
+  ADD CONSTRAINT `procedures_ibfk_2` FOREIGN KEY (`Hospital`) REFERENCES `Hospitals` (`Id`);
 
 INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (1, 'NZ', 1),
