@@ -49,15 +49,9 @@ public class HttpCommonDAO implements CommonDAO {
     @Override
     public void logout() {
         Response response = null;
-        int id = Session.getCurrentId();
-        UserType userType = Session.getCurrentUser().getValue();
+        String url = "http://localhost:6969/api/v1/logout";
 
-        String url = "http://localhost:6969/api/v1/setup";
-        Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("id", id);
-        queryParams.put("UserType", userType);
-
-        Request request = new Request(url, queryParams);
+        Request request = new Request(url, new HashMap<>(), "{}");
         try {
             response = request.post();
         } catch (IOException e) {

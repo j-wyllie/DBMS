@@ -63,24 +63,19 @@ public class MySqlCountryDAO implements CountryDAO {
     }
 
     @Override
-    public void update(CountriesEnum country, boolean valid) {
+    public void update(CountriesEnum country, boolean valid) throws SQLException {
         DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         String query = "update countries set Valid = ? where Name = ?;";
-        try {
-            Connection connection = connectionInstance.getConnection();
+        Connection connection = connectionInstance.getConnection();
 
-            PreparedStatement stmt = connection.prepareStatement(query);
-            stmt.setBoolean(1, valid);
-            stmt.setString(2, country.toString());
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setBoolean(1, valid);
+        stmt.setString(2, country.toString());
 
-            stmt.executeUpdate();
+        stmt.executeUpdate();
 
-            stmt.close();
-            connection.close();
-
-        } catch (SQLException e) {
-            log.error(e.getMessage(), e);
-        }
+        stmt.close();
+        connection.close();
     }
 
 

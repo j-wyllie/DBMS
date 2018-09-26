@@ -37,7 +37,7 @@ public class ConditionController {
         try {
             profileId = Integer.valueOf(req.params(KeyEnum.ID.toString()));
         } catch (Exception e) {
-            res.status(500);
+            res.status(400);
             return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
@@ -83,11 +83,11 @@ public class ConditionController {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             res.status(500);
-            return ResponseMsgEnum.BAD_REQUEST.toString();
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
 
         res.status(201);
-        return ResponseMsgEnum.BAD_REQUEST.toString();
+        return "Condition added successfully.";
     }
 
     /**
@@ -131,7 +131,7 @@ public class ConditionController {
         int id;
 
         try {
-            id = Integer.valueOf(req.params(KeyEnum.ID.toString()));
+            id = Integer.valueOf(req.queryParams(KeyEnum.ID.toString()));
         } catch (Exception e) {
             res.status(400);
             return ResponseMsgEnum.BAD_REQUEST.toString();

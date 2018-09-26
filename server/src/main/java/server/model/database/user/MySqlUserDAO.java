@@ -174,7 +174,7 @@ public class MySqlUserDAO implements UserDAO {
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try (Connection conn = instance.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(query)){
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, user.getUsername());
             if (user.getPassword() != null) {
                 stmt.setString(2, PasswordUtilities.getSaltedHash(user.getPassword()));
@@ -191,6 +191,7 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(10, user.getPictureName());
             stmt.execute();
         } catch (SQLException | InvalidKeySpecException | NoSuchAlgorithmException e) {
+            log.error(e.getMessage(), e);
             throw new SQLException();
         }
     }

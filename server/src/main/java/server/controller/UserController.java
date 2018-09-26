@@ -2,6 +2,8 @@ package server.controller;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
@@ -208,11 +210,11 @@ public class UserController {
         if (valid) {
             try {
                 User user = database.get(username);
-                long token = Middleware.authenticate(
+                Map<String, Integer> body = Middleware.authenticate(
                         user.getStaffID(), user.getUserType());
                 res.type(DataTypeEnum.JSON.toString());
                 res.status(200);
-                return gson.toJson(token);
+                return gson.toJson(body);
             } catch (Exception e) {
                 res.status(500);
                 return e.getMessage();

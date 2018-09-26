@@ -99,7 +99,7 @@ public class Display extends CommonView {
 
 
     /**
-     * sets all of the items in the fxml to their respective values.
+     * Sets all of the items in the fxml to their respective values.
      *
      * @param currentProfile donors profile
      */
@@ -289,7 +289,6 @@ public class Display extends CommonView {
 
     /**
      * Sets the current donor attributes to the labels on start up.
-     *
      * @param profile to be used
      * @param isOpenedByClinician boolean, if true profile has been opened by a clinician/admin
      * @param transplantWaitingList view for the transplantWaitingList. Will have null value if

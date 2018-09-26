@@ -192,7 +192,7 @@ public class Request {
      */
     private void setHeaders(HttpURLConnection con) {
         if (!(this.urlString.contains("setup") || this.urlString.contains("login"))) {
-            int id = 0;
+            int id = -1;
             UserType userType = Session.getCurrentUser().getValue();
             if (userType == UserType.ADMIN || userType == UserType.CLINICIAN) {
                 User user = (User) Session.getCurrentUser().getKey();
@@ -201,7 +201,6 @@ public class Request {
                 Profile profile = (Profile) Session.getCurrentUser().getKey();
                 id = profile.getId();
             }
-            System.out.println(id);
             con.setRequestProperty("id", String.valueOf(id));
             con.setRequestProperty("UserType", userType.toString());
             con.setRequestProperty("Authorization", String.valueOf(Session.getToken()));
