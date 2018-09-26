@@ -12,6 +12,7 @@ import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
+import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -20,6 +21,7 @@ import org.junit.Test;
 import server.model.database.DAOFactory;
 import server.model.database.organ.OrganDAO;
 import server.model.database.profile.ProfileDAO;
+import server.model.database.user.MySqlUserDAO;
 import server.model.database.user.UserDAO;
 
 @Slf4j

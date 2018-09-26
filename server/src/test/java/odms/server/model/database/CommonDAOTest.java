@@ -7,6 +7,7 @@ import java.io.PrintStream;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import odms.commons.model.profile.Profile;
+import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

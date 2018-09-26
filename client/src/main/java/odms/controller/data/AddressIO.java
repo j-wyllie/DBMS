@@ -12,6 +12,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import odms.commons.model.enums.CountriesEnum;
 
 
 /**
@@ -134,10 +135,17 @@ public final class AddressIO {
         return root.getAsJsonObject();
     }
 
-    public static List<Double> getLongLatRegion(String region, String country) {
+    /**
+     * Get the lat long of the region of death.
+     *
+     * @param region the region to search.
+     * @param country the country to search in.
+     * @return list containing lat long.
+     */
+    public static List<Double> getLongLatRegion(String region, CountriesEnum country) {
         ArrayList<Double> longLat = new ArrayList<>();
         try {
-            JsonObject jsonString = getGeocodeLocation(region, country);
+            JsonObject jsonString = getGeocodeLocation(region, country.getName());
 
             if (jsonString.getAsJsonArray(RESULTS).get(0).getAsJsonObject()
                     .getAsJsonArray(ADDRESS_COMPONENTS).get(0).getAsJsonObject().toString()

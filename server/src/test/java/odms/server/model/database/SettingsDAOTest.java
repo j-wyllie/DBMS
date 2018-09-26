@@ -1,4 +1,4 @@
-package odms.controller.data.database;
+package odms.server.model.database;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -22,7 +22,7 @@ import server.model.database.settings.MySqlSettingsDAO;
 import server.model.database.settings.SettingsDAO;
 import server.model.database.user.UserDAO;
 
-public class MySqlSettingsDAOTest extends CommonTestUtils {
+public class SettingsDAOTest extends CommonTestUtils {
 
     // Data access object variables.
     private SettingsDAO settingsDAO = DAOFactory.getSettingsDAO();

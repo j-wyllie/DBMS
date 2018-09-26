@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
@@ -740,7 +741,8 @@ public class MySqlProfileDAO implements ProfileDAO {
         int bpDiastolic = profiles.getInt("BloodPressureDiastolic");
         String address = profiles.getString("Address");
         String region = profiles.getString("Region");
-        String country = profiles.getString("Country");
+        String countryStr = profiles.getString("Country");
+        CountriesEnum country = countryStr != null ? CountriesEnum.valueOf(countryStr) : null;
 
         String phone = profiles.getString("Phone");
         String email = profiles.getString("Email");
@@ -916,12 +918,12 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setNull(23, Types.VARCHAR);
         }
         if (profile.getCountry() != null) {
-            stmt.setString(24, profile.getCountry());
+            stmt.setString(24, profile.getCountry().toString());
         } else {
             stmt.setNull(24, Types.VARCHAR);
         }
         if (profile.getBirthCountry() != null) {
-            stmt.setString(25, profile.getBirthCountry());
+            stmt.setString(25, profile.getBirthCountry().toString());
         } else {
             stmt.setNull(25, Types.VARCHAR);
         }

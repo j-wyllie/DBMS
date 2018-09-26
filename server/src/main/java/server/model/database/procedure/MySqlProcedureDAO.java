@@ -88,7 +88,6 @@ public class MySqlProcedureDAO implements ProcedureDAO {
                 }
             }
 
-            stmt.executeUpdate();
             if (procedure.getHospital() != null) {
                 if (procedure.getHospital().getId() != null) {
                     stmt.setInt(6, procedure.getHospital().getId());
@@ -98,6 +97,8 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             } else {
                 stmt.setNull(6, Types.INTEGER);
             }
+
+            stmt.executeUpdate();
 
             try (ResultSet keys = stmt.getGeneratedKeys()) {
                 while (keys.next()) {

@@ -74,12 +74,9 @@ public class ProfileController {
                 profiles = gson.toJson(result);
             } else if (req.queryMap().hasKey("organs")) {
                 String organs = req.queryParams("organs");
-                System.out.println(organ);
                 String bloodTypes = req.queryParams("bloodTypes");
-                System.out.println(bloodType);
                 Integer lowerAgeRange = Integer.valueOf(req.queryParams("lowerAgeRange"));
                 Integer upperAgeRange = Integer.valueOf(req.queryParams("upperAgeRange"));
-                System.out.println(upperAgeRange);
                 List<Profile> result = database.getOrganReceivers(organs, bloodTypes,
                         lowerAgeRange, upperAgeRange);
                 profiles = gson.toJson(result);
@@ -364,9 +361,6 @@ public class ProfileController {
         String password = request.queryParams("password");
         try {
             valid = database.checkCredentials(username, password);
-        } catch (SQLException e) {
-            response.status(500);
-            return e.getMessage();
         } catch (UserNotFoundException e) {
             response.status(404);
             return "Profile not found.";

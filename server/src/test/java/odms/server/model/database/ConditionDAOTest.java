@@ -8,13 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import odms.commons.model.profile.Condition;
 import odms.commons.model.profile.Profile;
+import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
 import server.model.database.DAOFactory;
-import server.model.database.DatabaseConnection;
 import server.model.database.condition.ConditionDAO;
 import server.model.database.profile.ProfileDAO;
 
@@ -25,8 +23,8 @@ public class ConditionDAOTest extends CommonTestUtils {
     private Condition condition1;
     private Condition condition2;
 
-    ConditionDAO conditionDao = DAOFactory.getConditionDao();
-    ProfileDAO profileDao = DAOFactory.getProfileDao();
+    private ConditionDAO conditionDao = DAOFactory.getConditionDao();
+    private ProfileDAO profileDao = DAOFactory.getProfileDao();
 
     @Before
     public void setup() throws SQLException {
