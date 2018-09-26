@@ -206,8 +206,7 @@ CREATE TABLE IF NOT EXISTS `profiles` (
   `ImageName` varchar(50) DEFAULT NULL,
   `LastBloodDonation` datetime DEFAULT CURRENT_TIMESTAMP,
   `BloodDonationPoints` int(11) DEFAULT NULL,
-  `Token` int(11) DEFAULT NULL,
-  INDEX (ProfileId)
+  `Token` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -230,8 +229,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
   `IsDefault` tinyint(1) DEFAULT '0',
   `ImageName` varchar(50) DEFAULT NULL,
-  `Token` int(11) DEFAULT NULL,
-  INDEX (UserId)
+  `Token` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -348,11 +346,8 @@ ALTER TABLE `profiles`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`UserId`),
-  ADD KEY (`UserId`);
-
---
--- AUTO_INCREMENT for dumped tables
---
+  ADD KEY (`UserId`),
+  ADD KEY (`Username`);
 
 --
 -- AUTO_INCREMENT for table `affected_organs`
@@ -467,14 +462,6 @@ ALTER TABLE `procedures`
   ADD CONSTRAINT `procedures_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
 ALTER TABLE `procedures`
   ADD CONSTRAINT `procedures_ibfk_2` FOREIGN KEY (`Hospital`) REFERENCES `hospitals` (`Id`) ON DELETE SET NULL;
-
-
-DELETE FROM `users` WHERE Username IN ('Username', 'Pleb');
-
-INSERT INTO `users` (`Username`, `Name`, `UserType`, `Address`, `Region`) VALUES
-  ('Username', 'Tim Hamblin', 'ADMIN', '69 Yeetville', 'Yeetus'),
-  ('Pleb', 'Brooke rasdasdk', 'ADMIN', '68 Yeetville', 'Yeetskeet');
-
 
 INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (1, 'NZ', 1),
@@ -678,4 +665,5 @@ INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (199, 'YE', 1),
   (200, 'ZM', 1),
   (201, 'ZW', 1);
+
 

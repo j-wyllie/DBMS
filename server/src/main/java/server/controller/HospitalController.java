@@ -1,5 +1,6 @@
 package server.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.locations.Hospital;
 import org.sonar.api.internal.google.gson.Gson;
 import org.sonar.api.internal.google.gson.JsonObject;
@@ -12,6 +13,7 @@ import spark.Response;
 import java.sql.SQLException;
 import java.util.List;
 
+@Slf4j
 public class HospitalController {
 
     /**
@@ -102,7 +104,7 @@ public class HospitalController {
 
             hospital = new Hospital(name, lat, lon, address, null, id);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             res.status(400);
             return "Bad Request";
         }

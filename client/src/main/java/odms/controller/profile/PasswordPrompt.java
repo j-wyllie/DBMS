@@ -23,6 +23,6 @@ public class PasswordPrompt {
      */
     public void savePassword() {
         ProfileDAO profileDAO = DAOFactory.getProfileDao();
-        profileDAO.savePassword(view.currentProfile.getNhi(), view.passwordField.getText());
+        profileDAO.savePassword(view.getCurrentProfile().getNhi(), view.passwordField.getText());
     }
 }

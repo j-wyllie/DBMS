@@ -22,6 +22,7 @@ import server.model.database.PasswordUtilities;
  */
 @Slf4j
 public class MySqlUserDAO implements UserDAO {
+
     private static final String NOT_FOUND = "Not found";
 
     /**
@@ -29,13 +30,12 @@ public class MySqlUserDAO implements UserDAO {
      *
      * @return ArrayList of all users in the database
      */
-    @Override
     public List<User> getAll() {
         ArrayList<User> allUsers = new ArrayList<>();
         String query = "SELECT * FROM users;";
 
         try (Connection conn = DatabaseConnection.getConnection();
-                Statement stmt = conn.createStatement()){
+                Statement stmt = conn.createStatement()) {
 
             try (ResultSet allUserRows = stmt.executeQuery(query)) {
                 while (allUserRows.next()) {
@@ -83,36 +83,30 @@ public class MySqlUserDAO implements UserDAO {
      */
     public User get(String username) throws UserNotFoundException {
         String query = "SELECT * FROM users WHERE Username = ?;";
-        User user;
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
             try (ResultSet rs = stmt.executeQuery()) {
-
                 rs.next();
-                user = parseUser(rs);
+                return parseUser(rs);
             }
         } catch (SQLException e) {
             throw new UserNotFoundException(NOT_FOUND, username);
         }
-        return user;
     }
 
-    @Override
     public Boolean checkCredentials(String username, String password) throws UserNotFoundException {
         String query = "SELECT Username, Password FROM users WHERE Username = ?;";
 
         try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(query)){
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
-            String hashedPassword;
 
             try (ResultSet rs = stmt.executeQuery()) {
                 rs.next();
-                hashedPassword = rs.getString("Password");
+                return PasswordUtilities.check(password, rs.getString("Password"));
             }
-            return PasswordUtilities.check(password, hashedPassword);
 
         } catch (SQLException e) {
             throw new UserNotFoundException(NOT_FOUND, username);
@@ -161,20 +155,15 @@ public class MySqlUserDAO implements UserDAO {
      *
      * @param user to add.
      */
-    @Override
     public void add(User user) throws SQLException {
         String query = "INSERT INTO users (Username, Password, Name, UserType, Address," +
                 " Region, Created, LastUpdated, IsDefault, ImageName) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
         try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(query)){
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, user.getUsername());
-            if (user.getPassword() != null) {
-                stmt.setString(2, PasswordUtilities.getSaltedHash(user.getPassword()));
-            } else {
-                stmt.setString(2, "");
-            }
+            stmt.setString(2, PasswordUtilities.getSaltedHash(user.getPassword()));
             stmt.setString(3, user.getName());
             stmt.setString(4, user.getUserType().toString());
             stmt.setString(5, user.getWorkAddress());
@@ -195,7 +184,6 @@ public class MySqlUserDAO implements UserDAO {
      * @param username to check.
      * @return true if the username does not already exist.
      */
-    @Override
     public boolean isUniqueUsername(String username) {
         String query = "SELECT Username FROM users WHERE Username = ?;";
 
@@ -205,25 +193,22 @@ public class MySqlUserDAO implements UserDAO {
             try (ResultSet result = stmt.executeQuery()) {
                 return !result.next();
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }
         return false;
     }
-
 
     /**
      * Removes a user from the database.
      *
      * @param user to remove.
      */
-    @Override
     public void remove(User user) {
         String query = "DELETE FROM users WHERE UserId = ?;";
 
         try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(query)){
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, user.getStaffID());
 
             stmt.executeUpdate();
@@ -237,7 +222,6 @@ public class MySqlUserDAO implements UserDAO {
      *
      * @param user to update.
      */
-    @Override
     public void update(User user) {
         String query = "UPDATE users SET Username = ?, Password = ?, Name = ?, UserType = ?, "
                 + "Address = ?, Region = ?, LastUpdated = ?, IsDefault = ?, ImageName = ? "
