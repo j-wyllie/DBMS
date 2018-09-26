@@ -158,8 +158,8 @@ public class Server {
                 path("/:id", () -> {
                     patch("", ConditionController::edit);
                     delete("", ConditionController::delete);
-                })
-            );
+                });
+            });
 
             // procedure api endpoints.
             path("/procedures", () -> {
@@ -175,8 +175,8 @@ public class Server {
                         post("", ProcedureController::addOrgan);
                         delete("", ProcedureController::deleteOrgan);
                     });
-                })
-            );
+                });
+            });
 
             // drugs api endpoints.
             path("/drugs", () -> {
@@ -185,8 +185,8 @@ public class Server {
                 path("/:id", () -> {
                     patch("", DrugController::edit);
                     delete("", DrugController::delete);
-                })
-            );
+                });
+            });
 
             // countries api endpoints.
             path("/countries", () -> {

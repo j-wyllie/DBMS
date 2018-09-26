@@ -109,7 +109,10 @@ public class ProcedureController {
         try {
             newProcedure = gson.fromJson(req.body(), Procedure.class);
             pending = Boolean.valueOf(req.queryParams(KeyEnum.PENDING.toString()));
-        } catch (Exception e) {
+            if (newProcedure == null) {
+                throw new IllegalArgumentException("Missing required fields.");
+            }
+        } catch (IllegalArgumentException e) {
             log.error(e.getMessage(), e);
             res.status(400);
             return ResponseMsgEnum.BAD_REQUEST.toString();
@@ -124,7 +127,7 @@ public class ProcedureController {
         }
 
         res.status(201);
-        return "profile Created";
+        return "Procedure Updated";
     }
 
     /**

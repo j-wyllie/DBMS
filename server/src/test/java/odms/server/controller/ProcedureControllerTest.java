@@ -42,14 +42,17 @@ public class ProcedureControllerTest extends CommonTestUtils {
     private Procedure procedureA;
     private Procedure procedureB;
     private Procedure procedureC;
+    private Procedure procedureD;
 
     // Request variables.
     private Request requestA;
     private Request requestB;
+    private Request requestC;
 
     // Response variables.
     private Response responseA;
     private Response responseB;
+    private Response responseC;
 
     // General variables.
     Gson gson = new Gson();
@@ -66,10 +69,14 @@ public class ProcedureControllerTest extends CommonTestUtils {
         procedureA = new Procedure("Lung Transplant", genericDate, "");
         procedureB = new Procedure("Heart Transplant", genericDate, "");
         procedureC = new Procedure("Bone Marrow Transplant", LocalDate.now().plusDays(7), "");
+        procedureD = new Procedure("Cornea Transplant", LocalDate.now().plusDays(7), "");
 
         procedureDAO.add(profileA.getId(), procedureA);
+        procedureA = procedureDAO.getAll(profileA.getId(), false).get(0);
         procedureDAO.add(profileA.getId(), procedureB);
+        procedureB = procedureDAO.getAll(profileA.getId(), false).get(1);
         procedureDAO.add(profileA.getId(), procedureC);
+        procedureC = procedureDAO.getAll(profileA.getId(), true).get(0);
 
         requestA = mock(Request.class);
         responseA = mock(Response.class);
@@ -77,6 +84,10 @@ public class ProcedureControllerTest extends CommonTestUtils {
         requestB = mock(Request.class);
         when(requestB.params(KeyEnum.ID.toString())).thenReturn(String.valueOf(profileA.getId()));
         responseB = mock(Response.class);
+
+        requestC = mock(Request.class);
+        when(requestC.params(KeyEnum.ID.toString())).thenReturn(String.valueOf(procedureC.getId()));
+        responseC = mock(Response.class);
     }
 
     @Test
@@ -100,6 +111,7 @@ public class ProcedureControllerTest extends CommonTestUtils {
 
     @Test
     public void testAddValid() {
+        when(requestB.body()).thenReturn(gson.toJson(procedureD));
         assertEquals("Procedure Created", ProcedureController.add(requestB, responseB));
     }
 
@@ -109,13 +121,23 @@ public class ProcedureControllerTest extends CommonTestUtils {
     }
 
     @Test
-    public void testEdit() {
+    public void testEditValid() {
 
     }
 
     @Test
-    public void testDelete() {
+    public void testEditInvalid() {
+        assertEquals(ResponseMsgEnum.BAD_REQUEST.toString(), ProcedureController.edit(requestA, responseA));
+    }
 
+    @Test
+    public void testDeleteValid() {
+        assertEquals("Procedure Deleted", ProcedureController.delete(requestC, responseC));
+    }
+
+    @Test
+    public void testDeleteInvalid() {
+        assertEquals(ResponseMsgEnum.BAD_REQUEST.toString(), ProcedureController.delete(requestA, responseA));
     }
 
     @Test
