@@ -28,19 +28,19 @@ public class HlaController {
 
         // try matching same groups
         Integer numMatchingSame = 0;
-        if (xa.equals(xb)) {
+        if (xa.equals(ya)) {
             numMatchingSame++;
         }
-        if (ya.equals(yb)) {
+        if (xb.equals(yb)) {
             numMatchingSame++;
         }
 
         // try matching cross groups
         Integer numMatchingCross = 0;
-        if (xa.equals(ya)) {
+        if (xa.equals(yb)) {
             numMatchingCross++;
         }
-        if (ya.equals(xb)) {
+        if (xb.equals(ya)) {
             numMatchingCross++;
         }
 
@@ -99,7 +99,7 @@ public class HlaController {
     public String getMatchString(Integer profileIdA, Integer profileIdB) {
         Integer score = matchScore(profileIdA, profileIdB);
         String text;
-        if (score.equals(null)) {
+        if (score == null) {
             text = "No HLA";
         } else {
             text = String.valueOf(score) + "%";
