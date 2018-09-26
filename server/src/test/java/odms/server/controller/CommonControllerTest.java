@@ -9,9 +9,11 @@ import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.powermock.api.mockito.PowerMockito;
 import server.controller.CommonController;
 import server.controller.Middleware;
 import server.model.database.DAOFactory;
+import server.model.database.PasswordUtilities;
 import server.model.database.profile.ProfileDAO;
 import server.model.database.user.UserDAO;
 import server.model.enums.KeyEnum;
@@ -114,6 +116,10 @@ public class CommonControllerTest extends CommonTestUtils {
         responseC = mock(Response.class);
         responseD = mock(Response.class);
         responseE = mock(Response.class);
+
+        PowerMockito.stub(
+                PowerMockito.method(PasswordUtilities.class, "getSaltedHash")
+        ).toReturn("test");
     }
 
     @Test

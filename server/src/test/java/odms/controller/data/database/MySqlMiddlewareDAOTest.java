@@ -12,7 +12,9 @@ import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.powermock.api.mockito.PowerMockito;
 import server.model.database.DAOFactory;
+import server.model.database.PasswordUtilities;
 import server.model.database.middleware.MiddlewareDAO;
 import server.model.database.profile.ProfileDAO;
 import server.model.database.user.UserDAO;
@@ -60,22 +62,26 @@ public class MySqlMiddlewareDAOTest extends CommonTestUtils {
 
         userA = new User(UserType.CLINICIAN, "Brooke", "Canterbury");
         userA.setUsername("brooker");
-        userA.setPassword("yeet");
+        userA.setPassword("test");
         userDAO.add(userA);
         userA = userDAO.get(userA.getUsername());
 
         userB = new User(UserType.CLINICIAN, "Tim", "Hamblin");
         userB.setUsername("timh");
-        userB.setPassword("yeet");
+        userB.setPassword("test");
 
         userDAO.add(userB);
         userB = userDAO.get(userB.getUsername());
 
         userC = new User(UserType.CLINICIAN, "Josh", "Wyllie");
         userC.setUsername("joshw");
-        userC.setPassword("yeet");
+        userC.setPassword("test");
         userDAO.add(userC);
         userC = userDAO.get(userC.getUsername());
+
+        PowerMockito.stub(
+                PowerMockito.method(PasswordUtilities.class, "getSaltedHash")
+        ).toReturn("test");
     }
 
     @Test

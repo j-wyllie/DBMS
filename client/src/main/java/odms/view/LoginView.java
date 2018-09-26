@@ -4,8 +4,6 @@ import static odms.controller.AlertController.invalidUsername;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,7 +20,6 @@ import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
-import odms.controller.GuiMain;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.profile.ProfileDAO;
 import odms.controller.database.user.UserDAO;
@@ -65,7 +62,6 @@ public class LoginView extends CommonController {
                     tryLoginProfile(event, username);
                 } else if (isValidUser()) {
                     currentUser = loadUser(username);
-                    //System.out.println(currentUser.getUsername());
                     Session.setCurrentUser(currentUser, currentUser.getUserType());
                     loadUserView(currentUser);
                 } else {
@@ -150,7 +146,6 @@ public class LoginView extends CommonController {
      * @param profile the profile object whose data will be displayed
      */
     public void loadProfileView(Profile profile) {
-        GuiMain.startCheckOrganThread();
         try {
             if (profile != null) {
                 FXMLLoader fxmlLoader = new FXMLLoader();
@@ -200,7 +195,6 @@ public class LoginView extends CommonController {
      * @param user user to be loaded.
      */
     private void loadUserView(User user) {
-        GuiMain.startCheckOrganThread();
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(

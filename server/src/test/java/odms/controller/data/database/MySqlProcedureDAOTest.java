@@ -1,12 +1,7 @@
 package odms.controller.data.database;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
-
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.List;
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.locations.Hospital;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
 import odms.server.CommonTestUtils;
@@ -15,6 +10,13 @@ import org.junit.Before;
 import org.junit.Test;
 import server.model.database.procedure.MySqlProcedureDAO;
 import server.model.database.profile.MySqlProfileDAO;
+
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
+
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class MySqlProcedureDAOTest extends CommonTestUtils {
 
@@ -78,6 +80,7 @@ public class MySqlProcedureDAOTest extends CommonTestUtils {
     public void testUpdate() {
         Procedure testProcedure = mySqlProcedureDAO.getAll(testProfile0.getId(), true).get(0);
         testProcedure.setSummary("gg no re");
+        testProcedure.setHospital(new Hospital("Unspecified", 0.0, 0.0, "", -1));
         mySqlProcedureDAO.update(testProcedure, true);
         assertEquals(testProcedure.getSummary(),
                 mySqlProcedureDAO.getAll(testProfile0.getId(), true).get(0).getSummary());
