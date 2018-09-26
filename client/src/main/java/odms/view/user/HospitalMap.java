@@ -130,8 +130,8 @@ public class HospitalMap extends CommonView implements
         } else {
             mapView = new GoogleMapView("en-US", KEY);
             gridPane.add(mapView, 0, 0, 2, 3);
-            Node map = mapView;
-            map.toBack();
+            Node mapNode = mapView;
+            mapNode.toBack();
             mapView.addMapInializedListener(this);
             hospitalList = new ArrayList<>();
             markers = new ArrayList<>();
@@ -370,23 +370,15 @@ public class HospitalMap extends CommonView implements
         String helpText;
 
         if (userIsAdmin) {
-            helpText =
-                    "Welcome! Click on a location through the map or the provided table and use the enabled "
-                            +
-                            "buttons to find the nearest hospital, edit or delete a hospital, or add a new hospital. \n"
-                            +
-                            "Route between two locations by clicking on two locations on the map, "
-                            +
+            helpText = "Welcome! Click on a location through the map or the provided table and use the enabled " +
+                            "buttons to find the nearest hospital, edit or delete a hospital, or add a new hospital. \n" +
+                            "Route between two locations by clicking on two locations on the map, " +
                             "one after the other, and a route will appear. \n" +
                             "Add a custom marker by double clicking on the map where you want the marker. ";
         } else {
-            helpText =
-                    "Welcome! Click on any location through the map or the provided table and use the "
-                            +
-                            "enabled buttons to find the nearest hospital. Or, route to another location \n"
-                            +
-                            "by clicking on two locations on the map, one after the other, and a route will appear. \n"
-                            +
+            helpText = "Welcome! Click on any location through the map or the provided table and use the " +
+                            "enabled buttons to find the nearest hospital. Or, route to another location \n" +
+                            "by clicking on two locations on the map, one after the other, and a route will appear. \n" +
                             "To add a custom marker, double click on the map where you want the marker.";
         }
 
