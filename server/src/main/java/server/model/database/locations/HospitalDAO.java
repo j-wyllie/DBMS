@@ -52,10 +52,18 @@ public interface HospitalDAO {
     void edit(Hospital hospital) throws SQLException;
 
     /**
-     * Remove a hospital from the database.
+     * Remove a hospital from the database by name.
      *
      * @param name the name of the hospital to remove
      * @throws SQLException thrown when there is a server error.
      */
     void remove(String name) throws SQLException;
+
+    /**
+     * Remove a hospital from the database by ID.
+     *
+     * @param id the ID of the hospital to remove
+     * @throws SQLException thrown when there is a server error.
+     */
+    void remove(Integer id) throws SQLException;
 }
