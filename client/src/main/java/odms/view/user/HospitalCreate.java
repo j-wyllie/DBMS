@@ -8,13 +8,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.locations.Hospital;
+import odms.controller.AlertController;
 
 /**
  * View class for the create hospital scene.
@@ -28,15 +28,6 @@ public class HospitalCreate {
     private TextField addressField;
 
     @FXML
-    private Label warningLabel;
-
-    @FXML
-    private Label warningServerLabel;
-
-    @FXML
-    private Label warningAddressLabel;
-
-    @FXML
     private ListView<RadioButton> programList;
 
     private odms.controller.user.HospitalCreate controller =
@@ -46,6 +37,7 @@ public class HospitalCreate {
 
     /**
      * Button handler called when the add button is clicked.
+     *
      * @param event button clicked event
      */
     public void handleAddButtonClicked(ActionEvent event) {
@@ -57,38 +49,28 @@ public class HospitalCreate {
         try {
             address = addressField.getText();
             name = nameField.getText();
-            if (name.length() < 1) throw new Exception("Name not provided!");
-            if (address.length() < 1) throw new Exception("Address not provided!");
-        } catch (Exception e) {
-            warningLabel.setVisible(true);
-            warningServerLabel.setVisible(false);
-            warningAddressLabel.setVisible(false);
-            return;
-        }
-
-        try {
+            if (name.length() < 1) {
+                throw new IllegalArgumentException("Name not provided!");
+            }
+            if (address.length() < 1) {
+                throw new IllegalArgumentException("Address not provided!");
+            }
             if (!isEdit) {
                 controller.addHospital(name, address, organPrograms);
             } else {
                 controller.editHospital(name, address, organPrograms, hospitalId);
             }
-        } catch (IOException e) {
-            warningAddressLabel.setText(e.getMessage());
-            warningAddressLabel.setVisible(true);
-            warningServerLabel.setVisible(false);
-            warningLabel.setVisible(false);
-            return;
-        } catch (SQLException e) {
-            warningServerLabel.setVisible(true);
-            warningAddressLabel.setVisible(false);
-            warningLabel.setVisible(false);
-            return;
+            appStage.close();
+
+        } catch (IOException | IllegalArgumentException | SQLException e) {
+            AlertController.invalidEntry("Please enter all fields.");
         }
-        appStage.close();
+
     }
 
     /**
      * Button handler called when the cancel button is clicked.
+     *
      * @param event button clicked event
      */
     public void handleCancelButtonClicked(ActionEvent event) {
@@ -106,6 +88,7 @@ public class HospitalCreate {
 
     /**
      * Init the listView to contain radio buttons.
+     *
      * @param hospital The hospital object to be edited.
      */
     public void initialize(Hospital hospital) {
