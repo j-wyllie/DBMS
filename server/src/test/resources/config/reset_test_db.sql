@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `hla_type` (
 
 DROP TABLE IF EXISTS `hospitals`;
 CREATE TABLE IF NOT EXISTS `hospitals` (
-  `Id` int(11) DEFAULT NULL,
+  `Id` int(11) NOT NULL,
   `Name` varchar(50) DEFAULT NULL,
   `Address` varchar(100) DEFAULT NULL,
   `Latitude` double DEFAULT NULL,
@@ -170,7 +170,8 @@ CREATE TABLE IF NOT EXISTS `procedures` (
   `Description` varchar(200) NOT NULL,
   `ProcedureDate` datetime DEFAULT NULL,
   `Pending` BOOLEAN DEFAULT NULL,
-  `Previous` BOOLEAN DEFAULT NULL
+  `Previous` BOOLEAN DEFAULT NULL,
+  `Hospital` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -181,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `procedures` (
 
 DROP TABLE IF EXISTS `profiles`;
 CREATE TABLE IF NOT EXISTS `profiles` (
-  `ProfileId` int(11) DEFAULT NULL,
+  `ProfileId` int(11) NOT NULL,
   `NHI` varchar(20) UNIQUE DEFAULT NULL,
   `Username` varchar(50) UNIQUE DEFAULT NULL,
   `Password` varchar(100) DEFAULT NULL,
@@ -318,6 +319,7 @@ ALTER TABLE `organs`
 ALTER TABLE `procedures`
   ADD PRIMARY KEY (`Id`),
   ADD KEY `ProfileId` (`ProfileId`);
+  ADD KEY `Hospitals` (`Hospital`);
 
 --
 -- Indexes for table `profiles`
@@ -444,6 +446,8 @@ ALTER TABLE `organs`
 --
 ALTER TABLE `procedures`
   ADD CONSTRAINT `procedures_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
+ALTER TABLE `procedures`
+  ADD CONSTRAINT `procedures_ibfk_2` FOREIGN KEY (`Hospital`) REFERENCES `Hospitals` (`Id`);
 
 INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (1, 'NZ', 1),

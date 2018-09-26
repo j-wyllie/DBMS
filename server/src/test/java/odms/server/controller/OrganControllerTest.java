@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.ExpiredOrgan;
 import odms.commons.model.profile.Organ;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
@@ -126,7 +127,25 @@ public class OrganControllerTest extends CommonTestUtils {
     }
 
     @After
-    public void tearDown() {
-
+    public void tearDown() throws SQLException {
+        // Profile/Organ teardown.
+        for (Profile profile : profileDAO.getAll()) {
+            for (ExpiredOrgan organ : organDAO.getExpired(profile)) {
+                organDAO.revertExpired(profile.getId(), organ.getOrgan());
+            }
+            for (OrganEnum organ : organDAO.getReceived(profile)) {
+                organDAO.removeReceived(profile, organ);
+            }
+            for (OrganEnum organ : organDAO.getRequired(profile)) {
+                organDAO.removeRequired(profile, organ);
+            }
+            for (OrganEnum organ : organDAO.getDonating(profile)) {
+                organDAO.removeDonating(profile, organ);
+            }
+            for (OrganEnum organ : organDAO.getDonations(profile)) {
+                organDAO.removeDonation(profile, organ);
+            }
+            profileDAO.remove(profile);
+        }
     }
 }
