@@ -40,6 +40,7 @@ public class ProfileControllerTest extends CommonTestUtils {
     private Profile profileA;
     private Profile profileB;
     private Profile profileC;
+    private Profile profileD;
     private LocalDate genericDate =
             LocalDate.of(1998, 3, 3);
 
@@ -47,11 +48,13 @@ public class ProfileControllerTest extends CommonTestUtils {
     private Request requestA;
     private Request requestB;
     private Request requestC;
+    private Request requestD;
 
     // Response variables.
     private Response responseA;
     private Response responseB;
     private Response responseC;
+    private Response responseD;
 
     // General variables.
     private Gson gson = new Gson();
@@ -88,6 +91,11 @@ public class ProfileControllerTest extends CommonTestUtils {
         profileC = profileDAO.get(profileC.getNhi());
         organDAO.addDonating(profileC, OrganEnum.LIVER);
 
+        profileD = new Profile("Cassidy", "Slater",
+                genericDate, "LPO3227");
+        profileD.setUsername("LPO3227");
+        profileD.setPassword("12345");
+
         requestA = mock(Request.class);
         responseA = mock(Response.class);
 
@@ -98,19 +106,18 @@ public class ProfileControllerTest extends CommonTestUtils {
         requestC = mock(Request.class);
         when(requestC.queryParams("username")).thenReturn(profileC.getUsername());
         responseC = mock(Response.class);
+
+        profileB.setRegion("Canterbury");
+        requestD = mock(Request.class);
+        when(requestD.body()).thenReturn(gson.toJson(profileB));
+        when(requestD.params(KeyEnum.ID.toString())).thenReturn(String.valueOf(profileB.getId()));
+        responseD = mock(Response.class);
     }
 
     @Test
     public void testGetAllValid() {
         List<String> testResult = gson.fromJson(ProfileController.getAll(requestA, responseA), List.class);
         assertEquals(3, testResult.size());
-    }
-
-    @Test
-    public void testGetAllInvalid() {
-        when(requestA.queryParams(KEY_SEARCH)).thenReturn("Alice");
-        when(requestA.queryParams("ageSearchInt")).thenReturn("invalidInt");
-        assertEquals(ResponseMsgEnum.BAD_REQUEST.toString(), ProfileController.getAll(requestA, responseA));
     }
 
     @Test
@@ -138,14 +145,6 @@ public class ProfileControllerTest extends CommonTestUtils {
         List<String> testResult = gson.fromJson(ProfileController.getDead(requestA, responseA), List.class);
         assertEquals(1, testResult.size());
     }
-
-    @Test
-    public void testGetAllSearch() {
-        when(requestA.queryParams(KEY_SEARCH)).thenReturn("Alice");
-        List<String> testResult = gson.fromJson(ProfileController.getAll(requestA, responseA), List.class);
-        assertEquals(1, testResult.size());
-    }
-
     @Test
     public void testGetValid() {
         assertEquals(profileC.getId(), gson.fromJson(ProfileController.get(requestB, responseB), Profile.class).getId());
@@ -158,17 +157,25 @@ public class ProfileControllerTest extends CommonTestUtils {
 
     @Test
     public void testCreateValid() {
-
+        when(requestA.body()).thenReturn(gson.toJson(profileD));
+        assertEquals("Profile Created", ProfileController.create(requestA, responseA));
     }
 
     @Test
-    public void testCreateInvalid() {
+    public void testCreateInvalidBody() {
+        assertEquals(ResponseMsgEnum.BAD_REQUEST.toString(), ProfileController.create(requestA, responseA));
+    }
+
+    @Test
+    public void testCreateInvalidNHI() {
+        profileD.setNhi(profileA.getNhi());
+        when(requestA.body()).thenReturn(gson.toJson(profileD));
         assertEquals(ResponseMsgEnum.BAD_REQUEST.toString(), ProfileController.create(requestA, responseA));
     }
 
     @Test
     public void testEditValid() {
-
+        assertEquals("Profile Updated", ProfileController.edit(requestD, responseD));
     }
 
     @Test
@@ -178,7 +185,7 @@ public class ProfileControllerTest extends CommonTestUtils {
 
     @Test
     public void testDeleteValid() {
-
+        assertEquals("Profile Deleted", ProfileController.delete(requestD, responseD));
     }
 
     @Test
@@ -193,7 +200,7 @@ public class ProfileControllerTest extends CommonTestUtils {
 
     @Test
     public void testHasPasswordValid() {
-        when(requestA.queryParams("nhi")).thenReturn(String.valueOf(profileA.getNhi()));
+        when(requestA.queryParams("nhi")).thenReturn(String.valueOf(profileC.getNhi()));
         assertTrue(Boolean.valueOf(ProfileController.hasPassword(requestA, responseA)));
     }
 
@@ -240,13 +247,6 @@ public class ProfileControllerTest extends CommonTestUtils {
     @Test
     public void testSavePasswordInvalidRequest() {
         assertEquals(ResponseMsgEnum.BAD_REQUEST.toString(), ProfileController.savePassword(requestA, responseA));
-    }
-
-    @Test
-    public void testSavePasswordInvalidUsername() {
-        when(requestA.queryParams("username")).thenReturn("nick");
-        when(requestA.queryParams("password")).thenReturn("valid");
-        assertEquals("Profile not found", ProfileController.savePassword(requestA, responseA));
     }
 
     @After

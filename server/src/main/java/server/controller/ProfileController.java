@@ -1,11 +1,9 @@
 package server.controller;
 
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
+
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.enums.UserType;
@@ -125,26 +123,26 @@ public class ProfileController {
         String profiles;
 
         if (req.queryParams(KEY_SEARCH) != null) {
-            String searchString;
-            int ageSearchInt;
-            int ageRangeSearchInt;
-            String region;
-            String gender;
-            String type;
+            String searchString = null;
+            int ageSearchInt = 0;
+            int ageRangeSearchInt = 0;
+            String region = null;
+            String gender = null;
+            String type = null;
             try {
                 searchString = req.queryParams(KEY_SEARCH);
                 ageSearchInt = Integer.parseInt(req.queryParams("ageSearchInt"));
                 ageRangeSearchInt = Integer.parseInt(req.queryParams("ageRangeSearchInt"));
                 region = req.queryParams("region");
-                gender = req.queryParams("gender");
+                gender = req.queryParams("gender") != null ? req.queryParams("gender") : "any";
                 type = req.queryParams("type");
             } catch (NumberFormatException e) {
-                log.error(e.getMessage(), e);
-                res.status(400);
-                return ResponseMsgEnum.BAD_REQUEST.toString();
+                ageSearchInt = 0;
+                ageRangeSearchInt = -999;
             }
             Set<OrganEnum> organs = new HashSet<>();
-            List<String> organArray = gson.fromJson(req.queryParams("organs"), List.class);
+            List<String> organArray = gson.fromJson(req.queryParams("organs"), List.class) != null ?
+                    gson.fromJson(req.queryParams("organs"), List.class) : new ArrayList<>();
             for (String organ : organArray) {
                 organs.add(OrganEnum.valueOf(organ));
             }
@@ -176,12 +174,15 @@ public class ProfileController {
             } else {
                 profile = database.get(req.queryParams("username"));
             }
+            if (profile == null) {
+                throw new IllegalArgumentException("Required fields are missing.");
+            }
 
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
             res.status(500);
             return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
-        } catch (NumberFormatException e) {
+        } catch (IllegalArgumentException e) {
             log.error(e.getMessage(), e);
             res.status(400);
             return ResponseMsgEnum.BAD_REQUEST.toString();
@@ -235,7 +236,7 @@ public class ProfileController {
         }
 
         res.status(201);
-        return "profile Created";
+        return "Profile Created";
     }
 
     /**
@@ -265,7 +266,7 @@ public class ProfileController {
         }
 
         res.status(200);
-        return "profile Updated";
+        return "Profile Updated";
     }
 
     /**
@@ -295,7 +296,7 @@ public class ProfileController {
         }
 
         res.status(200);
-        return "profile Deleted";
+        return "Profile Deleted";
     }
 
     /**
@@ -416,9 +417,11 @@ public class ProfileController {
             }
             valid = profileDAO.savePassword(username, password);
         } catch (UserNotFoundException e) {
+            log.error(e.getMessage(), e);
             response.status(404);
             return "Profile not found";
         } catch (IllegalArgumentException e) {
+            log.error(e.getMessage(), e);
             response.status(400);
             return ResponseMsgEnum.BAD_REQUEST.toString();
         }
