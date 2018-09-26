@@ -2,7 +2,6 @@ package server.controller;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
@@ -42,23 +41,22 @@ public class OrganController {
      * @return the response body.
      */
     public static String getAll(Request req, Response res) {
-        Set<OrganEnum> organs;
-        int profileId = Integer.parseInt(req.params(KeyEnum.ID.toString()));
+        int profileId;
 
         try {
-            organs = getOrgans(new Profile(profileId), req);
+            profileId = Integer.valueOf(req.params(KeyEnum.ID.toString()));
+        } catch (IllegalArgumentException e) {
+            res.status(400);
+            return ResponseMsgEnum.BAD_REQUEST.toString();
+        }
+        try {
+            res.type(DataTypeEnum.JSON.toString());
+            res.status(200);
+            return getOrgans(new Profile(profileId), req, res);
         } catch (Exception e) {
             res.status(500);
-            return e.getMessage();
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
-
-        Gson gson = new Gson();
-        String responseBody = gson.toJson(organs);
-
-        res.type(DataTypeEnum.JSON.toString());
-        res.status(200);
-
-        return responseBody;
     }
 
     /**
@@ -125,22 +123,24 @@ public class OrganController {
      * @param req that was received.
      * @return the set of organs based on the criteria.
      */
-    private static Set<OrganEnum> getOrgans(Profile profile, Request req) {
+    private static String getOrgans(Profile profile, Request req, Response res) {
         OrganDAO database = DAOFactory.getOrganDao();
+        Gson gson = new Gson();
 
-        if (req.queryMap().hasKey(DONATED)) {
-            return database.getDonations(profile.getId());
+        if (req.queryParams(DONATED) != null) {
+            return gson.toJson(database.getDonations(profile.getId()));
         }
-        if (req.queryMap().hasKey(DONATING)) {
-            return database.getDonating(profile.getId());
+        if (req.queryParams(DONATING) != null) {
+            return gson.toJson(database.getDonating(profile.getId()));
         }
-        if (req.queryMap().hasKey(RECEIVED)) {
-            return database.getReceived(profile.getId());
+        if (req.queryParams(RECEIVED) != null) {
+            return gson.toJson(database.getReceived(profile.getId()));
         }
-        if (req.queryMap().hasKey(REQUIRED)) {
-            return database.getRequired(profile);
+        if (req.queryParams(REQUIRED) != null) {
+            return gson.toJson(database.getRequired(profile));
         }
-        return new HashSet<>();
+        res.status(400);
+        return ResponseMsgEnum.BAD_REQUEST.toString();
     }
 
     /**
