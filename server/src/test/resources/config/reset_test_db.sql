@@ -182,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `procedures` (
 
 DROP TABLE IF EXISTS `profiles`;
 CREATE TABLE IF NOT EXISTS `profiles` (
-  `ProfileId` int(11) DEFAULT NULL,
+  `ProfileId` int(11) NOT NULL,
   `NHI` varchar(20) UNIQUE DEFAULT NULL,
   `Username` varchar(50) UNIQUE DEFAULT NULL,
   `Password` varchar(100) DEFAULT NULL,
