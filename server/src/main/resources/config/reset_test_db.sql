@@ -66,8 +66,8 @@ CREATE TABLE IF NOT EXISTS `countries` (
 
 DROP TABLE IF EXISTS `drugs`;
 CREATE TABLE IF NOT EXISTS `drugs` (
-  `Id` int(11) NOT NULL,
-  `ProfileId` int(11) NOT NULL,
+  `Id` int(11) DEFAULT NULL,
+  `ProfileId` int(11) DEFAULT NULL,
   `Drug` varchar(50) DEFAULT NULL,
   `Current` BOOLEAN DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -211,7 +211,7 @@ CREATE TABLE IF NOT EXISTS `procedures` (
 
 DROP TABLE IF EXISTS `profiles`;
 CREATE TABLE IF NOT EXISTS `profiles` (
-  `ProfileId` int(11) NOT NULL,
+  `ProfileId` int(11) DEFAULT NULL,
   `NHI` varchar(20) UNIQUE DEFAULT NULL,
   `Username` varchar(50) UNIQUE DEFAULT NULL,
   `Password` varchar(100) DEFAULT NULL,
@@ -431,7 +431,7 @@ ALTER TABLE `countries`
 -- AUTO_INCREMENT for table `drugs`
 --
 ALTER TABLE `drugs`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `history`
 --

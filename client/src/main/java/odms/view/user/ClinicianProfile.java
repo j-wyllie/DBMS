@@ -19,7 +19,10 @@ import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
+import odms.controller.CommonController;
 import odms.controller.data.ImageDataIO;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.common.CommonDAO;
 import odms.controller.user.DataManagement;
 import odms.controller.user.Display;
 import odms.view.CommonView;
@@ -99,6 +102,8 @@ public class ClinicianProfile extends CommonView {
     @FXML
     private void handleLogoutButtonClicked(ActionEvent event) throws IOException {
         userProfileController.closeAllOpenStages();
+        CommonDAO server = DAOFactory.getCommonDao();
+        server.logout();
         currentUser = null;
         if (socialFeed != null) {
             socialFeed.pauseTimer();

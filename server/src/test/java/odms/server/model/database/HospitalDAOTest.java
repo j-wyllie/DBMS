@@ -6,11 +6,19 @@ import java.sql.SQLException;
 import java.util.List;
 import odms.commons.model.locations.Hospital;
 import odms.server.CommonTestUtils;
+import org.junit.*;
+import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import server.model.database.DAOFactory;
 import server.model.database.locations.HospitalDAO;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class HospitalDAOTest extends CommonTestUtils {
 

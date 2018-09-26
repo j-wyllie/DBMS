@@ -7,7 +7,7 @@ import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 
-public final class Session {
+public class Session {
 
     private static Object currentUser;
     private static Object currentProfile;
@@ -16,7 +16,7 @@ public final class Session {
     /**
      * Constructor - cannot instantiate a static class.
      */
-    private Session () {
+    public Session () {
         throw new UnsupportedOperationException();
     }
 
@@ -26,8 +26,7 @@ public final class Session {
             User user = (User) currentUser;
             if (user.getUserType() == UserType.ADMIN) {
                 return new SimpleEntry<>(user, UserType.ADMIN);
-            }
-            else {
+            } else {
                 return new SimpleEntry<>(user, UserType.CLINICIAN);
             }
         } else if (currentProfile != null) {
@@ -49,6 +48,17 @@ public final class Session {
         }
     }
 
+    public static int getCurrentId() {
+        if (currentUser != null) {
+            User user = (User) currentUser;
+            return user.getStaffID();
+        } else if (currentProfile != null) {
+            Profile profile = (Profile) currentProfile;
+            return profile.getId();
+        }
+        return -1;
+    }
+
     public static int getToken() {
         return token;
     }
@@ -63,16 +73,15 @@ public final class Session {
      */
     public static String getDefaultLocation() {
         String country;
-        try {
-            if (currentUser != null) {
-                User user = (User) currentUser;
-                country = user.getCountry().toString();
-            } else {
-                Profile profile = (Profile) currentProfile;
-                country = profile.getCountry().toString();
-            }
-        } catch (NullPointerException e) {
-            country = Locale.getDefault().toString();
+        if (currentUser != null) {
+            User user = (User) currentUser;
+            country = user.getCountry().toString();
+        } else {
+            Profile profile = (Profile) currentProfile;
+            country = profile.getCountry();
+        }
+        if (country == null) {
+            country = Locale.getDefault().getDisplayCountry();
         }
         return country;
     }

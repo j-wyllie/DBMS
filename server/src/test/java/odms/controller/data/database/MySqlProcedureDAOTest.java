@@ -1,4 +1,4 @@
-package odms.server.model.database;
+package odms.controller.data.database;
 
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.locations.Hospital;

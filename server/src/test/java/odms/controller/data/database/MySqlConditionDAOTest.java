@@ -29,7 +29,7 @@ public class ConditionDAOTest extends CommonTestUtils {
     @Before
     public void setup() throws SQLException {
         condition1 = new Condition(1, "HIV", LocalDate.now(), false, true, LocalDate.now());
-        condition2 = new Condition(2, "HIB", LocalDate.now(), false, true, LocalDate.now());
+        condition2 = new Condition(2, "HIB", LocalDate.now(), true, true, LocalDate.now());
 
         testProfile1 = new Profile("Jack", "Haaay", LocalDate.of(1998, 2, 27), "ABC1234");
         testProfile2 = new Profile("Tim", "Hamb-lame", LocalDate.of(1998, 2, 27), "ABC2345");
@@ -47,24 +47,24 @@ public class ConditionDAOTest extends CommonTestUtils {
     @After
     public void tearDown() throws SQLException {
         List<Condition> allConditions = new ArrayList<>();
-        allConditions.addAll(conditionDao.getAll(testProfile1.getId(), true));
-        allConditions.addAll(conditionDao.getAll(testProfile2.getId(), true));
+        allConditions.addAll(conditionDao.getAll(testProfile1.getId()));
+        allConditions.addAll(conditionDao.getAll(testProfile2.getId()));
 
         if (!allConditions.isEmpty()) {
             for (Condition condition : allConditions) {
                 conditionDao.remove(condition);
             }
         }
-
         profileDao.remove(testProfile1);
         profileDao.remove(testProfile2);
     }
 
     @Test
     public void testAddCondition() {
+        assertEquals(0, conditionDao.getAll(testProfile1.getId(), false).size());
         conditionDao.add(testProfile1.getId(), condition1);
-        condition1 = conditionDao.getAll(testProfile1.getId(), true).get(0);
-        assertEquals(1, conditionDao.getAll(testProfile1.getId(), true).size());
+        condition1 = conditionDao.getAll(testProfile1.getId(), false).get(0);
+        assertEquals(1, conditionDao.getAll(testProfile1.getId(), false).size());
     }
 
     @Test

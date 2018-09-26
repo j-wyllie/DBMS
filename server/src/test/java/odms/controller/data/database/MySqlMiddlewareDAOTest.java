@@ -12,11 +12,20 @@ import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import server.model.database.DAOFactory;
+import server.model.database.PasswordUtilities;
 import server.model.database.middleware.MiddlewareDAO;
 import server.model.database.profile.ProfileDAO;
 import server.model.database.user.UserDAO;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(PasswordUtilities.class)
+@PowerMockIgnore("javax.management.*")
 public class MiddlewareDAOTest extends CommonTestUtils {
 
     // Data access objects required.
@@ -43,6 +52,11 @@ public class MiddlewareDAOTest extends CommonTestUtils {
 
     @Before
     public void setup() throws SQLException, UserNotFoundException {
+
+        PowerMockito.stub(
+                PowerMockito.method(PasswordUtilities.class, "getSaltedHash")
+        ).toReturn("test");
+
         profileA = new Profile("Brooke", "Rakowitz",
                 LocalDate.of(1998, 3, 3), "LPO7236");
         profileDAO.add(profileA);
@@ -67,6 +81,7 @@ public class MiddlewareDAOTest extends CommonTestUtils {
         userB = new User(UserType.CLINICIAN, "Tim", "Hamblin");
         userB.setUsername("timh");
         userB.setPassword("test");
+
         userDAO.add(userB);
         userB = userDAO.get(userB.getUsername());
 

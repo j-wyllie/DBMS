@@ -9,8 +9,16 @@ public interface ConditionDAO {
      * Get all conditions for the profile.
      * @param profile to get the conditions for.
      * @param chronic true if the conditions required are chronic.
+     * @return the list of conditions for the profile.
      */
     List<Condition> getAll(int profile, boolean chronic);
+
+    /**
+     * Get all conditions for the profile.
+     * @param profile to get the conditions for.
+     * @return the list of conditions for the profile.
+     */
+    List<Condition> getAll(int profile);
 
     /**
      * Add a new condition to a profile.

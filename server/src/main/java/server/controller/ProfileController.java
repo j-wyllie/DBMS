@@ -3,6 +3,7 @@ package server.controller;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -45,12 +46,7 @@ public class ProfileController {
      * @return the response body, a list of all profiles.
      */
     public static String getAll(Request req, Response res) {
-        String profiles;
-        profiles = getAll(req);
-        res.type(DataTypeEnum.JSON.toString());
-        res.status(200);
-
-        return profiles;
+        return getAllProfiles(req, res);
     }
 
     /**
@@ -64,11 +60,11 @@ public class ProfileController {
         Gson gson = new Gson();
         String profiles;
         try {
-            if (req.queryMap().hasKey(KEY_SEARCH)) {
+            if (req.queryParams(KEY_SEARCH) != null) {
                 String searchString = req.queryParams(KEY_SEARCH);
                 List<Entry<Profile, OrganEnum>> result = database.searchReceiving(searchString);
                 profiles = gson.toJson(result);
-            } else if (req.queryMap().hasKey(KEY_ORGANS)) {
+            } else if (req.queryParams(KEY_ORGANS) != null) {
                 String organs = req.queryParams(KEY_ORGANS);
                 String bloodTypes = req.queryParams("bloodTypes");
                 Integer lowerAgeRange = Integer.valueOf(req.queryParams("lowerAgeRange"));
@@ -94,7 +90,6 @@ public class ProfileController {
 
     /**
      * Gets all dead profiles stored, possibly with search criteria.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body, a list of all profiles.
@@ -104,7 +99,7 @@ public class ProfileController {
         Gson gson = new Gson();
         String profiles;
         try {
-            if (req.queryMap().hasKey(KEY_SEARCH)) {
+            if (req.queryParams(KEY_SEARCH) != null) {
                 String searchString = req.queryParams(KEY_SEARCH);
                 List<Profile> result = database.getDeadFiltered(searchString);
                 profiles = gson.toJson(result);
@@ -124,23 +119,33 @@ public class ProfileController {
 
     /**
      * Gets all profiles (possibly with search criteria).
-     *
      * @param req received.
      * @return json string of profiles.
      */
-    private static String getAll(Request req) {
+    private static String getAllProfiles(Request req, Response res) {
         ProfileDAO database = DAOFactory.getProfileDao();
         Gson gson = new Gson();
         String profiles;
 
-        if (req.queryMap().hasKey(KEY_SEARCH)) {
-            String searchString = req.queryParams(KEY_SEARCH);
-            int ageSearchInt = Integer.parseInt(req.queryParams("ageSearchInt"));
-            int ageRangeSearchInt = Integer.parseInt(req.queryParams("ageRangeSearchInt"));
-            String region = req.queryParams("region");
-            String gender = req.queryParams("gender");
-            String type = req.queryParams("type");
-
+        if (req.queryParams(KEY_SEARCH) != null) {
+            String searchString;
+            int ageSearchInt;
+            int ageRangeSearchInt;
+            String region;
+            String gender;
+            String type;
+            try {
+                searchString = req.queryParams(KEY_SEARCH);
+                ageSearchInt = Integer.parseInt(req.queryParams("ageSearchInt"));
+                ageRangeSearchInt = Integer.parseInt(req.queryParams("ageRangeSearchInt"));
+                region = req.queryParams("region");
+                gender = req.queryParams("gender");
+                type = req.queryParams("type");
+            } catch (NumberFormatException e) {
+                log.error(e.getMessage(), e);
+                res.status(400);
+                return ResponseMsgEnum.BAD_REQUEST.toString();
+            }
             Set<OrganEnum> organs = new HashSet<>();
             List<String> organArray = gson.fromJson(req.queryParams(KEY_ORGANS), List.class);
             for (String organ : organArray) {
@@ -152,12 +157,14 @@ public class ProfileController {
         } else {
             profiles = gson.toJson(database.getAll());
         }
+
+        res.type(DataTypeEnum.JSON.toString());
+        res.status(200);
         return profiles;
     }
 
     /**
      * Gets a single profile from storage.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -335,7 +342,6 @@ public class ProfileController {
         }
 
         res.status(200);
-
         return hasPassword.toString();
     }
 
@@ -357,23 +363,23 @@ public class ProfileController {
             valid = database.checkCredentials(username, password);
         } catch (UserNotFoundException e) {
             response.status(404);
-            return "Profile not found.";
+            return "Profile not found";
         }
 
         if (valid) {
             try {
                 Profile profile = database.get(username);
-                long token = Middleware.authenticate(profile.getId(), UserType.PROFILE);
+                Map<String, Integer> body = Middleware.authenticate(profile.getId(), UserType.PROFILE);
                 response.type(DataTypeEnum.JSON.toString());
                 response.status(200);
-                return gson.toJson(token);
+                return gson.toJson(body);
             } catch (SQLException e) {
                 response.status(500);
                 return e.getMessage();
             }
         } else {
-            response.status(404);
-            return "Error.";
+            response.status(401);
+            return "Unauthorized";
         }
     }
 
@@ -388,7 +394,7 @@ public class ProfileController {
         ProfileDAO profileDAO = DAOFactory.getProfileDao();
         Boolean valid;
         try {
-            valid = profileDAO.savePassword(request.queryParams("nhi"),
+            valid = profileDAO.savePassword(request.queryParams("username"),
                     request.queryParams("password"));
         } catch (UserNotFoundException e) {
             response.status(500);
@@ -396,10 +402,11 @@ public class ProfileController {
         }
         if (valid) {
             response.status(200);
+            return "Password Set";
         } else {
             response.status(400);
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
-        return "Password Set";
     }
 
     /**

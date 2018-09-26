@@ -18,6 +18,7 @@ import server.controller.ProcedureController;
 import server.controller.ProfileController;
 import server.controller.SettingsController;
 import server.controller.UserController;
+import server.controller.*;
 
 /**
  * Main entry point for server application.
@@ -34,7 +35,7 @@ public class Server {
     }
 
     /**
-     *
+     * The main server start.
      * @param args parameters for application
      */
     public static void main(String[] args) {
@@ -50,10 +51,24 @@ public class Server {
         initRoutes();
     }
 
+    /**
+     * Initialises the server endpoints.
+     */
     private static void initRoutes() {
         // user api routes.
         path("/api/v1", () -> {
+
+            // Initial interactions.
+            post("/setup", CommonController::setup);
+            post("/login", CommonController::checkCredentials);
+            post("/logout", CommonController::logout);
+            get("/setup/password", ProfileController::hasPassword);
+            post("/setup/password", ProfileController::savePassword);
+
             path("/users", () -> {
+                // user api routes.
+                before("/*", Middleware::isAdminAuthenticated);
+                before("", Middleware::isAdminAuthenticated);
                 get("/all", UserController::getAll);
                 get("", UserController::get);
                 post("", UserController::create);
@@ -62,19 +77,44 @@ public class Server {
                     patch("", UserController::edit);
                     delete("", UserController::delete);
                 });
-                path("/login", () -> post("", UserController::checkCredentials));
+
             });
 
             // profile api routes.
             path("/profiles", () -> {
 
-                get("/all", ProfileController::getAll);
-                get("", ProfileController::get);
+                // No authentication required.
                 post("", ProfileController::create);
-                get("/password", ProfileController::hasPassword);
-                post("/password", ProfileController::savePassword);
 
-                post("/login", ProfileController::checkCredentials);
+                // Profile authentication required.
+                before("", Middleware::isAuthenticated);
+                before("/:id", Middleware::isAuthenticated);
+
+                get("", ProfileController::get);
+
+                path("/:id", () -> {
+                    patch("", ProfileController::edit);
+
+                    // organs api endpoints.
+                    path("/organs", () -> {
+                        get("", OrganController::getAll);
+                        post("", OrganController::add);
+                        delete("", OrganController::delete);
+                    });
+
+                    // condition api endpoints.
+                    path("/conditions", () -> {
+                        get("", ConditionController::getAll);
+                    });
+
+                    // procedure api endpoints.
+                    path("/procedures", () -> {
+                        get("", ProcedureController::getAll);
+                    });
+                });
+
+                // Admin or clinician authentication required.
+                get("/all", ProfileController::getAll);
                 get("/receivers", ProfileController::getReceiving);
                 get("/dead", ProfileController::getDead);
 
@@ -119,15 +159,18 @@ public class Server {
             });
 
             // condition api endpoints.
-            path("/conditions", () ->
+            path("/conditions", () -> {
+                before("/*", Middleware::isAdminAuthenticated);
+
                 path("/:id", () -> {
                     patch("", ConditionController::edit);
                     delete("", ConditionController::delete);
-                })
-            );
+                });
+            });
 
             // procedure api endpoints.
-            path("/procedures", () ->
+            path("/procedures", () -> {
+                before("/*", Middleware::isAdminAuthenticated);
 
                 // id refers to procedure id
                 path("/:id", () -> {
@@ -139,30 +182,32 @@ public class Server {
                         post("", ProcedureController::addOrgan);
                         delete("", ProcedureController::deleteOrgan);
                     });
-                })
-            );
+                });
+            });
 
             // drugs api endpoints.
-            path("/drugs", () ->
+            path("/drugs", () -> {
+                before("/*", Middleware::isAdminAuthenticated);
+
                 path("/:id", () -> {
                     patch("", DrugController::edit);
                     delete("", DrugController::delete);
-                })
-            );
+                });
+            });
 
             // countries api endpoints.
-            path("/settings", () -> {
-                // countries api endpoints.
-                get("/countries", SettingsController::getAllCountries);
-                patch("/countries", SettingsController::editCountries);
+            path("/countries", () -> {
+                before("", Middleware::isAdminAuthenticated);
 
-                // locale api endpoints.
-                get("/locale", SettingsController::getLocale);
-                post("/locale", SettingsController::setLocale);
+                get("", CountriesController::getAll);
+                patch("", CountriesController::edit);
             });
 
             // hospitals api endpoints.
             path("/hospitals", () -> {
+                before("/*", Middleware::isAdminAuthenticated);
+                before("", Middleware::isAdminAuthenticated);
+
                 get("/all", HospitalController::getAll);
                 get("", HospitalController::get);
                 post("", HospitalController::create);

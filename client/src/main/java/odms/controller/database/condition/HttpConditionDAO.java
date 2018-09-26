@@ -33,7 +33,7 @@ public class HttpConditionDAO implements ConditionDAO {
         Map<String, Object> queryParams = new HashMap<>();
 
         String body = gson.toJson(condition);
-        Request request = new Request(url, 0, queryParams, body);
+        Request request = new Request(url, queryParams, body);
         try {
             request.post();
         } catch (IOException e) {
@@ -45,7 +45,7 @@ public class HttpConditionDAO implements ConditionDAO {
     public void remove(Condition condition) {
         String url = String.format("http://localhost:6969/api/v1/conditions/%s", condition.getId());
         Map<String, Object> queryParams = new HashMap<>();
-        Request request = new Request(url, 0, queryParams);
+        Request request = new Request(url, queryParams);
         try {
             request.delete();
         } catch (IOException e) {
@@ -59,7 +59,7 @@ public class HttpConditionDAO implements ConditionDAO {
         String url = String.format("http://localhost:6969/api/v1/conditions/%s", condition.getId());
 
         String body = gson.toJson(condition);
-        Request request = new Request(url, 0, new HashMap<>(), body);
+        Request request = new Request(url, new HashMap<>(), body);
         try {
             request.patch();
         } catch (IOException e) {
@@ -71,7 +71,7 @@ public class HttpConditionDAO implements ConditionDAO {
         JsonParser parser = new JsonParser();
         Gson gson = new Gson();
         Response response = null;
-        Request request = new Request(url, 0, queryParams);
+        Request request = new Request(url, queryParams);
         try {
             response = request.get();
         } catch (IOException e) {
