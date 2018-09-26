@@ -37,7 +37,7 @@ public class Server {
         log.info("Listening on port: " + port);
 
         port(port);
-        initExceptionHandler((e) -> {
+        initExceptionHandler(e -> {
             log.error("Server init failed");
             log.error(e.getMessage(), e);
         });
@@ -158,8 +158,8 @@ public class Server {
                 path("/:id", () -> {
                     patch("", ConditionController::edit);
                     delete("", ConditionController::delete);
-                });
-            });
+                })
+            );
 
             // procedure api endpoints.
             path("/procedures", () -> {
@@ -175,8 +175,8 @@ public class Server {
                         post("", ProcedureController::addOrgan);
                         delete("", ProcedureController::deleteOrgan);
                     });
-                });
-            });
+                })
+            );
 
             // drugs api endpoints.
             path("/drugs", () -> {
@@ -185,8 +185,8 @@ public class Server {
                 path("/:id", () -> {
                     patch("", DrugController::edit);
                     delete("", DrugController::delete);
-                });
-            });
+                })
+            );
 
             // countries api endpoints.
             path("/countries", () -> {

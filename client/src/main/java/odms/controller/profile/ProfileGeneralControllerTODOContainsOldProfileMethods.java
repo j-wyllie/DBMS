@@ -68,7 +68,6 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
      */
     private static void setGivenAttribute(String[] parts, Profile profile)
             throws IllegalArgumentException {
-        //todo Change how setExtraAttributes works
         String attrName = parts[0];
         String value = null;
         if (parts[1] != null) {

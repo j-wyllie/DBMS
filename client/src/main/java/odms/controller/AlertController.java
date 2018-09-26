@@ -8,6 +8,10 @@ import odms.commons.model.enums.OrganEnum;
 
 public class AlertController {
 
+    private AlertController() {
+        throw new UnsupportedOperationException();
+    }
+
     /**
      * Creates a generic popup when details are entered incorrectly.
      */

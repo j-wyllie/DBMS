@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import odms.Session;
@@ -15,16 +16,17 @@ import odms.commons.model.user.User;
 
 @Slf4j
 public class Request {
+    private static final Integer PORT = 6969;
+    private static final String DOMAIN = "localhost";
+    private static final String URL = "http://" + DOMAIN + ":" + PORT + "/api/v1/";
+
+    private static final String TYPE_CONTENT = "Content-Type";
+    private static final String TYPE_JSON = "application/json";
 
     // Base request variables.
     private String urlString;
     private Map<String, Object> queryParams;
     private String body;
-
-    // Base server variables.
-    private static Integer port = 6969;
-    private static String domain = "localhost";
-    private static String url = "http://" + domain + ":" + port + "/api/v1/";
 
     /**
      * Constructor for a request.
@@ -83,7 +85,7 @@ public class Request {
         con.setDoOutput(true);
 
         OutputStream output = con.getOutputStream();
-        output.write(this.body.getBytes("UTF-8"));
+        output.write(this.body.getBytes(StandardCharsets.UTF_8));
 
         String body = execute(con);
         int status = con.getResponseCode();
@@ -108,7 +110,7 @@ public class Request {
         con.setDoOutput(true);
 
         OutputStream output = con.getOutputStream();
-        output.write(this.body.getBytes("UTF-8"));
+        output.write(this.body.getBytes(StandardCharsets.UTF_8));
 
         String body = execute(con);
         int status = con.getResponseCode();
@@ -146,7 +148,7 @@ public class Request {
         con.setConnectTimeout(60000);
         con.setReadTimeout(60000);
 
-        StringBuffer responseContent = new StringBuffer();
+        StringBuilder responseContent = new StringBuilder();
         BufferedReader response;
         try {
             response = new BufferedReader(
@@ -205,7 +207,7 @@ public class Request {
             con.setRequestProperty("UserType", userType.toString());
             con.setRequestProperty("Authorization", String.valueOf(Session.getToken()));
         }
-        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty(TYPE_CONTENT, TYPE_JSON);
     }
 
     /**
@@ -213,6 +215,6 @@ public class Request {
      * @return the url string.
      */
     public static String getUrl() {
-        return url;
+        return URL;
     }
 }

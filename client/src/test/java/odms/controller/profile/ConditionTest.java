@@ -5,17 +5,27 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import odms.commons.model.profile.Condition;
 import odms.commons.model.profile.Profile;
+import odms.controller.database.condition.HttpConditionDAO;
 import odms.view.profile.ProfileMedicalHistory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(HttpConditionDAO.class)
 public class ConditionTest {
     public ProfileMedicalHistory view;
     public ConditionGeneral controller;
@@ -23,6 +33,9 @@ public class ConditionTest {
 
     @Before
     public void setup() {
+        PowerMockito.stub(PowerMockito.method(HttpConditionDAO.class, "remove"))
+                .toReturn(null);
+
         List<String> profileOneAttr = new ArrayList<>();
         profileOneAttr.add("given-names=\"John\"");
         profileOneAttr.add("last-names=\"Wayne\"");
@@ -30,8 +43,7 @@ public class ConditionTest {
         profileOneAttr.add("nhi=\"123456879\"");
         view = new ProfileMedicalHistory();
         currentProfile = new Profile(profileOneAttr);
-        controller = new ConditionGeneral(view);
-        view.initialize(currentProfile, false);
+        controller = new ConditionGeneral();
     }
 
     @Test
@@ -123,6 +135,22 @@ public class ConditionTest {
         } catch (IllegalArgumentException e) {
             assertEquals(e.getMessage(),"Can not cure if Chronic");
         }
+    }
+
+    @Test
+    public void testDeleteConditions() throws IOException{
+        ArrayList<Condition> conditionList = new ArrayList();
+        Condition condition1 = new odms.commons.model.profile.Condition("", LocalDate.now(), LocalDate.now(), true);
+        Condition condition2 = new odms.commons.model.profile.Condition("", LocalDate.now(), LocalDate.now(),true);
+        Condition condition3 = new odms.commons.model.profile.Condition("", LocalDate.now(), LocalDate.now(),true);
+        conditionList.add(condition1);
+        conditionList.add(condition2);
+        conditionList.add(condition3);
+        controller.addCondition(condition1, currentProfile);
+        controller.addCondition(condition2, currentProfile);
+        controller.addCondition(condition3, currentProfile);
+        controller.delete(currentProfile, conditionList);
+        assertEquals(currentProfile.getAllConditions().size(), 0);
     }
 
 }

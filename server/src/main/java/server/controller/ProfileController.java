@@ -25,6 +25,7 @@ import spark.Response;
  */
 @Slf4j
 public class ProfileController {
+
     private static final String KEY_SEARCH = "searchString";
 
     /**
@@ -36,18 +37,14 @@ public class ProfileController {
 
     /**
      * Gets all profiles stored.
+     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body, a list of all profiles.
      */
     public static String getAll(Request req, Response res) {
         String profiles;
-        try {
-            profiles = getAll(req);
-        } catch (SQLException e) {
-            res.status(500);
-            return e.getMessage();
-        }
+        profiles = getAll(req);
         res.type(DataTypeEnum.JSON.toString());
         res.status(200);
 
@@ -56,10 +53,11 @@ public class ProfileController {
 
     /**
      * Gets all receiving profiles (possibly with search criteria).
+     *
      * @param req received.
      * @return json string of profiles.
      */
-    public static String getReceiving(Request req,  Response res) {
+    public static String getReceiving(Request req, Response res) {
         ProfileDAO database = DAOFactory.getProfileDao();
         Gson gson = new Gson();
         String profiles;
@@ -94,6 +92,7 @@ public class ProfileController {
 
     /**
      * Gets all dead profiles stored, possibly with search criteria.
+     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body, a list of all profiles.
@@ -122,13 +121,12 @@ public class ProfileController {
     }
 
     /**
-     /**
-     * Gets all profiles (possibly with search criteria).
+     * /** Gets all profiles (possibly with search criteria).
+     *
      * @param req received.
      * @return json string of profiles.
-     * @throws SQLException error.
      */
-    private static String getAll(Request req) throws SQLException {
+    private static String getAll(Request req) {
         ProfileDAO database = DAOFactory.getProfileDao();
         Gson gson = new Gson();
         String profiles;
@@ -157,6 +155,7 @@ public class ProfileController {
 
     /**
      * Gets a single profile from storage.
+     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -188,6 +187,7 @@ public class ProfileController {
 
     /**
      * Creates and stores a new profile.
+     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -225,6 +225,7 @@ public class ProfileController {
 
     /**
      * Edits a stored profile.
+     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -254,6 +255,7 @@ public class ProfileController {
 
     /**
      * Deletes a profile from storage.
+     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -283,6 +285,7 @@ public class ProfileController {
 
     /**
      * Gets a count of all stored profiles.
+     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -309,6 +312,7 @@ public class ProfileController {
 
     /**
      * Checks that a profile has a password.
+     *
      * @param req the request fields.
      * @param res the response from the server.
      * @return The response body.
@@ -331,6 +335,7 @@ public class ProfileController {
 
     /**
      * Checks the credentials of a profile logging in,
+     *
      * @param request request containg password and username.
      * @param response response from the server.
      * @return String displaying success of validation.
@@ -368,6 +373,7 @@ public class ProfileController {
 
     /**
      * Saves the profiles password.
+     *
      * @param request request being sent with url and password.
      * @param response the server response.
      * @return String confirming success.

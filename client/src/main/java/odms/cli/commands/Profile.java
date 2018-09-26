@@ -88,8 +88,7 @@ public class Profile extends CommandUtils {
     private static void deleteProfiles(List<odms.commons.model.profile.Profile> profileList)
             throws SQLException {
         ProfileDAO database = DAOFactory.getProfileDao();
-        boolean result;
-        if (profileList.size() > 0) {
+        if (!profileList.isEmpty()) {
             for (odms.commons.model.profile.Profile profile : profileList) {
                 database.remove(profile);
                 CurrentHistory.getDeletedProfiles().add(profile);
@@ -119,8 +118,6 @@ public class Profile extends CommandUtils {
                     .setExtraAttributes(attrArray, profile);
             action.setHistoryData(action.getHistoryData() + profile.getAttributesSummary());
             action.setHistoryTimestamp(LocalDateTime.now());
-            //CurrentHistory.updateHistory(action);
-
         } else {
             System.out.println(searchNotFoundText);
         }
@@ -172,8 +169,8 @@ public class Profile extends CommandUtils {
         ProfileDAO database = DAOFactory.getProfileDao();
         List<odms.commons.model.profile.Profile> profiles = new ArrayList<>();
         if (expression.lastIndexOf('=') == expression.indexOf('=')) {
-            String attr = expression.substring(expression.indexOf("\"") + 1,
-                    expression.lastIndexOf("\""));
+            String attr = expression.substring(expression.indexOf('\"') + 1,
+                    expression.lastIndexOf('\"'));
             if (expression.substring(8, 8 + "given-names".length()).equals("given-names") ||
                     expression.substring(8, 8 + "last-names".length()).equals("last-names") ||
                     expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
@@ -205,9 +202,7 @@ public class Profile extends CommandUtils {
                     expression.substring(8, 8 + "last-names".length()).equals("last-names") ||
                     expression.substring(8, 8 + "nhi".length()).equals("nhi")) {
                 try {
-                    odms.commons.model.profile.Profile profiles = database.get(attr);
-                    return profiles;
-
+                    return database.get(attr);
                 } catch (SQLException e) {
                     log.error(e.getMessage(), e);
                 }

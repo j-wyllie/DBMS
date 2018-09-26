@@ -20,29 +20,26 @@ public class CommandUtils {
         throw new UnsupportedOperationException();
     }
 
-    private static final String CMD_REGEX_CREATE =
-            "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]"
-                    + "([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)?)+)"
-                    + "[\"]))*";
+    private static final String CMD_REGEX_START = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]";
+    private static final String CMD_REGEX_END = "[\"]))*";
+
+    private static final String CMD_REGEX_CREATE = CMD_REGEX_START
+                    + "([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)?)+)" + CMD_REGEX_END;
 
     private static final String CMD_REGEX_PROFILE_VIEW =
             "([a-z]+)((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
                     + "(([a-zA-Z0-9][-]?(\\s)?)+)[\"]))+(\\s[>]\\s"
                     + "([a-z]+)([-]([a-z]+))?)";
 
-    private static final String CMD_REGEX_PROFILE_UPDATE =
-            "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]"
+    private static final String CMD_REGEX_PROFILE_UPDATE = CMD_REGEX_START
                     + "([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)"
                     + "?)+)[\"]))*(\\s[>])((\\s([a-z]+)([-]([a-z]"
-                    + "+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)?)+)"
-                    + "[\"]))*";
+                    + "+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)?)+)" + CMD_REGEX_END;
 
-    private static final String CMD_REGEX_ORGAN_UPDATE =
-            "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]"
+    private static final String CMD_REGEX_ORGAN_UPDATE = CMD_REGEX_START
                     + "([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)"
                     + "?)+)[\"]))*(\\s[>](\\s([a-z]+)([-]([a-z]+)"
-                    + ")?)([=][\"](([a-zA-Z]([-])?([,](\\s)?)*)+)"
-                    + "[\"]))*";
+                    + ")?)([=][\"](([a-zA-Z]([-])?([,](\\s)?)*)+)" + CMD_REGEX_END;
 
     private static final String ERR_ORGAN_EXISTS = "This organ already exists.";
 

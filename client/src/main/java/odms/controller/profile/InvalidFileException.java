@@ -4,7 +4,7 @@ import java.io.File;
 
 public class InvalidFileException extends Exception {
 
-        private File file;
+        private final File file;
 
         InvalidFileException(String message, File file) {
             super(message);
