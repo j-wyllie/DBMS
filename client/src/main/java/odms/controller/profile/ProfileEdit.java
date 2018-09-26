@@ -1,5 +1,7 @@
 package odms.controller.profile;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -480,19 +482,29 @@ public class ProfileEdit extends CommonController {
     public void saveHLAtype() {
         try {
             // add primary HLA values
-            Integer xa = view.getHLAXAField();
-            Integer xb = view.getHLAXBField();
-            Integer xc = view.getHLAXCField();
-            Integer xdp = view.getHLAXDPField();
-            Integer xdq = view.getHLAXDQField();
-            Integer xdr = view.getHLAXDRField();
-            Integer ya = view.getHLAYAField();
-            Integer yb = view.getHLAYBField();
-            Integer yc = view.getHLAYCField();
-            Integer ydp = view.getHLAYDPField();
-            Integer ydq = view.getHLAYDQField();
-            Integer ydr = view.getHLAYDRField();
-            HLAType hlaType = new HLAType(xa, xb, xc, xdp, xdq, xdr, ya, yb, yc, ydp, ydq, ydr);
+            List<String> hlas = new ArrayList<>();
+            hlas.add(view.getHLAXAField());
+            hlas.add(view.getHLAXBField());
+            hlas.add(view.getHLAXCField());
+            hlas.add(view.getHLAXDPField());
+            hlas.add(view.getHLAXDQField());
+            hlas.add(view.getHLAXDRField());
+            hlas.add(view.getHLAYAField());
+            hlas.add(view.getHLAYBField());
+            hlas.add(view.getHLAYCField());
+            hlas.add(view.getHLAYDPField());
+            hlas.add(view.getHLAYDQField());
+            hlas.add(view.getHLAYDRField());
+
+            if (hlas.toString().isEmpty()) {
+                return;
+            }
+
+            List<Integer> hlasInt = new ArrayList<>();
+            for (String hla : hlas) {
+                hlasInt.add(Integer.valueOf(hla));
+            }
+            HLAType hlaType = new HLAType(hlasInt);
 
             // add secondary HLA values (move to hla controller)
             for (Object secondaryHlaObject : view.getSecondaryHlaListView().getItems().toArray()) {

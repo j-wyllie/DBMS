@@ -103,7 +103,7 @@ public class HlaControllerTest {
                 PowerMockito.method(HlaController.class, DATABASE_HLA)
         ).toReturn(hlas);
 
-        assertEquals("No HLA", controller.getMatchString(9, 10));
+        assertEquals("Missing HLA", controller.getMatchString(9, 10));
     }
 
 }
