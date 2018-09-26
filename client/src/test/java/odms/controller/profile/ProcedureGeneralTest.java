@@ -5,14 +5,23 @@ import static org.junit.Assert.assertNotEquals;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
+import odms.controller.database.procedure.HttpProcedureDAO;
 import odms.view.profile.ProceduresDisplay;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
-@Ignore
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(HttpProcedureDAO.class)
+@PowerMockIgnore("javax.management.*")
 public class ProcedureGeneralTest {
     public ProceduresDisplay view;
     public odms.controller.profile.ProcedureGeneral controller;
@@ -20,6 +29,8 @@ public class ProcedureGeneralTest {
 
     @Before
     public void setup() {
+        PowerMockito.stub(PowerMockito.method(HttpProcedureDAO.class, "remove"))
+                .toReturn(null);
         ArrayList<String> profileOneAttr = new ArrayList<>();
         profileOneAttr.add("given-names=\"John\"");
         profileOneAttr.add("last-names=\"Wayne\"");
@@ -52,19 +63,28 @@ public class ProcedureGeneralTest {
 
     @Test
     public void testGetFullPendingProcedures() {
+        List<Procedure> list = new ArrayList<>();
+        list.add(new Procedure("ABC", LocalDate.parse("9999-01-01")));
+        PowerMockito.stub(PowerMockito.method(HttpProcedureDAO.class, "getAll"))
+                .toReturn(list);
+
         Procedure testProcedure1 = new Procedure("ABC", LocalDate.parse("9999-01-01"));
         Procedure testProcedure2 = new Procedure("ABC", LocalDate.parse("1000-01-01"));
         currentProfile.getPendingProcedures().add(testProcedure2);
         currentProfile.getPendingProcedures().add(testProcedure1);
-        assertEquals(controller.getPendingProcedures(currentProfile).get(0), testProcedure1);
+        assertEquals(controller.getPendingProcedures(currentProfile).get(0).getDate(), testProcedure1.getDate());
     }
 
     @Test
     public void testGetFullPreviousProcedures() {
+        List<Procedure> list = new ArrayList<>();
+        list.add(new Procedure("ABC", LocalDate.parse("1000-01-01")));
+        PowerMockito.stub(PowerMockito.method(HttpProcedureDAO.class, "getAll"))
+                .toReturn(list);
         Procedure testProcedure1 = new Procedure("ABC", LocalDate.parse("9999-01-01"));
         Procedure testProcedure2 = new Procedure("ABC", LocalDate.parse("1000-01-01"));
         currentProfile.getPreviousProcedures().add(testProcedure1);
         currentProfile.getPreviousProcedures().add(testProcedure2);
-        assertEquals(controller.getPreviousProcedures(currentProfile).get(0), testProcedure2);
+        assertEquals(controller.getPreviousProcedures(currentProfile).get(0).getDate(), testProcedure2.getDate());
     }
 }
