@@ -244,7 +244,7 @@ public class ProcedureController {
 
         try {
             id = Integer.valueOf(req.params(KeyEnum.ID.toString()));
-            organ = OrganEnum.valueOf(gson.toJson(req.body(), OrganEnum.class));
+            organ = gson.fromJson(req.body(), OrganEnum.class);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             res.status(400);
@@ -260,6 +260,6 @@ public class ProcedureController {
         }
 
         res.status(200);
-        return "Affected organ removed";
+        return "Affected organ added";
     }
 }
