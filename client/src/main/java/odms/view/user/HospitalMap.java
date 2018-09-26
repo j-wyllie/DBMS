@@ -76,7 +76,7 @@ public class HospitalMap extends CommonView implements Initializable,
     private Hospital hospitalSelected2;
     private Polyline helicopterRoute;
 
-    private Boolean userIsAdmin;
+    private Boolean userIsAdmin = false;
 
     private GoogleMap map;
     private List<Marker> markers;
@@ -154,7 +154,6 @@ public class HospitalMap extends CommonView implements Initializable,
         }
 
         locationSelected(false);
-
     }
 
     /**
@@ -361,17 +360,25 @@ public class HospitalMap extends CommonView implements Initializable,
     @FXML
     private void handleShowHelp() {
 
-        String helpText = "Welcome! \n" +
-                "To route between two hospitals, click on each and a route will appear, " +
-                "to toggle the travel method use the dropdown menu. \n" +
-                "To add a custom marker, double click on the map where you want the marker, " +
-                "this marker can be used just like a hospital. \n" +
-                "To add a hospital to the map, click 'Add Hospital," +
-                "and fill out the required info. \n" +
-                "To find the nearest hospital to a location, click its corresponding marker, " +
-                "then click the 'Find nearest hospital' button. \n" +
-                "Use the 'Clear' button to remove all routes and custom markers.";
-        AlertController.guiPopupInfo(helpText);
+        String helpText;
+
+        if (userIsAdmin) {
+            helpText =
+                    "Welcome! Click on a location through the map or the provided table and use the enabled " +
+                    "buttons to find the nearest hospital, edit or delete a hospital, or add a new hospital. \n" +
+                    "Route between two locations by clicking on two locations on the map, " +
+                            "one after the other, and a route will appear. \n" +
+                    "Add a custom marker by double clicking on the map where you want the marker. ";
+        } else {
+            helpText =
+                    "Welcome! Click on any location through the map or the provided table and use the " +
+                     "enabled buttons to find the nearest hospital. Or, route to another location \n" +
+                     "by clicking on two locations on the map, one after the other, and a route will appear. \n" +
+                     "To add a custom marker, double click on the map where you want the marker.";
+        }
+
+        //AlertController.guiPopupInfo(helpText);
+        travelInfo.setText(helpText);
     }
 
     /**
