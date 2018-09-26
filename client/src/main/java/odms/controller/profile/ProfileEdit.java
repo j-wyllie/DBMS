@@ -1,6 +1,7 @@
 package odms.controller.profile;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -589,6 +590,12 @@ public class ProfileEdit extends CommonController {
         ObservableList<String> secondaryHlas = view.getSecondaryHlaListView().getItems();
         secondaryHlas.add(0, newHla);
         view.getSecondaryHlaListView().setItems(secondaryHlas);
+    }
+
+    public void handelSecondaryHlaDeleted(List<String> HLAsToRemove) {
+        for (String hla : HLAsToRemove) {
+            view.getSecondaryHlaListView().getItems().remove(hla);
+        }
     }
 
     public void setCurrentProfile(Profile donor) {

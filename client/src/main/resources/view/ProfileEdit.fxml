@@ -681,7 +681,7 @@
                                                       <Insets left="5.0" right="5.0" />
                                                    </GridPane.margin>
                                                 </TextField>
-                                                <ListView fx:id="secondaryHlaListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="7" GridPane.rowSpan="5">
+                                                <ListView fx:id="secondaryHlaListView" onKeyPressed="#handleSecondaryHlaListViewKeyPressed" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="7" GridPane.rowSpan="5">
                                                    <GridPane.margin>
                                                       <Insets bottom="5.0" left="5.0" right="5.0" />
                                                    </GridPane.margin></ListView>
