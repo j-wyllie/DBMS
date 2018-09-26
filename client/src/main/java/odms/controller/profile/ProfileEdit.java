@@ -244,6 +244,9 @@ public class ProfileEdit extends CommonController {
     public void saveChosenImage() throws IOException {
         File chosenFile = view.getChosenFile();
         if (chosenFile != null) {
+
+            // Packages this into a request, set, which replaces current photo TODO
+
             currentProfile.setPictureName(
                     ImageDataIO.deleteAndSaveImage(
                             chosenFile, currentProfile.getNhi()
