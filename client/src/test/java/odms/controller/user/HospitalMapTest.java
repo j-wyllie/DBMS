@@ -16,14 +16,12 @@ public class HospitalMapTest {
     public odms.controller.user.HospitalMap controller;
     private Hospital hospital1;
     private Hospital hospital2;
-    private Hospital hospital3;
 
 
     @Before
     public void setup() {
         hospital1 = new Hospital("HospitalTest1", -39.07, 174.05, null, 11);
         hospital2 = new Hospital("HospitalTest2", -40.57, 175.27, null, 14);
-        hospital3 = new Hospital("HospitalTest3", -38.23, 177.31, null, 16);
         view = new HospitalMap();
         controller = new odms.controller.user.HospitalMap(view);
     }
