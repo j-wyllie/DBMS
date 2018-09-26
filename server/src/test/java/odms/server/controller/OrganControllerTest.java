@@ -24,16 +24,26 @@ import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import server.controller.OrganController;
 import server.model.database.DAOFactory;
+import server.model.database.PasswordUtilities;
 import server.model.database.organ.OrganDAO;
 import server.model.database.profile.ProfileDAO;
+import server.model.database.user.MySqlUserDAO;
 import server.model.database.user.UserDAO;
 import server.model.enums.KeyEnum;
 import server.model.enums.ResponseMsgEnum;
 import spark.Request;
 import spark.Response;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(PasswordUtilities.class)
+@PowerMockIgnore("javax.management.*")
 public class OrganControllerTest extends CommonTestUtils {
 
     // Data access object variables.
@@ -73,25 +83,31 @@ public class OrganControllerTest extends CommonTestUtils {
     private static final String RECEIVED = "received";
     private static final String REQUIRED = "required";
 
-
-
     @Before
     public void setup() throws SQLException, OrganConflictException, UserNotFoundException {
+        PowerMockito.stub(
+                PowerMockito.method(PasswordUtilities.class, "getSaltedHash")
+        ).toReturn("test");
+
+        PowerMockito.stub(
+                PowerMockito.method(MySqlUserDAO.class, "checkCredentials")
+        ).toReturn(true);
+
         profileA = new Profile("Alice", "Smith",
                 genericDate, "LPO7236");
         profileDAO.add(profileA);
         profileA.setUsername("alices");
-        profileA.setPassword("12345");
+        profileA.setPassword("test");
         profileA = profileDAO.get(profileA.getNhi());
 
         // Default admin.
         userA = new User(UserType.ADMIN, "admin", "Canterbury");
         userA.setUsername("admin");
-        userA.setPassword("admin");
+        userA.setPassword("test");
         userA.setDefault(true);
         userDAO.add(userA);
         userA = userDAO.get(userA.getUsername());
-        userA.setPassword("admin");
+        userA.setPassword("test");
 
         organA = new Organ(OrganEnum.LIVER, LocalDateTime.now());
         organB = new Organ(OrganEnum.CONNECTIVE_TISSUE, LocalDateTime.now());
