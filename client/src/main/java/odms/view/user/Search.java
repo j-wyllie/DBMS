@@ -23,10 +23,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Profile;
-import odms.controller.database.DAOFactory;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.user.User;
-import odms.controller.database.profile.ProfileDAO;
 import odms.view.CommonView;
 import org.controlsfx.control.CheckComboBox;
 
@@ -290,12 +288,12 @@ public class Search extends CommonView {
     }
 
     /**
-     * Limits the characters entered in textfield to only digits and maxLength
+     * Limits the characters entered in textfield to only digits and maxLength.
      *
      * @param maxLength that can be entered in the textfield
-     * @return
+     * @return eventHandler
      */
-    public static EventHandler<KeyEvent> numeric_Validation(final Integer maxLength) {
+    public static EventHandler<KeyEvent> numericValidation(final Integer maxLength) {
         return e -> {
             TextField txt_TextField = (TextField) e.getSource();
             if (txt_TextField.getText().length() >= maxLength) {
@@ -322,10 +320,9 @@ public class Search extends CommonView {
         this.parentView = parentView;
         this.currentUser = currentUser;
         if (currentUser != null) {
-            this.currentUser = currentUser;
             ageRangeField.setDisable(true);
-            ageField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
-            ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
+            ageField.addEventHandler(KeyEvent.KEY_TYPED, numericValidation(10));
+            ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numericValidation(10));
             genderStrings.clear();
             genderStrings.add("any");
             genderStrings.add("male");
@@ -357,9 +354,8 @@ public class Search extends CommonView {
                 }
             });
 
-            organsCombobox.addEventHandler(ComboBox.ON_HIDDEN, event -> {
-                performSearchFromFilters();
-            });
+            organsCombobox.addEventHandler(ComboBox.ON_HIDDEN, event ->
+                    performSearchFromFilters());
 
             makeSearchTable(currentUser);
             setSearchTablePlaceholder();
@@ -371,7 +367,7 @@ public class Search extends CommonView {
     /**
      * Clears the search table and sets the placeholder.
      */
-    public void setSearchTablePlaceholder() {
+    private void setSearchTablePlaceholder() {
         try {
             makeSearchTable(currentUser);
             searchTable.getItems().clear();
