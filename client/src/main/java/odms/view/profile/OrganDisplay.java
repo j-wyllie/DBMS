@@ -132,6 +132,18 @@ public class OrganDisplay extends CommonView {
         if (currentProfile.getDateOfDeath() != null) {
             donatingButton.setDisable(true);
             receivingButton.setDisable(true);
+            if (isClinician) {
+                listViewDonating.setMouseTransparent(false);
+                listViewDonating.setOnMousePressed(event -> {
+                    if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+                            listViewDonating.getSelectionModel().getSelectedItem() != null) {
+                        giveReasonForOverride(event,
+                                listViewDonating.getSelectionModel().getSelectedItem());
+                    }
+                });
+            }
+        } else {
+            expiredButton.setVisible(false);
         }
 
         if (!isClinician) {
@@ -139,18 +151,6 @@ public class OrganDisplay extends CommonView {
         }
 
         populateOrganLists();
-
-        if (isClinician) {
-        listViewDonating.setMouseTransparent(false);
-            listViewDonating.setOnMousePressed(event -> {
-                if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
-                        listViewDonating.getSelectionModel().getSelectedItem() != null) {
-                    giveReasonForOverride(event,
-                            listViewDonating.getSelectionModel().getSelectedItem());
-                }
-            });
-        }
-
     }
 
     /**
@@ -173,7 +173,6 @@ public class OrganDisplay extends CommonView {
         }
         receivingButton.setVisible(false);
         donatedButton.setVisible(false);
-
         expiredButton.setVisible(false);
 
         if (currentProfile.getDateOfDeath() == null) {
