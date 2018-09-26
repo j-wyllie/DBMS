@@ -74,11 +74,10 @@ CREATE TABLE IF NOT EXISTS `countries` (
 
 DROP TABLE IF EXISTS `drugs`;
 CREATE TABLE IF NOT EXISTS `drugs` (
-  `Id` int(11) NOT NULL,
-  `ProfileId` int(11) NOT NULL,
+  `Id` int(11) DEFAULT NULL,
+  `ProfileId` int(11) DEFAULT NULL,
   `Drug` varchar(50) DEFAULT NULL,
-  `Current` tinyint(1) DEFAULT NULL,
-  `Past` tinyint(1) DEFAULT NULL
+  `Current` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -313,7 +312,7 @@ ALTER TABLE `countries`
 -- AUTO_INCREMENT for table `drugs`
 --
 ALTER TABLE `drugs`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `history`
 --

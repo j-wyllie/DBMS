@@ -67,7 +67,7 @@ public class MySqlMedicationDAO implements MedicationDAO {
      */
     @Override
     public void add(Drug drug, int profile, Boolean current) {
-        String query = "insert into drugs (ProfileId, Drug, Current, Past) values (?, ?, ?, ?);";
+        String query = "insert into drugs (ProfileId, Drug, Current) values (?, ?, ?);";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
@@ -77,7 +77,6 @@ public class MySqlMedicationDAO implements MedicationDAO {
             stmt.setInt(1, profile);
             stmt.setString(2, drug.getDrugName());
             stmt.setBoolean(3, current);
-            stmt.setBoolean(4, !current);
 
             stmt.executeUpdate();
             conn.close();
@@ -119,7 +118,7 @@ public class MySqlMedicationDAO implements MedicationDAO {
      */
     @Override
     public void update(Drug drug, Boolean current) {
-        String query = "update drugs set Drug = ?, Current = ?, Past = ? where Id = ?;";
+        String query = "update drugs set Drug = ?, Current = ? where Id = ?;";
         DatabaseConnection instance = DatabaseConnection.getInstance();
 
         try {
@@ -128,8 +127,7 @@ public class MySqlMedicationDAO implements MedicationDAO {
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, drug.getDrugName());
             stmt.setBoolean(2, current);
-            stmt.setBoolean(3, !current);
-            stmt.setInt(4, drug.getId());
+            stmt.setInt(3, drug.getId());
 
             stmt.executeUpdate();
             conn.close();
