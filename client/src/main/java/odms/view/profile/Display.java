@@ -92,7 +92,7 @@ public class Display extends CommonView {
         CommonDAO server = DAOFactory.getCommonDao();
         server.logout();
         currentProfile = null;
-        Session.setCurrentUser(currentProfile, null);
+        Session.setCurrentUser(null, null);
         if(socialFeedInitialised) {
             socialFeed.pauseTimer();
             socialFeedInitialised = false;

@@ -10,8 +10,8 @@ import odms.commons.model.user.User;
 
 public class Session {
 
-    private static Object currentUser;
-    private static Object currentProfile;
+    private static User currentUser;
+    private static Profile currentProfile;
     private static int token;
 
     /**
@@ -42,9 +42,9 @@ public class Session {
      */
     public static void setCurrentUser(Object currentUser, UserType userType) {
         if (userType == UserType.ADMIN || userType == UserType.CLINICIAN) {
-            Session.currentUser = currentUser;
+            Session.currentUser = (User) currentUser;
         } else {
-            Session.currentProfile = currentUser;
+            Session.currentProfile = (Profile) currentUser;
         }
     }
 
@@ -81,5 +81,10 @@ public class Session {
             return profile.getCountry() != null ? profile.getCountry()
                     : CountriesEnum.getEnumByString(Locale.getDefault().getDisplayCountry());
         }
+    }
+
+    public static void clear() {
+        currentUser = null;
+        currentProfile = null;
     }
 }

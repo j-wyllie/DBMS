@@ -107,7 +107,7 @@ public class ClinicianProfile extends CommonView {
         CommonDAO server = DAOFactory.getCommonDao();
         server.logout();
         currentUser = null;
-        Session.setCurrentUser(currentUser, null);
+        Session.clear();
         if (socialFeed != null) {
             socialFeed.pauseTimer();
         }
