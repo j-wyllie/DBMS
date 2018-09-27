@@ -1,3 +1,11 @@
+.banner {
+    -fx-background-color: linear-gradient(#34c6a7, #1fa98c);
+    -fx-background-image: url(/images/login.png);
+    -fx-background-size: 600px 275px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
 .button-login {
     -fx-background-color: linear-gradient(#34c6a7, #1fa98c);
     -fx-background-radius: 4;
