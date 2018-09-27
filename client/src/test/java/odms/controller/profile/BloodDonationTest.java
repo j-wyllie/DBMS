@@ -31,6 +31,7 @@ public class BloodDonationTest {
         profileOneAttr.add("dob=\"17-01-1998\"");
         profileOneAttr.add("nhi=\"123456879\"");
         currentProfile = new Profile(profileOneAttr);
+        currentProfile.setId(9999);
         currentProfile.setBloodType("O+");
         controller = new odms.controller.profile.BloodDonation();
     }
@@ -91,6 +92,8 @@ public class BloodDonationTest {
 
     @Test
     public void testPointsUpdate() {
+        PowerMockito.stub(PowerMockito.method(HttpProfileDAO.class, "updateBloodDonation"))
+                .toReturn(null);
         currentProfile.setLastBloodDonation(LocalDateTime.now());
         controller.updatePoints(currentProfile, false);
         Assert.assertEquals(3, currentProfile.getBloodDonationPoints());
@@ -98,6 +101,8 @@ public class BloodDonationTest {
 
     @Test
     public void testPointsUpdatePlasmaDonation() {
+        PowerMockito.stub(PowerMockito.method(HttpProfileDAO.class, "updateBloodDonation"))
+                .toReturn(null);
         currentProfile.setLastBloodDonation(LocalDateTime.now());
         controller.updatePoints(currentProfile, true);
         Assert.assertEquals(5, currentProfile.getBloodDonationPoints());
