@@ -62,8 +62,10 @@ public class HospitalCreate {
             }
             appStage.close();
 
-        } catch (IOException | IllegalArgumentException | SQLException e) {
+        } catch (IOException | IllegalArgumentException e) {
             AlertController.invalidEntry("Please enter all fields.");
+        } catch (SQLException e) {
+            AlertController.invalidEntry("Database error.");
         }
 
     }
