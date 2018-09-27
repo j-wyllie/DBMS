@@ -1,5 +1,8 @@
 package odms.commons.model.locations;
 
+import odms.commons.model.enums.OrganEnum;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,7 +14,7 @@ public class Hospital {
     private Double latitude;
     private Double longitude;
     private String address;
-    private List programs;
+    private List<Boolean> programs;
     private Integer id;
 
     /**
@@ -24,7 +27,7 @@ public class Hospital {
      * @param programs list of transplant programs that the hospital provides
      * @param id the unique id for the hospital
      */
-    public Hospital(String name, Double lat, Double lon, String address, List programs,
+    public Hospital(String name, Double lat, Double lon, String address, List<Boolean> programs,
             Integer id) {
         this.name = name;
         this.latitude = lat;
@@ -32,6 +35,22 @@ public class Hospital {
         this.address = address;
         this.programs = programs;
         this.id = id;
+    }
+
+    /**
+     * Constructor for hospital objects.
+     * @param name Name of hte hospital
+     * @param lat latitude of hte hospital
+     * @param lon longitude of hte hospital
+     * @param address address of the hospital
+     * @param programs list of transplant programs that the hospital provides
+     */
+    public Hospital(String name, Double lat, Double lon, String address, List<Boolean> programs) {
+        this.name = name;
+        this.latitude = lat;
+        this.longitude = lon;
+        this.address = address;
+        this.programs = programs;
     }
 
     /**
@@ -47,6 +66,10 @@ public class Hospital {
         this.latitude = lat;
         this.longitude = lon;
         this.address = address;
+        programs = new ArrayList<>();
+        for (int i = 0; i < OrganEnum.values().length; i++) {
+            programs.add(false);
+        }
     }
 
     /**
@@ -64,6 +87,10 @@ public class Hospital {
         this.longitude = lon;
         this.address = address;
         this.id = id;
+        programs = new ArrayList<>();
+        for (int i = 0; i < OrganEnum.values().length; i++) {
+            programs.add(false);
+        }
     }
 
     public String getName() {
@@ -82,7 +109,7 @@ public class Hospital {
         return longitude;
     }
 
-    public List getPrograms() {
+    public List<Boolean> getPrograms() {
         return programs;
     }
 
@@ -106,7 +133,7 @@ public class Hospital {
         this.longitude = longitude;
     }
 
-    public void setPrograms(List programs) {
+    public void setPrograms(List<Boolean> programs) {
         this.programs = programs;
     }
 }

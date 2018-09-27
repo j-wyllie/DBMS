@@ -112,11 +112,23 @@ CREATE TABLE IF NOT EXISTS `hla_type` (
 
 DROP TABLE IF EXISTS `hospitals`;
 CREATE TABLE IF NOT EXISTS `hospitals` (
-  `Id` int(11) NOT NULL,
-  `Name` varchar(50) DEFAULT NULL,
-  `Address` varchar(100) DEFAULT NULL,
-  `Latitude` double DEFAULT NULL,
-  `Longitude` double DEFAULT NULL
+  `Id` INT(11),
+  `Name` VARCHAR(50) UNIQUE DEFAULT NULL,
+  `Address` VARCHAR(100) DEFAULT NULL,
+  `Latitude` DOUBLE DEFAULT NULL,
+  `Longitude` DOUBLE DEFAULT NULL,
+  `Bone` BOOLEAN DEFAULT FALSE,
+  `BoneMarrow` BOOLEAN DEFAULT FALSE,
+  `ConnectiveTissue` BOOLEAN DEFAULT FALSE,
+  `Cornea` BOOLEAN DEFAULT FALSE,
+  `Heart` BOOLEAN DEFAULT FALSE,
+  `Intestine` BOOLEAN DEFAULT FALSE,
+  `Kidney` BOOLEAN DEFAULT FALSE,
+  `Liver` BOOLEAN DEFAULT FALSE,
+  `Lung` BOOLEAN DEFAULT FALSE,
+  `MiddleEar` BOOLEAN DEFAULT FALSE,
+  `Pancreas` BOOLEAN DEFAULT FALSE,
+  `Skin` BOOLEAN DEFAULT FALSE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -316,7 +328,7 @@ ALTER TABLE `organs`
 --
 ALTER TABLE `procedures`
   ADD PRIMARY KEY (`Id`),
-  ADD KEY `ProfileId` (`ProfileId`);
+  ADD KEY `ProfileId` (`ProfileId`),
   ADD KEY `Hospitals` (`Hospital`);
 
 --
@@ -649,5 +661,3 @@ INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (199, 'YE', 1),
   (200, 'ZM', 1),
   (201, 'ZW', 1);
-
-
