@@ -42,7 +42,7 @@ public class UsersList {
         view.getViewUsersTable().getColumns().clear();
         TableColumn nameCol = new TableColumn("Name");
         TableColumn usernameCol = new TableColumn("Username");
-        TableColumn userTypeCol = new TableColumn("user Type");
+        TableColumn userTypeCol = new TableColumn("User Type");
         TableColumn staffIdCol = new TableColumn("Staff Id");
 
         view.getViewUsersTable().getColumns().addAll(nameCol, usernameCol, userTypeCol, staffIdCol);
@@ -56,7 +56,7 @@ public class UsersList {
                 new PropertyValueFactory<User, String>("userType")
         );
         staffIdCol.setCellValueFactory(
-                new PropertyValueFactory<User, String>("staffId")
+                new PropertyValueFactory<User, String>("staffID")
         );
 
         view.getViewUsersTable().setItems(usersObservableList);
@@ -87,8 +87,9 @@ public class UsersList {
         UserDAO server = DAOFactory.getUserDao();
 
         contextMenu.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
+            User user = view.getViewUsersTable().getSelectionModel().getSelectedItem();
+
             if (AlertController.deleteUserConfirmation()) {
-                User user = view.getViewUsersTable().getSelectionModel().getSelectedItem();
                 try {
                     server.remove(user);
                 } catch (SQLException e) {

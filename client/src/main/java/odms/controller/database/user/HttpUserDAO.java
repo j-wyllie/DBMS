@@ -70,7 +70,7 @@ public class HttpUserDAO implements UserDAO {
 
     @Override
     public void remove(User user) {
-        String url = USERS + user.getStaffID();
+        String url = USERS + "/" + user.getStaffID();
         Request request = new Request(url, new HashMap<>());
         try {
             request.delete();
@@ -82,7 +82,7 @@ public class HttpUserDAO implements UserDAO {
     @Override
     public void update(User user) throws IllegalArgumentException {
         Gson gson = new Gson();
-        String url = USERS + user.getStaffID();
+        String url = USERS + "/" + user.getStaffID();
         String body = gson.toJson(user);
         Request request = new Request(url, new HashMap<>(), body);
         try {
@@ -154,8 +154,6 @@ public class HttpUserDAO implements UserDAO {
         Request request = new Request(url, queryParams);
         try {
             response = request.get();
-
-            System.out.println(response.getBody());
 
             if (response.getStatus() == 200) {
                 return parser.fromJson(response.getBody(), User.class);
