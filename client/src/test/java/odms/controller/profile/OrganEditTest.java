@@ -3,20 +3,16 @@ package odms.controller.profile;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
 import odms.controller.database.organ.HttpOrganDAO;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -123,6 +119,8 @@ public class OrganEditTest {
                 .toReturn(set);
         PowerMockito.stub(PowerMockito.method(HttpOrganDAO.class, "getReceived"))
                 .toReturn(set);
+        PowerMockito.stub(PowerMockito.method(HttpOrganDAO.class, "addDonating"))
+                .toReturn(null);
         PowerMockito.stub(PowerMockito.method(HttpOrganDAO.class, "removeDonating"))
                 .toReturn(null);
         controller.addOrgansDonating(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
@@ -138,6 +136,8 @@ public class OrganEditTest {
                 .toReturn(set);
         PowerMockito.stub(PowerMockito.method(HttpOrganDAO.class, "removeDonation"))
                 .toReturn(null);
+        PowerMockito.stub(PowerMockito.method(HttpOrganDAO.class, "addDonation"))
+                .toReturn(null);
         controller.addOrgansDonated(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
         Boolean containsOrgan = currentProfile.getOrgansDonated().contains(OrganEnum.HEART);
         controller.removeOrgansDonated(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);
@@ -149,6 +149,8 @@ public class OrganEditTest {
         Set<OrganEnum> set = new HashSet<>();
         PowerMockito.stub(PowerMockito.method(HttpOrganDAO.class, "getRequired"))
                 .toReturn(set);
+        PowerMockito.stub(PowerMockito.method(HttpOrganDAO.class, "addRequired"))
+                .toReturn(null);
         PowerMockito.stub(PowerMockito.method(HttpOrganDAO.class, "removeRequired"))
                 .toReturn(null);
         controller.addOrgansRequired(OrganEnum.stringListToOrganSet(testOrganStrings), currentProfile);

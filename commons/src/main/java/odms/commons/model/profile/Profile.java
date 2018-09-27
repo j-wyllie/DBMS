@@ -39,6 +39,7 @@ public class Profile implements Comparable<Profile> {
     private Integer id;
     private String nhi;
     private String username;
+    private String password;
 
     private Boolean donor = false;
     private Boolean receiver = false;
@@ -278,6 +279,14 @@ public class Profile implements Comparable<Profile> {
      */
     public Profile(int profileId) {
         this.id = profileId;
+    }
+
+    /**
+     * Instantiates a profile with only the username for quick instantiation.
+     * @param username of the profile.
+     */
+    public Profile(String username) {
+        this.username = username;
     }
 
     /**
@@ -1262,5 +1271,17 @@ public class Profile implements Comparable<Profile> {
             }
         }
         procedures.add(procedure);
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

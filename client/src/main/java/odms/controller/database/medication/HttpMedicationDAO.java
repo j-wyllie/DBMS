@@ -34,7 +34,7 @@ public class HttpMedicationDAO implements MedicationDAO {
         queryParams.put("current", current);
 
         String body = gson.toJson(drug);
-        Request request = new Request(url, 0, queryParams, body);
+        Request request = new Request(url, queryParams, body);
         try {
             request.post();
         } catch (IOException e) {
@@ -46,7 +46,7 @@ public class HttpMedicationDAO implements MedicationDAO {
     public void remove(Drug drug) {
         String url = String.format("http://localhost:6969/api/v1/drugs/%s", drug.getId());
         Map<String, Object> queryParams = new HashMap<>();
-        Request request = new Request(url, 0, queryParams);
+        Request request = new Request(url, queryParams);
         try {
             request.delete();
         } catch (IOException e) {
@@ -62,7 +62,7 @@ public class HttpMedicationDAO implements MedicationDAO {
         queryParams.put("current", current);
 
         String body = gson.toJson(drug);
-        Request request = new Request(url, 0, queryParams, body);
+        Request request = new Request(url, queryParams, body);
         try {
             request.patch();
         } catch (IOException e) {
@@ -74,7 +74,7 @@ public class HttpMedicationDAO implements MedicationDAO {
         JsonParser parser = new JsonParser();
         Gson gson = new Gson();
         Response response = null;
-        Request request = new Request(url, 0, queryParams);
+        Request request = new Request(url, queryParams);
         try {
             response = request.get();
         } catch (IOException e) {

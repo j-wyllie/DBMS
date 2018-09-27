@@ -166,7 +166,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             stmt.setString(2, procedure.getLongDescription());
             stmt.setDate(3, Date.valueOf(procedure.getDate()));
             stmt.setBoolean(4, pending);
-            if (procedure.getHospital().getId() == -1) {
+            if (procedure.getHospital() == null || procedure.getHospital().getId() == -1) {
                 stmt.setNull(5, Types.INTEGER);
             } else {
                 stmt.setInt(5, procedure.getHospital().getId());

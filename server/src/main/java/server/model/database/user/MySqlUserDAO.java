@@ -173,7 +173,8 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setBoolean(9, user.getDefault());
             stmt.setString(10, user.getPictureName());
             stmt.execute();
-        } catch (SQLException | InvalidKeySpecException | NoSuchAlgorithmException e) {
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
+            log.error(e.getMessage(), e);
             throw new SQLException();
         }
     }

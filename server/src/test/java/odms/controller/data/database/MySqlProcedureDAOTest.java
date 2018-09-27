@@ -4,6 +4,7 @@ import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.locations.Hospital;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
+import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +18,7 @@ import java.util.List;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
-public class MySqlProcedureDaoTest extends MySqlCommonTests {
+public class MySqlProcedureDAOTest extends CommonTestUtils {
 
     private MySqlProcedureDAO mySqlProcedureDAO;
     private MySqlProfileDAO mySqlProfileDAO;
