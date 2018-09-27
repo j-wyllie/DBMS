@@ -192,20 +192,27 @@ public class MySqlProfileDAO implements ProfileDAO {
      * Removes a profile from the database.
      *
      * @param profile to remove.
-     * @throws SQLException thrown on invalid sql.
      */
     @Override
-    public void remove(Profile profile) throws SQLException {
-        String query = "DELETE FROM profiles WHERE ProfileId = ?;";
-
+    public void remove(Profile profile) {
+        String query;
+        if (profile.getId() != null) {
+            query = "delete from profiles where ProfileId = ?;";
+        } else {
+            query = "delete from profiles where NHI = ?;";
+        }
         try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, profile.getId());
+                PreparedStatement stmt = conn.prepareStatement(query);) {
+            if (profile.getId() != null) {
+                stmt.setInt(1, profile.getId());
+            } else {
+                stmt.setString(1, profile.getNhi());
+            }
 
             stmt.executeUpdate();
+
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
-            throw e;
         }
     }
 
