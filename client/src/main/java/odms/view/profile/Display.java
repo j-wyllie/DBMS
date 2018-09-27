@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
+import odms.Session;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.AlertController;
@@ -35,8 +36,6 @@ public class Display extends CommonView {
      * Text for showing recent edits.
      */
     @FXML
-    private Text editedText;
-    @FXML
     private Label donorFullNameLabel;
     @FXML
     private Label donorStatusLabel;
@@ -54,8 +53,6 @@ public class Display extends CommonView {
     private Tab tabMedications;
     @FXML
     private Tab tabOrgans;
-    @FXML
-    private Tab tabHistory;
     @FXML
     private Tab tabProcedures;
     @FXML
@@ -75,12 +72,14 @@ public class Display extends CommonView {
     // The FXML includes operate this way and allow access to the instantiated controller.
 
     /**
-     * Called when there has been an edit to the current profile.
+     * calls the controller method when the edit button is clicked.
+     * @param event edit button clicked event.
+     * @throws IOException thrown when edit window cannot be opened.
      */
-    public void editedTextArea() {
-        editedText.setText("The profile was successfully edited.");
+    @FXML
+    private void handleEditButtonClicked(ActionEvent event) throws IOException {
+        handleProfileEditButtonClicked(event, currentProfile, isOpenedByClinician, currentUser);
     }
-
 
     /**
      * Scene change to log in view.
@@ -93,6 +92,7 @@ public class Display extends CommonView {
         CommonDAO server = DAOFactory.getCommonDao();
         server.logout();
         currentProfile = null;
+        Session.setCurrentUser(null, null);
         if(socialFeedInitialised) {
             socialFeed.pauseTimer();
             socialFeedInitialised = false;
@@ -158,7 +158,7 @@ public class Display extends CommonView {
             try {
                 tabGeneral.setContent(loader.load());
                 ProfileGeneral profileGeneralView = loader.getController();
-                profileGeneralView.initialize(currentProfile, isOpenedByClinician, currentUser);
+                profileGeneralView.initialize(currentProfile);
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }
@@ -216,23 +216,7 @@ public class Display extends CommonView {
             try {
                 tabMedical.setContent(loader.load());
                 ProfileMedical profileMedicalViewTODO = loader.getController();
-                profileMedicalViewTODO.initialize(currentProfile, isOpenedByClinician, currentUser);
-            } catch (IOException e) {
-                log.error(e.getMessage(), e);
-            }
-        }
-    }
-
-    @FXML
-    public void onTabHistorySelected() {
-        if (tabHistory.isSelected()) {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/view/ProfileHistoryTab.fxml")
-            );
-            try {
-                tabHistory.setContent(loader.load());
-                ProfileHistory profileHistoryViewTODO = loader.getController();
-                profileHistoryViewTODO.initialize(currentProfile);
+                profileMedicalViewTODO.initialize(currentProfile, isOpenedByClinician);
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }

@@ -88,7 +88,7 @@ public interface ProfileDAO {
     /**
      * Updates a profiles information in the database.
      *
-     * @param profile to update.
+     * @param profile to updateCountries.
      * @throws SQLException thrown on invalid sql.
      */
     void update(Profile profile) throws SQLException;

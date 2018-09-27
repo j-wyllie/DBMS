@@ -35,7 +35,7 @@ public interface ConditionDAO {
 
     /**
      * Update a condition for the profile.
-     * @param condition to update.
+     * @param condition to updateCountries.
      */
     void update(Condition condition);
 }

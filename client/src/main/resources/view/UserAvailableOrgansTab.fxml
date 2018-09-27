@@ -12,14 +12,13 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import org.controlsfx.control.CheckComboBox?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.user.AvailableOrgans">
+<AnchorPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.151" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.user.AvailableOrgans">
    <children>
        <GridPane AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
            <columnConstraints>
                <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" />
                <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="160.0" />
                <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="99.0" prefWidth="165.0" />
-               <ColumnConstraints hgrow="SOMETIMES" maxWidth="161.0" minWidth="10.0" prefWidth="72.0" />
                <ColumnConstraints hgrow="NEVER" maxWidth="321.0" minWidth="-Infinity" prefWidth="176.0" />
                <ColumnConstraints hgrow="ALWAYS" maxWidth="332.0" minWidth="10.0" prefWidth="166.0" />
                <ColumnConstraints hgrow="ALWAYS" maxWidth="330.0" minWidth="10.0" prefWidth="82.0" />
@@ -48,6 +47,9 @@
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                     </columnResizePolicy>
+               <GridPane.margin>
+                  <Insets right="10.0" />
+               </GridPane.margin>
               </TableView>
               <CheckComboBox fx:id="organsCombobox" maxWidth="1.7976931348623157E308" GridPane.rowIndex="2" />
               <CheckComboBox fx:id="regionsCombobox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2">
@@ -55,7 +57,7 @@
                       <Insets left="10.0" />
                   </GridPane.margin>
               </CheckComboBox>
-              <TableView fx:id="potentialOrganMatchTable" prefHeight="512.0" prefWidth="205.0" GridPane.columnIndex="4" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" GridPane.rowSpan="2">
+              <TableView fx:id="potentialOrganMatchTable" prefHeight="512.0" prefWidth="205.0" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" GridPane.rowSpan="2">
                   <columns>
                       <TableColumn prefWidth="75.0" text="Wait Time" />
                       <TableColumn prefWidth="75.0" text="Age" />
@@ -66,45 +68,45 @@
                      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                  </columnResizePolicy>
               </TableView>
-            <Label text="Region" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+            <Label text="Region" GridPane.columnIndex="3" GridPane.rowIndex="1" />
               <Label text="Organ" GridPane.rowIndex="1" />
               <Label text="Region" GridPane.columnIndex="1" GridPane.rowIndex="1">
                  <GridPane.margin>
                      <Insets left="10.0" />
                  </GridPane.margin>
               </Label>
-          <CheckComboBox fx:id="regionsComboboxMatchesTable" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="2">
+          <CheckComboBox fx:id="regionsComboboxMatchesTable" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="2">
               <GridPane.margin>
                   <Insets right="10.0" />
               </GridPane.margin>
           </CheckComboBox>
-              <CheckComboBox fx:id="bloodTypeComboboxMatchesTable" maxWidth="1.7976931348623157E308" GridPane.columnIndex="5" GridPane.rowIndex="2">
+              <CheckComboBox fx:id="bloodTypeComboboxMatchesTable" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="2">
                <padding>
                   <Insets right="10.0" />
                </padding></CheckComboBox>
-            <TextField fx:id="ageField" layoutX="501.0" layoutY="60.0" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="158.0" promptText="Age" GridPane.columnIndex="6" GridPane.rowIndex="2">
+            <TextField fx:id="ageField" layoutX="501.0" layoutY="60.0" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="158.0" promptText="Age" GridPane.columnIndex="5" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="ageRangeField" disable="true" layoutX="926.0" layoutY="60.0" maxWidth="1.7976931348623157E308" GridPane.columnIndex="7" GridPane.rowIndex="2">
+            <TextField fx:id="ageRangeField" disable="true" layoutX="926.0" layoutY="60.0" maxWidth="1.7976931348623157E308" GridPane.columnIndex="6" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
             </TextField>
-            <CheckBox fx:id="ageRangeCheckbox" mnemonicParsing="false" onAction="#handleAgeRangeCheckboxChecked" prefHeight="18.0" prefWidth="84.0" text="Range" GridPane.columnIndex="6" GridPane.rowIndex="1" />
-            <Label text="Blood Type" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+            <CheckBox fx:id="ageRangeCheckbox" mnemonicParsing="false" onAction="#handleAgeRangeCheckboxChecked" prefHeight="18.0" prefWidth="84.0" text="Range" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+            <Label text="Blood Type" GridPane.columnIndex="4" GridPane.rowIndex="1" />
             <Label styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Available Organs" GridPane.columnSpan="2">
                <GridPane.margin>
-                  <Insets left="20.0" />
+                  <Insets />
                </GridPane.margin>
             </Label>
-            <Label layoutX="40.0" layoutY="96.0" prefHeight="24.0" prefWidth="189.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Potential Matches" GridPane.columnIndex="4" GridPane.columnSpan="2">
+            <Label layoutX="40.0" layoutY="96.0" prefHeight="24.0" prefWidth="189.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Potential Matches" GridPane.columnIndex="3" GridPane.columnSpan="2">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
                <GridPane.margin>
-                  <Insets left="20.0" />
+                  <Insets />
                </GridPane.margin>
             </Label>
           </children>

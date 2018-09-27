@@ -8,6 +8,10 @@ import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.net.Socket;
+import odms.commons.model.InitializationException;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.common.CommonDAO;
+
 /**
  * Main class. GUI boots from here.
  */
@@ -26,8 +30,10 @@ public class GuiMain extends Application {
      * @throws IOException file read exception for login fxml
      */
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) throws IOException, InitializationException {
         if (checkServer()) {
+            CommonDAO server = DAOFactory.getCommonDao();
+            server.setup();
             Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
             primaryStage.setScene(new Scene(root));
             primaryStage.setResizable(false);

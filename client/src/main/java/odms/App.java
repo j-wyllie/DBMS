@@ -11,7 +11,7 @@ public class App {
 
     public static void main(String[] args) {
 
-        CurrentHistory.getCurrentSessionHistory() .add(null);
+        CurrentHistory.getCurrentSessionHistory().add(null);
         try {
             if (args == null || args.length == 0) {
                 Application.launch(GuiMain.class);

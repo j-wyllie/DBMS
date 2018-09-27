@@ -1,9 +1,10 @@
 package odms.view.user;
 
 import java.io.File;
-import java.sql.SQLException;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
@@ -11,14 +12,15 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.user.User;
 import odms.controller.AlertController;
-import odms.controller.database.profile.MySqlProfileDAO;
 import odms.controller.profile.ProfileImportTask;
 import odms.view.CommonView;
 
+/**
+ * Import loading dialog class containing methods to handle the data import.
+ */
 @Slf4j
 public class ImportLoadingDialog extends CommonView {
 
@@ -41,7 +43,7 @@ public class ImportLoadingDialog extends CommonView {
     private Thread importTask;
 
     /**
-     * Binds the progress bar and the text property to the profile import task
+     * Binds the progress bar and the text property to the profile import task.
      */
     private void updateProgress() {
         progressBarImport.setProgress(0);
@@ -73,12 +75,15 @@ public class ImportLoadingDialog extends CommonView {
     }
 
     /**
-     * Creates the profile import task, adds handlers for the buttons and calls update progress
+     * Creates the profile import task, adds handlers for the buttons and calls update progress.
      *
      * @param file the file being imported
+     * @param parentStage the parent stage.
+     * @param user the current user.
      */
     @FXML
     public void initialize(File file, Stage parentStage, User user) {
+
         if (user != null) {
             currentUser = user;
             profileImportTask = new ProfileImportTask(file);
@@ -86,21 +91,27 @@ public class ImportLoadingDialog extends CommonView {
             profileImportTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
                     event -> buttonImportConfirm.setDisable(false));
 
-            buttonImportConfirm.setOnAction(event -> {
-                try {
-                    MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
-                    mySqlProfileDAO.commitTransaction(profileImportTask.getConnection());
-                } catch (SQLException e) {
-                    log.error(e.getMessage(), e);
+            profileImportTask.getFinished().addListener((observable, oldValue, newValue) -> {
+                // Only if completed
+                if (newValue) {
+                    buttonImportConfirm.setDisable(false);
                 }
-                closeWindows(parentStage);
             });
 
+            profileImportTask.getReverted().addListener((observable, oldValue, newValue) -> {
+                // Only if reverted
+                if (newValue) {
+                    importTask.interrupt();
+                    Platform.runLater(
+                            ((Stage) progressBarImport.getScene().getWindow())::close);
+                }
+            });
+
+            buttonImportConfirm.setOnAction(event -> closeWindows(parentStage));
+
             buttonImportCancel.setOnAction(event -> {
-                importTask.interrupt();
-                MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
-                mySqlProfileDAO.rollbackTransaction(profileImportTask.getConnection());
-                ((Stage) progressBarImport.getScene().getWindow()).close();
+                profileImportTask.rollback();
+                profileImportTask.setCancelled();
             });
 
             tableStatus.setSelectionModel(null);
@@ -111,6 +122,9 @@ public class ImportLoadingDialog extends CommonView {
 
     }
 
+    /**
+     * Sets up the table with success, failure and total count columns.
+     */
     private void setupTable() {
         TableColumn<ImportResult, String> tcLabels = new TableColumn<>("labels");
         TableColumn<ImportResult, String> tcValues = new TableColumn<>("values");
@@ -131,6 +145,11 @@ public class ImportLoadingDialog extends CommonView {
         this.hideTableHeader(tableStatus);
     }
 
+    /**
+     * Sets the items in the status table.
+     *
+     * @param results String array of results.
+     */
     private void updateTable(String[] results) {
         for (Integer i = 0; i < results.length; i++) {
             tableStatus.getItems().get(i).setValue(results[i]);
@@ -138,7 +157,7 @@ public class ImportLoadingDialog extends CommonView {
     }
 
     /**
-     * Closes all of the open windows and re-opens an admin page
+     * Closes all of the open windows and re-opens an admin page.
      *
      * @param stage the current stage
      */
@@ -149,7 +168,7 @@ public class ImportLoadingDialog extends CommonView {
     }
 
     /**
-     * Sets the current user of the program
+     * Sets the current user of the program.
      *
      * @param currentUser the current user
      */
@@ -162,25 +181,30 @@ public class ImportLoadingDialog extends CommonView {
     }
 
     public void setOnCloseRequest() {
-        this.currentStage.setOnCloseRequest((WindowEvent event) -> {
-            importTask.interrupt();
-            MySqlProfileDAO mySqlProfileDAO = new MySqlProfileDAO();
-            mySqlProfileDAO.rollbackTransaction(profileImportTask.getConnection());
-        });
+        this.currentStage.setOnCloseRequest(Event::consume);
     }
 
+    /**
+     * Class for the import results, contains getters and setters for the result values.
+     */
     public class ImportResult {
 
         private SimpleStringProperty result;
         private SimpleStringProperty value;
 
+        /**
+         * Constructor to set the result and value.
+         *
+         * @param result Current result to set.
+         * @param value Current value to set.
+         */
         ImportResult(String result, String value) {
             this.result = new SimpleStringProperty(result);
             this.value = new SimpleStringProperty(value);
         }
 
         /**
-         * Required by javafx
+         * Required by javafx.
          *
          * @return result property
          */
@@ -189,7 +213,7 @@ public class ImportLoadingDialog extends CommonView {
         }
 
         /**
-         * Required by javafx
+         * Required by javafx.
          *
          * @return value property
          */

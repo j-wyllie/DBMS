@@ -50,6 +50,7 @@ public class LoginView extends CommonController {
 
     /**
      * Scene change to profile profile view if log in credentials are valid.
+     *
      * @param event the login button clicked event.
      */
     @FXML
@@ -70,7 +71,6 @@ public class LoginView extends CommonController {
             } catch (UserNotFoundException | SQLException | IllegalArgumentException u) {
                 log.error(u.getMessage(), u);
                 AlertController.invalidUsernameOrPassword();
-
             }
         }
     }
@@ -95,6 +95,7 @@ public class LoginView extends CommonController {
         } else {
             if (isValidProfile()) {
                 Profile currentProfile = loadProfile(username);
+                Session.setCurrentUser(currentProfile, UserType.PROFILE);
                 loadProfileView(currentProfile);
             } else {
                 AlertController.invalidUsernameOrPassword();
@@ -212,6 +213,7 @@ public class LoginView extends CommonController {
             stage.show();
             closeCurrentStage();
         } catch (IOException e) {
+            log.error(e.getMessage(), e);
             invalidUsername();
         }
     }

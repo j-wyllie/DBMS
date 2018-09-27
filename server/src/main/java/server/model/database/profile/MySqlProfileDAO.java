@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
+import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
@@ -192,20 +193,27 @@ public class MySqlProfileDAO implements ProfileDAO {
      * Removes a profile from the database.
      *
      * @param profile to remove.
-     * @throws SQLException thrown on invalid sql.
      */
     @Override
-    public void remove(Profile profile) throws SQLException {
-        String query = "DELETE FROM profiles WHERE ProfileId = ?;";
-
+    public void remove(Profile profile) {
+        String query;
+        if (profile.getId() != null) {
+            query = "delete from profiles where ProfileId = ?;";
+        } else {
+            query = "delete from profiles where NHI = ?;";
+        }
         try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, profile.getId());
+                PreparedStatement stmt = conn.prepareStatement(query);) {
+            if (profile.getId() != null) {
+                stmt.setInt(1, profile.getId());
+            } else {
+                stmt.setString(1, profile.getNhi());
+            }
 
             stmt.executeUpdate();
+
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
-            throw e;
         }
     }
 
@@ -254,9 +262,9 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(18, profile.getRegion());
             stmt.setString(19, profile.getPhone());
             stmt.setString(20, profile.getEmail());
-            stmt.setString(21, profile.getCountry());
-            stmt.setString(22, profile.getBirthCountry());
-            stmt.setString(23, profile.getCountryOfDeath());
+            stmt.setString(21, profile.getCountry() != null ? profile.getCountry().toString() : null);
+            stmt.setString(22, profile.getBirthCountry() != null ? profile.getBirthCountry().toString() : null);
+            stmt.setString(23, profile.getCountryOfDeath() != null ? profile.getBirthCountry().toString() : null);
             stmt.setString(24, profile.getRegionOfDeath());
             stmt.setString(25, profile.getCityOfDeath());
             stmt.setString(26, profile.getStreetNumber());
@@ -457,7 +465,7 @@ public class MySqlProfileDAO implements ProfileDAO {
     @Override
     public List<Profile> getDead() {
         String query = "SELECT DISTINCT * FROM `profiles` " +
-                "JOIN organs on profiles.ProfileId=organs.ProfileId " +
+                "JOIN organs on profiles.ProfileId = organs.ProfileId " +
                 "WHERE Dod IS NOT NULL AND ToDonate = 1 AND Expired IS NULL;";
 
         List<Profile> result = new ArrayList<>();
@@ -663,8 +671,7 @@ public class MySqlProfileDAO implements ProfileDAO {
      * @throws UserNotFoundException thrown when a user is not found in the database.
      */
     @Override
-    public Boolean savePassword(String username, String password)
-            throws UserNotFoundException {
+    public Boolean savePassword(String username, String password) throws UserNotFoundException {
         String query = "UPDATE profiles SET Password = ? WHERE NHI = ?;";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -673,8 +680,9 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(1, PasswordUtilities.getSaltedHash(password));
             stmt.setString(2, username);
             stmt.executeUpdate();
-
+            return true;
         } catch (SQLException e) {
+            log.error(e.getMessage(), e);
             throw new UserNotFoundException("Not found", username);
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
             log.error(e.getMessage(), e);
@@ -742,7 +750,13 @@ public class MySqlProfileDAO implements ProfileDAO {
         int bpDiastolic = profiles.getInt("BloodPressureDiastolic");
         String address = profiles.getString("Address");
         String region = profiles.getString("Region");
-        String country = profiles.getString("Country");
+        String countryStr = profiles.getString("Country");
+        CountriesEnum country;
+        try {
+            country = countryStr != null ? CountriesEnum.valueOf(countryStr) : null;
+        } catch (IllegalArgumentException e) {
+            country = CountriesEnum.getEnumByString(countryStr);
+        }
 
         String phone = profiles.getString("Phone");
         String email = profiles.getString("Email");
@@ -751,7 +765,13 @@ public class MySqlProfileDAO implements ProfileDAO {
         String imageName = profiles.getString("ImageName");
 
         String city = profiles.getString("City");
-        String countryOfDeath = profiles.getString("CountryOfDeath");
+        String countryOfDeathStr = profiles.getString("CountryOfDeath");
+        CountriesEnum countryOfDeath;
+        try {
+            countryOfDeath = countryOfDeathStr != null ? CountriesEnum.valueOf(countryOfDeathStr) : null;
+        } catch (IllegalArgumentException e) {
+            countryOfDeath = CountriesEnum.getEnumByString(countryOfDeathStr);
+        }
         String regionOfDeath = profiles.getString("RegionOfDeath");
         String cityOfDeath = profiles.getString("CityOfDeath");
 
@@ -918,12 +938,12 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setNull(23, Types.VARCHAR);
         }
         if (profile.getCountry() != null) {
-            stmt.setString(24, profile.getCountry());
+            stmt.setString(24, profile.getCountry().toString());
         } else {
             stmt.setNull(24, Types.VARCHAR);
         }
         if (profile.getBirthCountry() != null) {
-            stmt.setString(25, profile.getBirthCountry());
+            stmt.setString(25, profile.getBirthCountry().toString());
         } else {
             stmt.setNull(25, Types.VARCHAR);
         }

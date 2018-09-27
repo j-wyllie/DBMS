@@ -106,7 +106,7 @@ public final class Print extends CommandUtils {
      */
     public static void printUserList(List<User> userlist) {
         for (User user : userlist) {
-            System.out.println("Staff ID: " + user.getStaffID());
+            System.out.println("Staff ID: " + user.getId());
             System.out.println("Name: " + user.getName());
             System.out.println("user type: " + user.getUserType());
             System.out.println("Date/Time Created: " + user.getTimeOfCreation());
@@ -242,7 +242,7 @@ public final class Print extends CommandUtils {
      */
     private static void printUserAttributesAttributes(User user) {
         System.out.println("user type: " + user.getUserType());
-        System.out.println("ODMS Staff ID: " + user.getStaffID());
+        System.out.println("ODMS Staff ID: " + user.getId());
 
         if (user.getName() != null) {
             System.out.println("Name: " + user.getName());

@@ -93,7 +93,7 @@ public class User extends CommandUtils {
     private static void updateUserAttr(odms.commons.model.user.User user, String[] attrList) {
         if (user != null) {
             List<String> attrArray = new ArrayList<>(Arrays.asList(attrList));
-            History action = new History("user", user.getStaffID(), "update",
+            History action = new History("user", user.getId(), "update",
                     user.getAttributesSummary(), -1, null);
             user.setExtraAttributes(attrArray);
             action.setHistoryData(action.getHistoryData() + user.getAttributesSummary());

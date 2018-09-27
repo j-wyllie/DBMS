@@ -2,8 +2,8 @@ package server.controller;
 
 import java.sql.SQLException;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import java.util.Map;
-
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
@@ -12,8 +12,10 @@ import server.model.database.DAOFactory;
 import server.model.database.user.UserDAO;
 import server.model.enums.DataTypeEnum;
 import server.model.enums.ResponseMsgEnum;
-import spark.*;
+import spark.Request;
+import spark.Response;
 
+@Slf4j
 public class UserController {
 
     /**
@@ -25,7 +27,6 @@ public class UserController {
 
     /**
      * Gets all users stored.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body, a list of all profiles.
@@ -51,7 +52,6 @@ public class UserController {
 
     /**
      * Gets a single user from storage.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -60,15 +60,14 @@ public class UserController {
         UserDAO database = DAOFactory.getUserDao();
         User user;
         try {
-
-            if (req.queryMap().hasKey("id")) {
+            if (req.queryParams("id") != null) {
                 user = database.get(Integer.valueOf(req.queryParams("id")));
             } else {
                 user = database.get(req.queryParams("username"));
             }
         } catch (UserNotFoundException e) {
             res.status(400);
-            return e.getMessage();
+            return "User not found";
         } catch (SQLException e) {
             res.status(500);
             return e.getMessage();
@@ -84,7 +83,6 @@ public class UserController {
 
     /**
      * Creates and stores a new user.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -114,12 +112,11 @@ public class UserController {
         }
 
         res.status(201);
-        return "user Created";
+        return "User Created";
     }
 
     /**
      * Edits a stored user.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -131,7 +128,7 @@ public class UserController {
 
         try {
             user = gson.fromJson(req.body(), User.class);
-            user.setStaffID(Integer.valueOf(req.params("id")));
+            user.setId(Integer.valueOf(req.params("id")));
         } catch (Exception e) {
             res.status(400);
             return ResponseMsgEnum.BAD_REQUEST.toString();
@@ -150,12 +147,11 @@ public class UserController {
         }
 
         res.status(200);
-        return "user Updated";
+        return "User Updated";
     }
 
     /**
      * Deletes a user from storage.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -167,7 +163,7 @@ public class UserController {
         try {
             // Creating a dummy user object so that the DAO can access the id
             user = new User(UserType.CLINICIAN, "dummy", "dummy");
-            user.setStaffID(Integer.valueOf(req.params("id")));
+            user.setId(Integer.valueOf(req.params("id")));
         } catch (Exception e) {
             res.status(400);
             return ResponseMsgEnum.BAD_REQUEST.toString();
@@ -181,7 +177,7 @@ public class UserController {
         }
 
         res.status(200);
-        return "user Deleted";
+        return "User Deleted";
     }
 
     /**
@@ -192,7 +188,6 @@ public class UserController {
      */
     public static String checkCredentials(Request req, Response res) {
         UserDAO database = DAOFactory.getUserDao();
-        Gson gson = new Gson();
         Boolean valid;
 
         String username = req.queryParams("username");
@@ -211,10 +206,10 @@ public class UserController {
             try {
                 User user = database.get(username);
                 Map<String, Integer> body = Middleware.authenticate(
-                        user.getStaffID(), user.getUserType());
+                        user.getId(), user.getUserType());
                 res.type(DataTypeEnum.JSON.toString());
                 res.status(200);
-                return gson.toJson(body);
+                return new Gson().toJson(body);
             } catch (Exception e) {
                 res.status(500);
                 return e.getMessage();

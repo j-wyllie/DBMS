@@ -8,6 +8,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.DatePicker;
 import javafx.util.StringConverter;
+import odms.data.DefaultLocale;
 
 /**
  * Date picker with added time picking functionality
