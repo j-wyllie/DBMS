@@ -207,8 +207,8 @@ public class ProfileImportTask extends Task<Void> {
         profile.setCity(csvRecord.get("city"));
         profile.setRegion(csvRecord.get("region"));
         profile.setZipCode(csvRecord.get("zip_code"));
-        profile.setCountry(CountriesEnum.getEnumByString(csvRecord.get("country")));
-        profile.setBirthCountry(CountriesEnum.getEnumByString(csvRecord.get("birth_country")));
+        profile.setCountry(CountriesEnum.valueOf(csvRecord.get("country")));
+        profile.setBirthCountry(CountriesEnum.valueOf(csvRecord.get("birth_country")));
         profile.setPhone(csvRecord.get("home_number"));
         profile.setMobilePhone(csvRecord.get("mobile_number"));
         profile.setEmail(csvRecord.get("email"));

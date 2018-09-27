@@ -192,6 +192,7 @@ public class Request {
      * @param con the connection to the server.
      */
     private void setHeaders(HttpURLConnection con) {
+        System.out.println(this.urlString);
         if (!(this.urlString.contains("setup") || this.urlString.contains("login"))) {
             int id = -1;
             UserType userType = Session.getCurrentUser().getValue();
