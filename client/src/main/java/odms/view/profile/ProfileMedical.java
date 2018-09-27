@@ -2,6 +2,7 @@ package odms.view.profile;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,6 +24,7 @@ import odms.controller.AlertController;
 import odms.controller.HlaController;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.hla.HLADAO;
+import odms.data.DefaultLocale;
 import odms.view.CommonView;
 
 import java.io.IOException;
@@ -107,7 +109,7 @@ public class ProfileMedical extends CommonView {
             DecimalFormat df = new DecimalFormat("#.##");
             df.setRoundingMode(RoundingMode.CEILING);
 
-            bmiLabel.setText(bmiLabel.getText() + df.format(currentProfile.getBmi()));
+            bmiLabel.setText(bmiLabel.getText() + DefaultLocale.format(currentProfile.getBmi()));
         }
         if (currentProfile.getIsSmoker() != null) {
             smokerLabel.setText(smokerLabel.getText() + currentProfile.getIsSmoker());
@@ -214,7 +216,7 @@ public class ProfileMedical extends CommonView {
      */
     public void updateBloodDonationLabel() {
         bloodDonationLabel.setText("Blood Donation Points: " +
-                currentProfile.getBloodDonationPoints());
+                DefaultLocale.format(currentProfile.getBloodDonationPoints()));
     }
 
     /**

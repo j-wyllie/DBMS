@@ -1,6 +1,12 @@
 package odms.data;
 
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.Date;
 import java.util.Locale;
 import odms.Session;
 import org.apache.commons.lang3.LocaleUtils;
@@ -56,6 +62,16 @@ public final class DefaultLocale {
     public static String format(Number num) {
         NumberFormat formatter = NumberFormat.getNumberInstance(getNumberLocale());
         return formatter.format(num);
+    }
+
+    public static String format(LocalDate date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(getDatetimeLocale());
+        return date.format(formatter);
+    }
+
+    public static String format(LocalDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).withLocale(getDatetimeLocale());
+        return dateTime.format(formatter);
     }
 
     public static void setNumberLocale(Locale locale) {
