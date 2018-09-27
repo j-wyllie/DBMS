@@ -87,6 +87,7 @@ public class Server {
 
                 path("/:id", () -> {
                     patch("", ProfileController::edit);
+                    path("/blood-donation", () -> post("", ProfileController::updateBloodDonation));
 
                     // organs api endpoints.
                     path("/organs", () -> {

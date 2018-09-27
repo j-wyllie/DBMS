@@ -70,11 +70,8 @@ public class BloodDonation {
         }
         profile.addBloodDonationPoints(bloodTypePoints);
         profile.setLastBloodDonation(LocalDateTime.now());
-        try {
-            DAOFactory.getProfileDao().update(profile);
-        } catch (SQLException e) {
-            log.error(e.getMessage(), e);
-        }
+
+        DAOFactory.getProfileDao().updateBloodDonation(profile.getId(), profile.getBloodDonationPoints());
     }
 
 }

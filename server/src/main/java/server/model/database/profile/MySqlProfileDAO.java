@@ -942,4 +942,25 @@ public class MySqlProfileDAO implements ProfileDAO {
 
         return stmt;
     }
+
+    /**
+     * Updates the blood donation points and last donation datetime for a profile.
+     * @param id of the profile.
+     * @param points to update to.
+     * @throws SQLException error.
+     */
+    @Override
+    public void updateBloodDonation(int id, int points) throws SQLException {
+        String query = "UPDATE profiles SET BloodDonationPoints = ?, LastBloodDonation = ? WHERE ProfileId = ?;";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, points);
+            stmt.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+            stmt.setInt(3, id);
+            stmt.executeUpdate();
+
+        }
+    }
 }
