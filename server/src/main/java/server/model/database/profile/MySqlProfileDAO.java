@@ -743,7 +743,12 @@ public class MySqlProfileDAO implements ProfileDAO {
         String address = profiles.getString("Address");
         String region = profiles.getString("Region");
         String countryStr = profiles.getString("Country");
-        CountriesEnum country = countryStr != null ? CountriesEnum.valueOf(countryStr) : null;
+        CountriesEnum country;
+        try {
+            country = countryStr != null ? CountriesEnum.valueOf(countryStr) : null;
+        } catch (IllegalArgumentException e) {
+            country = CountriesEnum.getEnumByString(countryStr);
+        }
 
         String phone = profiles.getString("Phone");
         String email = profiles.getString("Email");
@@ -753,7 +758,12 @@ public class MySqlProfileDAO implements ProfileDAO {
 
         String city = profiles.getString("City");
         String countryOfDeathStr = profiles.getString("CountryOfDeath");
-        CountriesEnum countryOfDeath = countryOfDeathStr != null ? CountriesEnum.valueOf(countryOfDeathStr) : null;
+        CountriesEnum countryOfDeath;
+        try {
+            countryOfDeath = countryOfDeathStr != null ? CountriesEnum.valueOf(countryOfDeathStr) : null;
+        } catch (IllegalArgumentException e) {
+            countryOfDeath = CountriesEnum.getEnumByString(countryOfDeathStr);
+        }
         String regionOfDeath = profiles.getString("RegionOfDeath");
         String cityOfDeath = profiles.getString("CityOfDeath");
 
