@@ -1284,4 +1284,8 @@ public class Profile implements Comparable<Profile> {
     public String getPassword() {
         return password;
     }
+
+    public void setBloodDonationPoints(int bloodDonationPoints) {
+        this.bloodDonationPoints = bloodDonationPoints;
+    }
 }

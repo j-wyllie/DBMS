@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import odms.commons.model.profile.Profile;
 import odms.controller.database.profile.HttpProfileDAO;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -100,6 +101,11 @@ public class BloodDonationTest {
         currentProfile.setLastBloodDonation(LocalDateTime.now());
         controller.updatePoints(currentProfile, true);
         Assert.assertEquals(5, currentProfile.getBloodDonationPoints());
+    }
+
+    @After
+    public void tearDown() {
+        currentProfile.setBloodDonationPoints(0);
     }
 
 }
