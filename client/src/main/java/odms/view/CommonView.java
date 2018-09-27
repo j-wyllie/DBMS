@@ -62,7 +62,7 @@ public class CommonView {
     }
 
     @FXML
-    protected void createPopup(ActionEvent actionEvent, String fxmlFile, String title) {
+    protected FXMLLoader createPopup(ActionEvent actionEvent, String fxmlFile, String title) {
         try {
             Node source = (Node) actionEvent.getSource();
             FXMLLoader fxmlLoader = new FXMLLoader();
@@ -76,9 +76,11 @@ public class CommonView {
             stage.setScene(scene);
             stage.setResizable(false);
             stage.show();
+            return fxmlLoader;
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
+        return null;
     }
 
     /**

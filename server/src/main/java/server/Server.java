@@ -52,11 +52,13 @@ public class Server {
         path("/api/v1", () -> {
 
             // Initial interactions.
+
             post("/setup", CommonController::setup);
             post("/login", CommonController::checkCredentials);
             post("/logout", CommonController::logout);
             get("/setup/password", ProfileController::hasPassword);
             post("/setup/password", ProfileController::savePassword);
+            post("/setup/create", ProfileController::create);
 
             path("/users", () -> {
                 // user api routes.
@@ -77,13 +79,15 @@ public class Server {
             path("/profiles", () -> {
 
                 // No authentication required.
-                post("", ProfileController::create);
+                //post("/create", ProfileController::create);
 
                 // Profile authentication required.
                 before("", Middleware::isAuthenticated);
                 before("/:id", Middleware::isAuthenticated);
 
                 get("", ProfileController::get);
+
+
 
                 path("/:id", () -> {
                     patch("", ProfileController::edit);
