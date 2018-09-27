@@ -400,6 +400,7 @@ public class MySqlProfileDAO implements ProfileDAO {
                         result.add(newProfile);
                     }
                 }
+                System.out.println(stmt);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -743,6 +744,8 @@ public class MySqlProfileDAO implements ProfileDAO {
         String address = profiles.getString("Address");
         String region = profiles.getString("Region");
         String countryStr = profiles.getString("Country");
+        System.out.println(countryStr);
+        System.out.println(CountriesEnum.valueOf(countryStr));
         CountriesEnum country = countryStr != null ? CountriesEnum.valueOf(countryStr) : null;
 
         String phone = profiles.getString("Phone");
