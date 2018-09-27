@@ -332,4 +332,23 @@ public class HttpProfileDAO implements ProfileDAO {
         }
         return false;
     }
+
+    /**
+     * Updates the blood donation points and last donation datetime for a profile.
+     * @param profileId of the profile.
+     * @param points to update to.
+     */
+    @Override
+    public void updateBloodDonation(int profileId, int points) {
+        String url = "http://localhost:6969/api/v1/profiles/" + profileId + "/blood-donation";
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("points", points);
+
+        Request request = new Request(url, queryParams, "{}");
+        try {
+            request.post();
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
 }

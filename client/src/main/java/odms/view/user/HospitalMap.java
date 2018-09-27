@@ -129,7 +129,7 @@ public class HospitalMap extends CommonView implements
             noInternetLabel.setVisible(true);
         } else {
             mapView = new GoogleMapView("en-US", KEY);
-            gridPane.add(mapView, 0, 0, 2, 3);
+            gridPane.add(mapView, 0, 0, 3, 3);
             Node mapNode = mapView;
             mapNode.toBack();
             mapView.addMapInializedListener(this);
