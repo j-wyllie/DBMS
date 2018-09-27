@@ -107,33 +107,6 @@ CREATE TABLE IF NOT EXISTS `hla_type` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hospitals`
---
-
-DROP TABLE IF EXISTS `hospitals`;
-CREATE TABLE IF NOT EXISTS `hospitals` (
-  `Id` INT(11),
-  `Name` VARCHAR(50) UNIQUE DEFAULT NULL,
-  `Address` VARCHAR(100) DEFAULT NULL,
-  `Latitude` DOUBLE DEFAULT NULL,
-  `Longitude` DOUBLE DEFAULT NULL,
-  `Bone` BOOLEAN DEFAULT FALSE,
-  `BoneMarrow` BOOLEAN DEFAULT FALSE,
-  `ConnectiveTissue` BOOLEAN DEFAULT FALSE,
-  `Cornea` BOOLEAN DEFAULT FALSE,
-  `Heart` BOOLEAN DEFAULT FALSE,
-  `Intestine` BOOLEAN DEFAULT FALSE,
-  `Kidney` BOOLEAN DEFAULT FALSE,
-  `Liver` BOOLEAN DEFAULT FALSE,
-  `Lung` BOOLEAN DEFAULT FALSE,
-  `MiddleEar` BOOLEAN DEFAULT FALSE,
-  `Pancreas` BOOLEAN DEFAULT FALSE,
-  `Skin` BOOLEAN DEFAULT FALSE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `locale`
 --
 
@@ -184,6 +157,33 @@ CREATE TABLE IF NOT EXISTS `procedures` (
   `Pending` BOOLEAN DEFAULT NULL,
   `Previous` BOOLEAN DEFAULT NULL,
   `Hospital` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hospitals`
+--
+
+DROP TABLE IF EXISTS `hospitals`;
+CREATE TABLE IF NOT EXISTS `hospitals` (
+  `Id` INT(11),
+  `Name` VARCHAR(50) UNIQUE DEFAULT NULL,
+  `Address` VARCHAR(100) DEFAULT NULL,
+  `Latitude` DOUBLE DEFAULT NULL,
+  `Longitude` DOUBLE DEFAULT NULL,
+  `Bone` BOOLEAN DEFAULT FALSE,
+  `BoneMarrow` BOOLEAN DEFAULT FALSE,
+  `ConnectiveTissue` BOOLEAN DEFAULT FALSE,
+  `Cornea` BOOLEAN DEFAULT FALSE,
+  `Heart` BOOLEAN DEFAULT FALSE,
+  `Intestine` BOOLEAN DEFAULT FALSE,
+  `Kidney` BOOLEAN DEFAULT FALSE,
+  `Liver` BOOLEAN DEFAULT FALSE,
+  `Lung` BOOLEAN DEFAULT FALSE,
+  `MiddleEar` BOOLEAN DEFAULT FALSE,
+  `Pancreas` BOOLEAN DEFAULT FALSE,
+  `Skin` BOOLEAN DEFAULT FALSE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -457,7 +457,7 @@ ALTER TABLE `organs`
 ALTER TABLE `procedures`
   ADD CONSTRAINT `procedures_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
 ALTER TABLE `procedures`
-  ADD CONSTRAINT `procedures_ibfk_2` FOREIGN KEY (`Hospital`) REFERENCES `Hospitals` (`Id`);
+  ADD CONSTRAINT `procedures_ibfk_2` FOREIGN KEY (`Hospital`) REFERENCES `hospitals` (`Id`);
 
 INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (1, 'NZ', 1),
