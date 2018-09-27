@@ -119,7 +119,7 @@ public final class AddressIO {
      * @return JsonObject containing the api response.
      * @throws IOException Thrown when a request cannot be made.
      */
-    private static JsonObject getGeocodeLocation(String address, String country)
+    public static JsonObject getGeocodeLocation(String address, String country)
             throws IOException {
         String key = "AIzaSyCfq6coJWIFGQusltLJCA8tZMt9cjouzLw";
 

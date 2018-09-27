@@ -185,4 +185,12 @@ public interface ProfileDAO {
      * @param profile Profile to be removed.
      */
     void removeByNhi(Profile profile);
+
+    /**
+     * Updates the blood donation points and last donation datetime for a profile.
+     * @param profileId of the profile.
+     * @param points to update to.
+     */
+    void updateBloodDonation(int profileId, int points);
+
 }

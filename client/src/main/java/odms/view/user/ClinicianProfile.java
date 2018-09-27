@@ -56,6 +56,8 @@ public class ClinicianProfile extends CommonView {
     @FXML
     private Tab socialFeedTab;
     @FXML
+    private Tab hospitalMapTab;
+    @FXML
     private Tab organMapTab;
     @FXML
     private ImageView profileImage;
@@ -206,6 +208,21 @@ public class ClinicianProfile extends CommonView {
     }
 
     /**
+     * Initializes the controller for the hospital map tab.
+     */
+    public void handleTabHospitalMapClicked() {
+        setTransplantWaitingListNull();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HospitalMapTab.fxml"));
+        try {
+            hospitalMapTab.setContent(loader.load());
+            HospitalMap hospitalMapTabView = loader.getController();
+            hospitalMapTabView.initialize(currentUser);
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    /**
      * Initializes the controller for the general details Tab.
      */
     public void handleGeneralTabClicked() {
@@ -268,7 +285,6 @@ public class ClinicianProfile extends CommonView {
             }
         }
     }
-
 
     /**
      * Sets up the social feed tab when it's clicked. Adds a listener to start and top the timer.

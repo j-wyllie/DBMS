@@ -95,19 +95,17 @@ public class MySqlMiddlewareDAO implements MiddlewareDAO {
      * @throws SQLException internal error.
      */
     private boolean isAuthenticated(String query, int id, int token) throws SQLException {
-        DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = instance.getConnection();
-
-        PreparedStatement stmt = conn.prepareStatement(query);
-        try {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1,  id);
             stmt.setInt(2,  token);
 
-            ResultSet set = stmt.executeQuery();
-            return set.next();
-        } finally {
-            conn.close();
-            stmt.close();
+            try (ResultSet set = stmt.executeQuery()) {
+                return set.next();
+            }
+
+        } catch (SQLException e) {
+            throw new SQLException();
         }
     }
 
@@ -119,17 +117,13 @@ public class MySqlMiddlewareDAO implements MiddlewareDAO {
      * @throws SQLException internal error.
      */
     private void setToken(String query, int id, int token) throws SQLException {
-        DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = instance.getConnection();
-
-        PreparedStatement stmt = conn.prepareStatement(query);
-        try {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1,  token);
             stmt.setInt(2,  id);
             stmt.execute();
-        } finally {
-            conn.close();
-            stmt.close();
+        } catch (SQLException e) {
+            throw new SQLException();
         }
     }
 
@@ -140,17 +134,13 @@ public class MySqlMiddlewareDAO implements MiddlewareDAO {
      * @throws SQLException internal error.
      */
     private void deleteToken(String query, int id) throws SQLException {
-        DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = instance.getConnection();
-
-        PreparedStatement stmt = conn.prepareStatement(query);
-        try {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setNull(1, Types.INTEGER);
             stmt.setInt(2,  id);
             stmt.execute();
-        } finally {
-            conn.close();
-            stmt.close();
+        } catch (SQLException e) {
+            throw new SQLException();
         }
     }
 }

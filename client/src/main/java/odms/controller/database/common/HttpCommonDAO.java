@@ -38,7 +38,7 @@ public class HttpCommonDAO implements CommonDAO {
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
-        if (response.getStatus() != 201) {
+        if (response != null && response.getStatus() != 201) {
             throw new InitializationException(response.getBody());
         }
     }
@@ -57,7 +57,7 @@ public class HttpCommonDAO implements CommonDAO {
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
-        if (response.getStatus() != 200) {
+        if (response != null && response.getStatus() != 200) {
             throw new InternalError(response.getBody());
         }
     }

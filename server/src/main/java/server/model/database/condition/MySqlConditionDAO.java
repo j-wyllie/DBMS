@@ -53,21 +53,19 @@ public class MySqlConditionDAO implements ConditionDAO {
     @Override
     public List<Condition> getAll(int profile) {
         String query = "select * from conditions where ProfileId = ?;";
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
         ArrayList<Condition> allConditions = new ArrayList<>();
 
-        try {
-            Connection conn = connectionInstance.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, profile);
-            ResultSet allConditionRows = stmt.executeQuery();
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)){
 
-            while (allConditionRows.next()) {
-                Condition condition = parseCondition(allConditionRows);
-                allConditions.add(condition);
+            stmt.setInt(1, profile);
+            try (ResultSet allConditionRows = stmt.executeQuery()) {
+
+                while (allConditionRows.next()) {
+                    Condition condition = parseCondition(allConditionRows);
+                    allConditions.add(condition);
+                }
             }
-            conn.close();
-            stmt.close();
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }

@@ -41,6 +41,8 @@
                   <Tab fx:id="transplantTab" onSelectionChanged="#handleTransplantWaitingListTabClicked" text="Transplant Waiting List" />
                <Tab fx:id="listUsersTab" onSelectionChanged="#handleViewUsersTabClicked" text="View Users" />
                   <Tab fx:id="availableOrgansTab" onSelectionChanged="#handleTabAvailableClicked" text="Available Organs" />
+       <Tab fx:id="hospitalMapTab" onSelectionChanged="#handleTabHospitalMapClicked" text="Hospital Map" />
+
    </tabs>
         </TabPane>
               <GridPane fx:id="bannerPane" styleClass="banner-clinician" stylesheets="@../styles/Common.css" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
