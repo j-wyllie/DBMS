@@ -2,32 +2,57 @@ package odms.controller.data.database;
 
 import odms.commons.model.locations.Hospital;
 import odms.server.CommonTestUtils;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import server.model.database.DAOFactory;
-import server.model.database.DatabaseConnection;
 import server.model.database.locations.HospitalDAO;
 
 import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class MySqlHospitalDAOTest extends CommonTestUtils {
 
     private Hospital testHospital1;
     private Hospital testHospital2;
-    private HospitalDAO hospitalDAO;
     private Hospital testHospital3;
+
+    private HospitalDAO hospitalDAO = DAOFactory.getHospitalDAO();
 
     @Before
     public void setup() throws SQLException {
-        testHospital1 = new Hospital("testHospital1", 30.00, 30.00, null);
-        testHospital2 = new Hospital("testHospital2", null, null, "Fake Street");
-        testHospital3 = new Hospital("testHospital3", null, null, "64 Fake Street");
-        hospitalDAO = DAOFactory.getHospitalDAO();
-        hospitalDAO.add(testHospital1);
-        hospitalDAO.add(testHospital2);
+        Hospital testHospitalOne = new Hospital(
+                "testHospital1",
+                30.00,
+                30.00,
+                null
+        );
+        Hospital testHospitalTwo = new Hospital(
+                "testHospital2",
+                null,
+                null,
+                "Fake Street"
+        );
+        hospitalDAO.add(testHospitalOne);
+        testHospital1 = hospitalDAO.get(testHospitalOne.getName());
+        hospitalDAO.add(testHospitalTwo);
+        testHospital2 = hospitalDAO.get(testHospitalTwo.getName());
+
+        // Not added to DB
+        testHospital3 = new Hospital(
+                "testHospital3",
+                null,
+                null,
+                "64 Fake Street"
+        );
+    }
+
+    @After
+    public void tearDown() throws SQLException {
+        hospitalDAO.remove(testHospital1.getId());
+        hospitalDAO.remove(testHospital2.getId());
     }
 
     @Test
@@ -45,11 +70,18 @@ public class MySqlHospitalDAOTest extends CommonTestUtils {
     }
 
     @Test
+    public void getById() throws SQLException {
+        Hospital expected = hospitalDAO.get(testHospital1.getName());
+        Hospital result = hospitalDAO.get(expected.getId());
+        assertEquals(expected.getName(), result.getName());
+    }
+
+    @Test
     public void add() throws SQLException {
         hospitalDAO.add(testHospital3);
         Hospital hospital = hospitalDAO.get(testHospital3.getName());
         assertEquals(testHospital3.getName(), hospital.getName());
-        hospitalDAO.remove(testHospital3.getName());
+        hospitalDAO.remove(hospital.getId());
     }
 
     @Test
@@ -71,9 +103,19 @@ public class MySqlHospitalDAOTest extends CommonTestUtils {
         assertEquals(size - 1, hospitals.size());
     }
 
-    @After
-    public void tearDown() throws SQLException {
-        hospitalDAO.remove(testHospital2.getName());
-        hospitalDAO.remove(testHospital1.getName());
+    @Test
+    public void removeById() throws SQLException {
+        Integer id = -1;
+        hospitalDAO.add(testHospital3);
+        List<Hospital> hospitals = hospitalDAO.getAll();
+        int size = hospitals.size();
+        for (Hospital hospital : hospitals) {
+            if (hospital.getName().equals(testHospital3.getName())) {
+                id = hospital.getId();
+            }
+        }
+        hospitalDAO.remove(id);
+        hospitals = hospitalDAO.getAll();
+        assertEquals(size - 1, hospitals.size());
     }
 }

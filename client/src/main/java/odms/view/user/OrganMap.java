@@ -11,16 +11,13 @@ import com.lynden.gmapsfx.javascript.object.Marker;
 import com.lynden.gmapsfx.javascript.object.MarkerOptions;
 import com.lynden.gmapsfx.util.MarkerImageFactory;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.ResourceBundle;
 import javafx.animation.PauseTransition;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -29,6 +26,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -43,10 +41,11 @@ import org.controlsfx.control.PopOver;
  * Tab containing the organ map.
  */
 @Slf4j
-public class OrganMap extends CommonView implements Initializable, MapComponentInitializedListener {
+public class OrganMap extends CommonView implements MapComponentInitializedListener {
 
     private static final String RECEIVER_MARKER = "/icons/receiverMarker.png";
     private static final String DONOR_MARKER = "/icons/deadDonorMarker.png";
+    private static final String KEY = "AIzaSyCfq6coJWIFGQusltLJCA8tZMt9cjouzLw";
     private static final String BOTH_MARKER = "/icons/bothMarkers.png";
     private static final Integer ZOOM_LEVEL = 5;
     private static final String FULL_PREFERRED_NAME = "fullPreferredName";
@@ -64,7 +63,6 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     private ArrayList<List<Double>> receiverPositionList = new ArrayList<>();
     private Boolean sameBoolean;
 
-    @FXML
     private GoogleMapView mapView;
     private GoogleMap map;
 
@@ -80,6 +78,8 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
     private TextField searchDonorsText;
     @FXML
     private Label noInternetLabel;
+    @FXML
+    private GridPane gridPane;
 
     private ClinicianProfile parentView;
     private PopOver popOver;
@@ -102,20 +102,20 @@ public class OrganMap extends CommonView implements Initializable, MapComponentI
         controller.setView(this);
         hasConnection = netIsAvailable();
         if (!hasConnection) {
-            mapView.setVisible(false);
             noInternetLabel.setVisible(true);
+        } else {
+            initializeMapView();
         }
         initListViews();
     }
 
     /**
-     * Initializes the map view by adding a listener.
-     *
-     * @param location location.
-     * @param resources resource bundle.
+     * Initializes the map view by adding it to the gridPane and adding a listener.
      */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    private void initializeMapView() {
+        mapView = new GoogleMapView("en-US", KEY);
+        gridPane.add(mapView, 1, 0, 1, 4);
+
         mapView.addMapInializedListener(this);
         mapView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             if (popOver != null) {

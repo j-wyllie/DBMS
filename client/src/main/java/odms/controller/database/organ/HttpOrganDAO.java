@@ -155,7 +155,7 @@ public class HttpOrganDAO implements OrganDAO {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("organ", organ.replace(" ", "+"));
         queryParams.put("expired", expired);
-        queryParams.put("note", note.replace(" ", "+"));
+        queryParams.put("note", note. replace(" ", "+"));
         queryParams.put("userId", userId);
         Request request = new Request(url, queryParams,"");
         try {
