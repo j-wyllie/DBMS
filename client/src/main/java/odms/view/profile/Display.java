@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
+import odms.Session;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.AlertController;
@@ -53,8 +54,6 @@ public class Display extends CommonView {
     @FXML
     private Tab tabOrgans;
     @FXML
-    private Tab tabHistory;
-    @FXML
     private Tab tabProcedures;
     @FXML
     private Tab tabSocialFeed;
@@ -93,6 +92,7 @@ public class Display extends CommonView {
         CommonDAO server = DAOFactory.getCommonDao();
         server.logout();
         currentProfile = null;
+        Session.setCurrentUser(currentProfile, null);
         if(socialFeedInitialised) {
             socialFeed.pauseTimer();
             socialFeedInitialised = false;
@@ -217,22 +217,6 @@ public class Display extends CommonView {
                 tabMedical.setContent(loader.load());
                 ProfileMedical profileMedicalViewTODO = loader.getController();
                 profileMedicalViewTODO.initialize(currentProfile, isOpenedByClinician);
-            } catch (IOException e) {
-                log.error(e.getMessage(), e);
-            }
-        }
-    }
-
-    @FXML
-    public void onTabHistorySelected() {
-        if (tabHistory.isSelected()) {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/view/ProfileHistoryTab.fxml")
-            );
-            try {
-                tabHistory.setContent(loader.load());
-                ProfileHistory profileHistoryViewTODO = loader.getController();
-                profileHistoryViewTODO.initialize(currentProfile);
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }

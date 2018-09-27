@@ -16,7 +16,8 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.profile.Display">
+
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.profile.Display">
    <children>
        <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
            <columnConstraints>
@@ -34,8 +35,6 @@
                      <Tab fx:id="tabGeneral" closable="false" onSelectionChanged="#onTabGeneralSelected" text="General">
             </Tab>
                      <Tab fx:id="tabMedical" onSelectionChanged="#onTabMedicalSelected" text="Medical">
-            </Tab>
-                     <Tab fx:id="tabHistory" onSelectionChanged="#onTabHistorySelected" text="History">
             </Tab>
                      <Tab fx:id="tabMedicalHistory" onSelectionChanged="#onTabMedicalHistorySelected" text="Medical History">
             </Tab>
