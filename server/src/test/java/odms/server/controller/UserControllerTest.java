@@ -91,7 +91,7 @@ public class UserControllerTest extends CommonTestUtils {
     @Test
     public void testGetValid() {
         when(requestA.queryParams("username")).thenReturn(userA.getUsername());
-        assertEquals(userA.getStaffID(), gson.fromJson(UserController.get(requestA, responseA), User.class).getStaffID());
+        assertEquals(userA.getId(), gson.fromJson(UserController.get(requestA, responseA), User.class).getId());
     }
 
     @Test
@@ -118,7 +118,7 @@ public class UserControllerTest extends CommonTestUtils {
     public void testEditValid() {
         userB.setUsername("Default Updated");
         when(requestA.body()).thenReturn(gson.toJson(userB));
-        when(requestA.params(KeyEnum.ID.toString())).thenReturn(String.valueOf(userB.getStaffID()));
+        when(requestA.params(KeyEnum.ID.toString())).thenReturn(String.valueOf(userB.getId()));
         assertEquals("User Updated", UserController.edit(requestA, responseA));
     }
 
@@ -133,13 +133,13 @@ public class UserControllerTest extends CommonTestUtils {
     public void testEditInvalidUsername() {
         userB.setUsername("admin");
         when(requestA.body()).thenReturn(gson.toJson(userB));
-        when(requestA.params(KeyEnum.ID.toString())).thenReturn(String.valueOf(userB.getStaffID()));
+        when(requestA.params(KeyEnum.ID.toString())).thenReturn(String.valueOf(userB.getId()));
         assertEquals(ResponseMsgEnum.FORBIDDEN.toString(), UserController.edit(requestA, responseA));
     }
 
     @Test
     public void testDeleteValid() {
-        when(requestA.params(KeyEnum.ID.toString())).thenReturn(String.valueOf(userB.getStaffID()));
+        when(requestA.params(KeyEnum.ID.toString())).thenReturn(String.valueOf(userB.getId()));
         assertEquals("User Deleted", UserController.delete(requestA, responseA));
     }
 
@@ -158,7 +158,7 @@ public class UserControllerTest extends CommonTestUtils {
                 .checkCredentials(requestA, responseA))
                 .getAsJsonObject().get(KeyEnum.ID.toString())
                 .getAsInt();
-        assert userA.getStaffID() == id;
+        assert userA.getId() == id;
     }
 
     @Test

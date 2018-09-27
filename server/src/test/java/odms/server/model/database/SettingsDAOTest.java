@@ -16,13 +16,23 @@ import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import server.model.database.DAOFactory;
+import server.model.database.PasswordUtilities;
 import server.model.database.profile.ProfileDAO;
 import server.model.database.settings.MySqlSettingsDAO;
 import server.model.database.settings.SettingsDAO;
 import server.model.database.user.UserDAO;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(PasswordUtilities.class)
+@PowerMockIgnore("javax.management.*")
 public class SettingsDAOTest extends CommonTestUtils {
+
 
     // Data access object variables.
     private SettingsDAO settingsDAO = DAOFactory.getSettingsDAO();
@@ -46,6 +56,11 @@ public class SettingsDAOTest extends CommonTestUtils {
 
     @Before
     public void setup() throws SQLException, UserNotFoundException {
+
+        PowerMockito.stub(
+                PowerMockito.method(PasswordUtilities.class, "getSaltedHash")
+        ).toReturn("test");
+
         settingsDAO.updateCountries(CountriesEnum.NZ, false);
 
         profileA = new Profile("Alice", "Smith",
