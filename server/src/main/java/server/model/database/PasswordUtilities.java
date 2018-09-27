@@ -58,7 +58,8 @@ public final class PasswordUtilities {
         String[] saltAndPass = stored.split("\\$");
         if (saltAndPass.length != 2) {
             throw new IllegalStateException(
-                    "The stored password have the form 'salt$hash'");
+                    "The stored password have the form 'salt$hash'"
+            );
         }
         String hashOfInput = hash(password, Base64.decodeBase64(saltAndPass[0]));
         return hashOfInput.equals(saltAndPass[1]);

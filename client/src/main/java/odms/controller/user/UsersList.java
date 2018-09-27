@@ -93,10 +93,7 @@ public class UsersList {
 
         contextMenu.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
 
-            User user = view.getViewUsersTable().getSelectionModel().getSelectedItem();
-
-            if (AlertController.deleteUserConfirmation()) {
-
+                User user = view.getViewUsersTable().getSelectionModel().getSelectedItem();if (AlertController.deleteUserConfirmation()) {
                 try {
                     server.remove(user);
                 } catch (SQLException e) {

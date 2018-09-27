@@ -67,7 +67,6 @@ public class MiddlewareTest extends CommonTestUtils {
 
     @Before
     public void setup() throws SQLException, UserNotFoundException {
-
         PowerMockito.stub(
                 PowerMockito.method(PasswordUtilities.class, "getSaltedHash")
         ).toReturn("test");

@@ -464,7 +464,7 @@ public class MySqlProfileDAO implements ProfileDAO {
     @Override
     public List<Profile> getDead() {
         String query = "SELECT DISTINCT * FROM `profiles` " +
-                "JOIN organs on profiles.ProfileId=organs.ProfileId " +
+                "JOIN organs on profiles.ProfileId = organs.ProfileId " +
                 "WHERE Dod IS NOT NULL AND ToDonate = 1 AND Expired IS NULL;";
 
         List<Profile> result = new ArrayList<>();
@@ -670,8 +670,7 @@ public class MySqlProfileDAO implements ProfileDAO {
      * @throws UserNotFoundException thrown when a user is not found in the database.
      */
     @Override
-    public Boolean savePassword(String username, String password)
-            throws UserNotFoundException {
+    public Boolean savePassword(String username, String password) throws UserNotFoundException {
         String query = "UPDATE profiles SET Password = ? WHERE NHI = ?;";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -680,8 +679,9 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(1, PasswordUtilities.getSaltedHash(password));
             stmt.setString(2, username);
             stmt.executeUpdate();
-
+            return true;
         } catch (SQLException e) {
+            log.error(e.getMessage(), e);
             throw new UserNotFoundException("Not found", username);
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
             log.error(e.getMessage(), e);

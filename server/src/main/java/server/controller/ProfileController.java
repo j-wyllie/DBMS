@@ -1,13 +1,12 @@
 package server.controller;
 
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.enums.UserType;
@@ -126,26 +125,26 @@ public class ProfileController {
         String profiles;
 
         if (req.queryParams(KEY_SEARCH) != null) {
-            String searchString;
-            int ageSearchInt;
-            int ageRangeSearchInt;
-            String region;
-            String gender;
-            String type;
+            String searchString = null;
+            int ageSearchInt = 0;
+            int ageRangeSearchInt = 0;
+            String region = null;
+            String gender = null;
+            String type = null;
             try {
                 searchString = req.queryParams(KEY_SEARCH);
                 ageSearchInt = Integer.parseInt(req.queryParams("ageSearchInt"));
                 ageRangeSearchInt = Integer.parseInt(req.queryParams("ageRangeSearchInt"));
                 region = req.queryParams("region");
-                gender = req.queryParams("gender");
+                gender = req.queryParams("gender") != null ? req.queryParams("gender") : "any";
                 type = req.queryParams("type");
             } catch (NumberFormatException e) {
-                log.error(e.getMessage(), e);
-                res.status(400);
-                return ResponseMsgEnum.BAD_REQUEST.toString();
+                ageSearchInt = 0;
+                ageRangeSearchInt = -999;
             }
             Set<OrganEnum> organs = new HashSet<>();
-            List<String> organArray = gson.fromJson(req.queryParams(KEY_ORGANS), List.class);
+            List<String> organArray = gson.fromJson(req.queryParams(KEY_ORGANS), List.class) != null ?
+                    gson.fromJson(req.queryParams("organs"), List.class) : new ArrayList<>();
             for (String organ : organArray) {
                 organs.add(OrganEnum.valueOf(organ));
             }
@@ -172,17 +171,24 @@ public class ProfileController {
         Profile profile;
 
         try {
-            if (req.queryMap().hasKey(KeyEnum.ID.toString())) {
+            if (req.queryParams(KeyEnum.ID.toString()) != null) {
                 profile = database.get(Integer.valueOf(req.queryParams(KeyEnum.ID.toString())));
             } else {
                 profile = database.get(req.queryParams("username"));
             }
+            if (profile == null) {
+                throw new IllegalArgumentException("Required fields are missing.");
+            }
+
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
             res.status(500);
-            return e.getMessage();
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage(), e);
+            res.status(400);
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
-
         String responseBody = new Gson().toJson(profile);
 
         res.type(DataTypeEnum.JSON.toString());
@@ -204,6 +210,12 @@ public class ProfileController {
 
         try {
             newProfile = gson.fromJson(req.body(), Profile.class);
+            if (newProfile == null) {
+                throw new IllegalArgumentException("Profile body missing.");
+            }
+        } catch (IllegalArgumentException e) {
+            res.status(400);
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         } catch (Exception e) {
             res.status(400);
             return ResponseMsgEnum.BAD_REQUEST.toString();
@@ -225,7 +237,7 @@ public class ProfileController {
         }
 
         res.status(201);
-        return "profile Created";
+        return "Profile Created";
     }
 
     /**
@@ -254,7 +266,7 @@ public class ProfileController {
         }
 
         res.status(200);
-        return "profile Updated";
+        return "Profile Updated";
     }
 
     /**
@@ -287,7 +299,7 @@ public class ProfileController {
         }
 
         res.status(200);
-        return "profile Deleted";
+        return "Profile Deleted";
     }
 
     /**
@@ -324,14 +336,19 @@ public class ProfileController {
      */
     public static String hasPassword(Request req, Response res) {
         ProfileDAO database = DAOFactory.getProfileDao();
-        Boolean hasPassword = false;
+        Boolean hasPassword;
         try {
-            if (req.queryMap().hasKey("nhi")) {
+            if (req.queryParams("nhi") != null) {
                 hasPassword = database.hasPassword(req.queryParams("nhi"));
+            } else {
+                throw new IllegalArgumentException("Required fields missing.");
             }
         } catch (SQLException e) {
             res.status(500);
             return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
+        } catch (IllegalArgumentException e) {
+            res.status(400);
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         res.status(200);
@@ -352,10 +369,16 @@ public class ProfileController {
         String username = request.queryParams("username");
         String password = request.queryParams("password");
         try {
+            if (username == null || password == null) {
+                throw new IllegalArgumentException("Missing required fields.");
+            }
             valid = database.checkCredentials(username, password);
         } catch (UserNotFoundException e) {
             response.status(404);
             return "Profile not found";
+        } catch (IllegalArgumentException e) {
+            response.status(400);
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         if (valid) {
@@ -384,19 +407,29 @@ public class ProfileController {
     public static String savePassword(Request request, Response response) {
         ProfileDAO profileDAO = DAOFactory.getProfileDao();
         Boolean valid;
+
+        String username = request.queryParams("username");
+        String password = request.queryParams("password");
         try {
-            valid = profileDAO.savePassword(request.queryParams("username"),
-                    request.queryParams("password"));
+            if (username == null || password == null) {
+                throw new IllegalArgumentException("Missing required fields.");
+            }
+            valid = profileDAO.savePassword(username, password);
         } catch (UserNotFoundException e) {
-            response.status(500);
-            return e.getMessage();
+            log.error(e.getMessage(), e);
+            response.status(404);
+            return "Profile not found";
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage(), e);
+            response.status(400);
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
         if (valid) {
             response.status(200);
             return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         } else {
-            response.status(400);
-            return ResponseMsgEnum.BAD_REQUEST.toString();
+            response.status(404);
+            return "Profile not found";
         }
     }
 
