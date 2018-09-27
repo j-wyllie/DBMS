@@ -99,6 +99,7 @@ public class CommandLine implements Runnable {
         this.userDatabase = DAOFactory.getUserDao();
 
         System.out.println("Organ profile Management System");
+        System.out.println("Type command 'help' for a list of CLI commands");
         System.out.println("Please enter your commands below:\n");
 
         while (!exit) {
