@@ -58,6 +58,9 @@ public class HlaController {
 
         try {
             for (String gene : HLAType.getPrimaryGeneList()) {
+                if (gene.isEmpty()) {
+                    return null;
+                }
                 numMatchingAntigens += calcMatch(gene, hlaA, hlaB);
             }
         } catch (NullPointerException exception) {
@@ -96,7 +99,7 @@ public class HlaController {
         Integer score = matchScore(profileIdA, profileIdB);
         String text;
         if (score == null) {
-            text = "No HLA";
+            text = "Missing HLA";
         } else {
             text = String.valueOf(score) + "%";
         }
