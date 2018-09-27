@@ -1,6 +1,5 @@
 package odms.view.user;
 
-import static odms.controller.AlertController.guiPopup;
 import static odms.controller.AlertController.profileCancelChanges;
 import static odms.controller.AlertController.saveChanges;
 
@@ -41,7 +40,7 @@ public class ClinicianEdit extends CommonView {
     private Label pictureLabel;
 
     @FXML
-    private TextField staffIdField;
+    private TextField idField;
 
     @FXML
     private TextField regionField;
@@ -140,8 +139,8 @@ public class ClinicianEdit extends CommonView {
                 givenNamesField.setText(currentUser.getName());
             }
 
-            if (currentUser.getStaffID() != null) {
-                staffIdField.setText(currentUser.getStaffID().toString());
+            if (currentUser.getId() != null) {
+                idField.setText(currentUser.getId().toString());
             }
 
             if (currentUser.getWorkAddress() != null) {
@@ -177,8 +176,8 @@ public class ClinicianEdit extends CommonView {
         return givenNamesField.getText();
     }
 
-    public String getStaffIdField() {
-        return staffIdField.getText();
+    public String getIdField() {
+        return idField.getText();
     }
 
     public String getAddressField() {

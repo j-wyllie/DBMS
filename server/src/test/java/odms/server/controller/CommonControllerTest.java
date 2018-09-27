@@ -1,6 +1,13 @@
 package odms.server.controller;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.google.gson.JsonParser;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
@@ -117,7 +124,7 @@ public class CommonControllerTest extends CommonTestUtils {
         requestC = mock(Request.class);
 
         requestD = mock(Request.class);
-        when(requestD.headers(KeyEnum.ID.toString())).thenReturn(String.valueOf(userA.getStaffID()));
+        when(requestD.headers(KeyEnum.ID.toString())).thenReturn(String.valueOf(userA.getId()));
         when(requestD.headers(KeyEnum.USERTYPE.toString())).thenReturn(String.valueOf(userA.getUserType()));
 
         requestE = mock(Request.class);
@@ -155,7 +162,7 @@ public class CommonControllerTest extends CommonTestUtils {
         ).toReturn(true);
         String response = CommonController.checkCredentials(requestA, responseA);
         int id = parser.parse(response).getAsJsonObject().get(KeyEnum.ID.toString()).getAsInt();
-        assertEquals(userA.getStaffID().toString(), String.valueOf(id));
+        assertEquals(userA.getId().toString(), String.valueOf(id));
     }
 
     @Test
@@ -208,7 +215,7 @@ public class CommonControllerTest extends CommonTestUtils {
     @Test
     public void testLogoutUserValid() throws SQLException {
         // Authenticate the user.
-        int token = Middleware.authenticate(userA.getStaffID(), userA.getUserType()).get("Token");
+        int token = Middleware.authenticate(userA.getId(), userA.getUserType()).get("Token");
         when(requestD.headers(KeyEnum.AUTH.toString())).thenReturn(String.valueOf(token));
         assertTrue(Middleware.isAdminAuthenticated(requestD, responseD));
         // Logout the user.
@@ -224,7 +231,7 @@ public class CommonControllerTest extends CommonTestUtils {
     @Test
     public void testLogoutUserInvalidToken() throws SQLException {
         // Authenticate the user.
-        int token = Middleware.authenticate(userA.getStaffID(), userA.getUserType()).get("Token");
+        int token = Middleware.authenticate(userA.getId(), userA.getUserType()).get("Token");
         when(requestD.headers(KeyEnum.AUTH.toString())).thenReturn(String.valueOf(token));
         assertTrue(Middleware.isAdminAuthenticated(requestD, responseD));
         // Invalid token set.

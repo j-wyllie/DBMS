@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
@@ -307,8 +308,8 @@ public class ProfileMedicalHistory extends CommonView {
      */
     @FXML
     private void handleAddNewCondition(ActionEvent event) throws IOException {
-        createPopup(event, "/view/AddCondition.fxml", "AddCondition");
-        ConditionAdd addConditionView = new ConditionAdd();
+        FXMLLoader loader = createPopup(event, "/view/AddCondition.fxml", "AddCondition");
+        ConditionAdd addConditionView = loader.getController();
         addConditionView.setup(this, currentProfile);
     }
 

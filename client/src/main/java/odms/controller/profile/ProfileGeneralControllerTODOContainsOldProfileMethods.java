@@ -133,15 +133,15 @@ public class ProfileGeneralControllerTODOContainsOldProfileMethods {
             profile.setAddress(value);
 
         } else if (attrName.equalsIgnoreCase(Attribute.COUNTRY.getText())) {
-            if (!DAOFactory.getCountryDAO().getAll(true).contains(value)) {
+            if (!DAOFactory.getSettingsDAO().getAllCountries(true).contains(value)) {
                 throw new IllegalArgumentException("Must be a valid country!");
             }
-            profile.setCountry(value);
+            profile.setCountry(CountriesEnum.getEnumByString(value));
 
         } else if (attrName.equalsIgnoreCase(Attribute.REGION.getText())) {
-            if (profile.getCountry() != null && (profile.getCountry().toLowerCase()
+            if (profile.getCountry() != null && (profile.getCountry().getName().toLowerCase()
                     .equalsIgnoreCase(CountriesEnum.NZ.getName()) ||
-                    profile.getCountry()
+                    profile.getCountry().getName()
                             .equalsIgnoreCase(CountriesEnum.NZ.toString())) &&
                     !NewZealandRegionsEnum.toArrayList().contains(value)) {
                 throw new IllegalArgumentException("Must be a region within New Zealand.");

@@ -4,8 +4,8 @@ import server.model.database.common.CommonDAO;
 import server.model.database.common.MySqlCommonDAO;
 import server.model.database.condition.ConditionDAO;
 import server.model.database.condition.MySqlConditionDAO;
-import server.model.database.country.CountryDAO;
-import server.model.database.country.MySqlCountryDAO;
+import server.model.database.settings.SettingsDAO;
+import server.model.database.settings.MySqlSettingsDAO;
 import server.model.database.hla.HLADAO;
 import server.model.database.hla.MySqlHLADao;
 import server.model.database.locations.HospitalDAO;
@@ -73,15 +73,9 @@ public class DAOFactory {
      * Gives the data access object class for the Countries enum.
      * @return dao for particular database type.
      */
-    public static CountryDAO getCountryDAO() {
-        return new MySqlCountryDAO();
+    public static SettingsDAO getSettingsDAO() {
+        return new MySqlSettingsDAO();
     }
-
-    /**
-     * Gives the data access object class for the Middleware class attributes.
-     * @return dao for particular database type.
-     */
-    public static MiddlewareDAO getMiddlewareDAO() { return new MySqlMiddlewareDAO(); }
 
     /**
      * Gives the data access object class for the Hospital object.
@@ -90,6 +84,12 @@ public class DAOFactory {
     public static HospitalDAO getHospitalDAO() {
         return new MySqlHospitalDAO();
     }
+
+    /**
+     * Gives the data access object class for the Middleware class attributes.
+     * @return dao for particular database type.
+     */
+    public static MiddlewareDAO getMiddlewareDAO() { return new MySqlMiddlewareDAO(); }
 
     /**
      * Gives the data access object class for the HLA object.

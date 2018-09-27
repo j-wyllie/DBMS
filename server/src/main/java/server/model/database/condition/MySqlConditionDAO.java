@@ -144,7 +144,7 @@ public class MySqlConditionDAO implements ConditionDAO {
 
     /**
      * Update a condition for the profile.
-     * @param condition to update.
+     * @param condition to updateCountries.
      */
     @Override
     public void update(Condition condition) {

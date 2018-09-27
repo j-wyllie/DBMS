@@ -55,7 +55,7 @@
                     preserveRatio="true"
                     fx:id="addMedicationButton">
                     <image>
-                        <Image url="@../icons/arrow0.png"/>
+                        <Image url="@../icons/arrowDown.png"/>
                     </image>
                 </ImageView>
             </graphic>
@@ -275,7 +275,7 @@
                 <graphic>
                     <ImageView pickOnBounds="true"
                         preserveRatio="true">
-                        <Image url="@../icons/arrow1.png"/>
+                        <Image url="@../icons/arrowRight.png"/>
                     </ImageView>
                 </graphic>
             </Button>
@@ -287,7 +287,7 @@
                 <graphic>
                     <ImageView pickOnBounds="true"
                         preserveRatio="true">
-                        <Image url="@../icons/arrow2.png"/>
+                        <Image url="@../icons/arrowLeft.png"/>
                     </ImageView>
                 </graphic>
             </Button>

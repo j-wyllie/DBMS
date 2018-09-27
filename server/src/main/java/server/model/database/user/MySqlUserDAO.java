@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
@@ -51,7 +52,6 @@ public class MySqlUserDAO implements UserDAO {
 
     /**
      * Gets a single user from the database by id.
-     *
      * @param userId of the user.
      * @return the specified user.
      * @throws UserNotFoundException error.
@@ -96,6 +96,14 @@ public class MySqlUserDAO implements UserDAO {
         }
     }
 
+    /**
+     * Checks a user credentials when they log in for validity.
+     * @param username username credential.
+     * @param password password credential.
+     * @return true if the credentials are correct, false otherwise.
+     * @throws UserNotFoundException error.
+     */
+    @Override
     public Boolean checkCredentials(String username, String password) throws UserNotFoundException {
         String query = "SELECT Username, Password FROM users WHERE Username = ?;";
 
@@ -131,6 +139,7 @@ public class MySqlUserDAO implements UserDAO {
         UserType userType = UserType.valueOf(rs.getString("UserType"));
         String address = rs.getString("Address");
         String region = rs.getString("Region");
+        String country = rs.getString("Country");
         boolean defaultBool = rs.getBoolean("IsDefault");
         LocalDateTime created = rs.getTimestamp("Created").toLocalDateTime();
         LocalDateTime updated = rs.getTimestamp("LastUpdated").toLocalDateTime();
@@ -146,19 +155,21 @@ public class MySqlUserDAO implements UserDAO {
                 updated,
                 imageName
         );
+        user.setCountry(country != null && !country.equals("") ? CountriesEnum.valueOf(country) : null);
         user.setDefault(defaultBool);
         return user;
     }
 
-    /**
+    /**        stubCheck(false);
+
      * Adds a new user to the database.
      *
      * @param user to add.
      */
     public void add(User user) throws SQLException {
         String query = "INSERT INTO users (Username, Password, Name, UserType, Address," +
-                " Region, Created, LastUpdated, IsDefault, ImageName) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                " Region, Country, Created, LastUpdated, IsDefault, ImageName) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -168,10 +179,11 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(4, user.getUserType().toString());
             stmt.setString(5, user.getWorkAddress());
             stmt.setString(6, user.getRegion());
-            stmt.setString(7, LocalDateTime.now().toString());
+            stmt.setString(7, user.getCountry() != null ? user.getCountry().toString() : null);
             stmt.setString(8, LocalDateTime.now().toString());
-            stmt.setBoolean(9, user.getDefault());
-            stmt.setString(10, user.getPictureName());
+            stmt.setString(9, LocalDateTime.now().toString());
+            stmt.setBoolean(10, user.getDefault());
+            stmt.setString(11, user.getPictureName());
             stmt.execute();
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
             log.error(e.getMessage(), e);
@@ -207,10 +219,9 @@ public class MySqlUserDAO implements UserDAO {
      */
     public void remove(User user) {
         String query = "DELETE FROM users WHERE UserId = ?;";
-
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, user.getStaffID());
+            stmt.setInt(1, user.getId());
 
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -221,11 +232,11 @@ public class MySqlUserDAO implements UserDAO {
     /**
      * Updates a users information in the database.
      *
-     * @param user to update.
+     * @param user to updateCountries.
      */
     public void update(User user) {
         String query = "UPDATE users SET Username = ?, Password = ?, Name = ?, UserType = ?, "
-                + "Address = ?, Region = ?, LastUpdated = ?, IsDefault = ?, ImageName = ? "
+                + "Address = ?, Region = ?, Country = ?, LastUpdated = ?, IsDefault = ?, ImageName = ? "
                 + "WHERE UserId = ?;";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -236,11 +247,11 @@ public class MySqlUserDAO implements UserDAO {
             stmt.setString(4, user.getUserType().toString());
             stmt.setString(5, user.getWorkAddress());
             stmt.setString(6, user.getRegion());
-            stmt.setString(7, user.getLastUpdated().toString());
-            stmt.setBoolean(8, user.getDefault());
-            stmt.setString(9, user.getPictureName());
+            stmt.setString(7, user.getCountry() != null ? user.getCountry().getName() : null);
+            stmt.setString(8, user.getLastUpdated().toString());
+            stmt.setBoolean(9, user.getDefault());
             stmt.setString(10, user.getPictureName());
-            stmt.setInt(10, user.getStaffID());
+            stmt.setInt(11, user.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             log.error(e.getMessage(), e);

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import odms.commons.model.enums.CountriesEnum;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -69,10 +70,10 @@ public class AddressIOTest {
         ArrayList<Double> aucklandCheck = new ArrayList<>();
         wellingtonCheck.add(-41.2864603);
         wellingtonCheck.add(174.776236);
-        assertEquals(AddressIO.getLongLatRegion("Wellington", "New Zealand"), wellingtonCheck);
+        assertEquals(AddressIO.getLongLatRegion("Wellington", CountriesEnum.NZ), wellingtonCheck);
         aucklandCheck.add(-36.8484597);
         aucklandCheck.add(174.7633315);
-        assertEquals(AddressIO.getLongLatRegion("Auckland", "New Zealand"), aucklandCheck);
+        assertEquals(AddressIO.getLongLatRegion("Auckland", CountriesEnum.NZ), aucklandCheck);
     }
 
 }

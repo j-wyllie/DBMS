@@ -80,6 +80,7 @@ public class ConditionAdd extends CommonView {
         dateCuredDatePicker.setDisable(true);
     }
 
+    @FXML
     public void setup(ProfileMedicalHistory view, Profile p) {
         parent = view;
         searchedDonor = p;

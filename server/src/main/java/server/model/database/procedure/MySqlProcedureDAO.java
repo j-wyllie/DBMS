@@ -99,6 +99,7 @@ public class MySqlProcedureDAO implements ProcedureDAO {
             }
 
             stmt.executeUpdate();
+
             try (ResultSet keys = stmt.getGeneratedKeys()) {
                 while (keys.next()) {
                     procedure.setId(keys.getInt(1));

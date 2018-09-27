@@ -4,8 +4,8 @@ import odms.controller.database.common.CommonDAO;
 import odms.controller.database.common.HttpCommonDAO;
 import odms.controller.database.condition.ConditionDAO;
 import odms.controller.database.condition.HttpConditionDAO;
-import odms.controller.database.country.CountryDAO;
-import odms.controller.database.country.HttpCountryDAO;
+import odms.controller.database.settings.SettingsDAO;
+import odms.controller.database.settings.HttpSettingsDAO;
 import odms.controller.database.hla.HLADAO;
 import odms.controller.database.hla.HttpHLADAO;
 import odms.controller.database.interactions.JsonMedicationInteractionsDAO;
@@ -74,8 +74,8 @@ public class DAOFactory {
      * Gives the data access object class for the Countries enum.
      * @return dao for particular http type.
      */
-    public static CountryDAO getCountryDAO() {
-        return new HttpCountryDAO();
+    public static SettingsDAO getSettingsDAO() {
+        return new HttpSettingsDAO();
     }
 
     /**

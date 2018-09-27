@@ -1,5 +1,8 @@
 package odms.view.profile;
 
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,9 +20,11 @@ import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
 import odms.controller.database.profile.HttpProfileDAO;
 import odms.controller.profile.ProcedureGeneral;
+import odms.data.DefaultLocale;
 import odms.view.CommonView;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -37,10 +42,10 @@ public class ProceduresDisplay extends CommonView {
     private TableColumn previousSummaryColumn;
 
     @FXML
-    private TableColumn pendingDateColumn;
+    private TableColumn<Procedure, String> pendingDateColumn;
 
     @FXML
-    private TableColumn previousDateColumn;
+    private TableColumn<Procedure, String> previousDateColumn;
 
     @FXML
     private TableColumn pendingAffectsColumn;
@@ -172,14 +177,14 @@ public class ProceduresDisplay extends CommonView {
 
         previousProcedureTable.setItems(previousProceduresObservableList);
         previousSummaryColumn.setCellValueFactory(new PropertyValueFactory("summary"));
-        previousDateColumn.setCellValueFactory(new PropertyValueFactory("date"));
+        previousDateColumn.setCellValueFactory(cdf -> new SimpleStringProperty(DefaultLocale.format(cdf.getValue().getDate())));
         previousAffectsColumn.setCellValueFactory(new PropertyValueFactory("affectsOrgansText"));
         previousProcedureTable.getColumns()
                 .setAll(previousSummaryColumn, previousDateColumn, previousAffectsColumn);
 
         pendingProcedureTable.setItems(pendingProceduresObservableList);
         pendingSummaryColumn.setCellValueFactory(new PropertyValueFactory("summary"));
-        pendingDateColumn.setCellValueFactory(new PropertyValueFactory("date"));
+        pendingDateColumn.setCellValueFactory(cdf -> new SimpleStringProperty(DefaultLocale.format(cdf.getValue().getDate())));
         pendingAffectsColumn.setCellValueFactory(new PropertyValueFactory("affectsOrgansText"));
         pendingProcedureTable.getColumns()
                 .setAll(pendingSummaryColumn, pendingDateColumn, pendingAffectsColumn);

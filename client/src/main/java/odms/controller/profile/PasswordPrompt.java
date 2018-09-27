@@ -33,10 +33,10 @@ public class PasswordPrompt {
         Profile profile = (Profile) Session.getCurrentUser().getKey();
         profile.setPassword(view.passwordField.getText());
         Session.setCurrentUser(profile, UserType.PROFILE);
-        profileDAO.savePassword(profile.getUsername(), view.passwordField.getText());
+        profileDAO.savePassword(profile.getNhi(), view.passwordField.getText());
 
         if (loginView.isValidProfile()) {
-            Profile currentProfile = loginView.loadProfile(((Profile) Session.getCurrentUser().getKey()).getUsername());
+            Profile currentProfile = loginView.loadProfile(((Profile) Session.getCurrentUser().getKey()).getNhi());
             loginView.loadProfileView(currentProfile);
         } else {
             AlertController.invalidUsernameOrPassword();

@@ -240,7 +240,7 @@
 //
 //        user user = odms.cli.commands.user.createClinician(createClinicianStr);
 //
-//        int staffID = user.getStaffID();
+//        int staffID = user.getId();
 //        String deleteProfileStr = "clinician " +
 //                "staffID=\"" + staffID + "\" "
 //                + "> delete";
@@ -278,7 +278,7 @@
 //                "workAddress=\"" + workAddress + "\" ";
 //
 //        user user = odms.cli.commands.user.createClinician(createClinicianStr);
-//        int staffID = user.getStaffID();
+//        int staffID = user.getId();
 //
 //        String newName = "Billy";
 //        String updateClinicianStr = "clinician " +
@@ -325,7 +325,7 @@
 //                "workAddress=\"" + workAddress + "\" ";
 //
 //        int staffID = odms.cli.commands.user.createClinician(createClinicianStr)
-//                .getStaffID();
+//                .getId();
 //
 //        String viewClincianDateStr = "clinician " +
 //                "staffID=\"" + staffID + "\" "

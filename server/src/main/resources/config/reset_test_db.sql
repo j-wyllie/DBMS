@@ -107,6 +107,21 @@ CREATE TABLE IF NOT EXISTS `hla_type` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `hospitals`
+--
+
+DROP TABLE IF EXISTS `hospitals`;
+CREATE TABLE IF NOT EXISTS `hospitals` (
+  `Id` int(11) NOT NULL,
+  `Name` varchar(50) DEFAULT NULL,
+  `Address` varchar(100) DEFAULT NULL,
+  `Latitude` double DEFAULT NULL,
+  `Longitude` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `locale`
 --
 
@@ -661,3 +676,5 @@ INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (199, 'YE', 1),
   (200, 'ZM', 1),
   (201, 'ZW', 1);
+
+
