@@ -104,7 +104,6 @@ public class MySqlProfileDAO implements ProfileDAO {
                 ResultSet.CONCUR_READ_ONLY);
 
         stmt.setString(1, "%" + searchString + "%");
-        stmt.setString(2, "%" + searchString + "%");
 
         ArrayList<Integer> existingIds = new ArrayList<>();
         try {
@@ -871,19 +870,18 @@ public class MySqlProfileDAO implements ProfileDAO {
     }
 
     @Override
-    public Boolean hasPassword(String nhi) {
-        return null;
-    }
+    public Boolean hasPassword(String nhi) { throw new UnsupportedOperationException(); }
 
     @Override
-    public Boolean checkCredentials(String username, String password) {
-        return null;
-    }
+    public Boolean checkCredentials(String username, String password) { throw new UnsupportedOperationException(); }
 
     @Override
     public Boolean savePassword(String nhi, String password) {
-        return null;
+        throw new UnsupportedOperationException();
     }
+
+    @Override
+    public void updateBloodDonation(int profileId, int points) { throw new UnsupportedOperationException(); }
 
     private List<Entry<Profile, OrganEnum>> getReceivers(String query) {
         DatabaseConnection instance = DatabaseConnection.getInstance();
