@@ -97,11 +97,10 @@ CREATE TABLE IF NOT EXISTS `history` (
 
 DROP TABLE IF EXISTS `hla_type`;
 CREATE TABLE IF NOT EXISTS `hla_type` (
-  `ProfileId` int(11) NOT NULL,
-  `AlphaValue` varchar(20),
-  `NumericValue` int(11) NOT NULL,
-  `GroupX` BOOLEAN NOT NULL,
-  `GroupY` BOOLEAN NOT NULL
+  `groupX` text NOT NULL,
+  `groupY` text NOT NULL,
+  `secondary` mediumtext NOT NULL,
+  `profileId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
