@@ -193,12 +193,12 @@ public class Request {
      * @param con the connection to the server.
      */
     private void setHeaders(HttpURLConnection con) {
-        if (!(this.urlString.contains("setup") || this.urlString.contains("login"))) {
+        if (!(this.urlString.contains("setup") || this.urlString.contains("login") || this.urlString.contains("create"))) {
             int id = -1;
             UserType userType = Session.getCurrentUser().getValue();
             if (userType == UserType.ADMIN || userType == UserType.CLINICIAN) {
                 User user = (User) Session.getCurrentUser().getKey();
-                id = user.getStaffID() == null ? 0 : user.getStaffID();
+                id = user.getId() == null ? 0 : user.getId();
             } else if (userType == UserType.PROFILE || userType == UserType.DONOR) {
                 Profile profile = (Profile) Session.getCurrentUser().getKey();
                 id = profile.getId();

@@ -129,7 +129,6 @@ public class MedicationsGeneral extends CommonView {
         if (saveChanges()) {
             //ProfileDataIO.saveData(getCurrentDatabase());
             controller.saveDrugs(currentProfile);
-            //todo sort out show notification
             showNotification("Medications Tab", event);
         }
     }

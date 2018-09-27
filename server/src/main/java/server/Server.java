@@ -10,6 +10,15 @@ import static spark.Spark.port;
 import static spark.Spark.post;
 
 import lombok.extern.slf4j.Slf4j;
+import server.controller.ConditionController;
+import server.controller.DrugController;
+import server.controller.HospitalController;
+import server.controller.HLAController;
+import server.controller.OrganController;
+import server.controller.ProcedureController;
+import server.controller.ProfileController;
+import server.controller.SettingsController;
+import server.controller.UserController;
 import server.controller.*;
 
 /**
@@ -17,8 +26,6 @@ import server.controller.*;
  */
 @Slf4j
 public class Server {
-
-    // Server running port.
     private static Integer port = 6969;
 
     /**
@@ -49,14 +56,17 @@ public class Server {
      * Initialises the server endpoints.
      */
     private static void initRoutes() {
+        // user api routes.
         path("/api/v1", () -> {
 
             // Initial interactions.
+
             post("/setup", CommonController::setup);
             post("/login", CommonController::checkCredentials);
             post("/logout", CommonController::logout);
             get("/setup/password", ProfileController::hasPassword);
             post("/setup/password", ProfileController::savePassword);
+            post("/setup/create", ProfileController::create);
 
             path("/users", () -> {
                 // user api routes.
@@ -77,13 +87,15 @@ public class Server {
             path("/profiles", () -> {
 
                 // No authentication required.
-                post("", ProfileController::create);
+                //post("/create", ProfileController::create);
 
                 // Profile authentication required.
                 before("", Middleware::isAuthenticated);
                 before("/:id", Middleware::isAuthenticated);
 
                 get("", ProfileController::get);
+
+
 
                 path("/:id", () -> {
                     patch("", ProfileController::edit);
@@ -190,11 +202,16 @@ public class Server {
             });
 
             // countries api endpoints.
-            path("/countries", () -> {
-                before("", Middleware::isAdminAuthenticated);
+            path("/settings", () -> {
+                before("/*", Middleware::isAdminAuthenticated);
 
-                get("", CountriesController::getAll);
-                patch("", CountriesController::edit);
+                // countries api endpoints.
+                get("/countries", SettingsController::getAllCountries);
+                patch("/countries", SettingsController::editCountries);
+
+                // locale api endpoints.
+                get("/locale", SettingsController::getLocale);
+                post("/locale", SettingsController::setLocale);
             });
 
             // hospitals api endpoints.

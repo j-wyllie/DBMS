@@ -57,7 +57,7 @@ public class Profile implements Comparable<Profile> {
 
     private String address;
 
-    private String countryOfDeath;
+    private CountriesEnum countryOfDeath;
     private String regionOfDeath;
     private String cityOfDeath;
 
@@ -67,8 +67,8 @@ public class Profile implements Comparable<Profile> {
     private String city;
     private String region;
     private String zipCode;
-    private String country;
-    private String birthCountry;
+    private CountriesEnum country;
+    private CountriesEnum birthCountry;
 
     private Boolean isSmoker;
     private String alcoholConsumption;
@@ -234,10 +234,11 @@ public class Profile implements Comparable<Profile> {
             String givenNames, String lastNames, LocalDate dob, LocalDateTime dod, String gender,
             Double height, Double weight, String bloodType, Boolean isSmoker,
             String alcoholConsumption, Integer bpSystolic, Integer bpDiastolic, String address,
-            String region, String phone, String email, String country, String city,
-            String countryOfDeath, String regionOfDeath, String cityOfDeath, LocalDateTime created,
-            LocalDateTime updated, String preferredName, String preferredGender, String imageName,
-            LocalDateTime lastBloodDonation, int bloodDonationPoints) {
+            String region, String phone, String email, CountriesEnum country, String city,
+            CountriesEnum countryOfDeath, String regionOfDeath, String cityOfDeath,
+            LocalDateTime created, LocalDateTime updated, String preferredName,
+            String preferredGender, String imageName, LocalDateTime lastBloodDonation,
+            int bloodDonationPoints) {
         this.id = id;
         this.nhi = nhi;
         this.username = username;
@@ -281,12 +282,8 @@ public class Profile implements Comparable<Profile> {
         this.id = profileId;
     }
 
-    /**
-     * Instantiates a profile with only the username for quick instantiation.
-     * @param username of the profile.
-     */
-    public Profile(String username) {
-        this.username = username;
+    public Profile(String Nhi) {
+        this.nhi = Nhi;
     }
 
     /**
@@ -419,12 +416,12 @@ public class Profile implements Comparable<Profile> {
             if (!CountriesEnum.toArrayList().contains(value)) {
                 throw new IllegalArgumentException("Must be a valid country!");
             }
-            setCountry(value);
+            setCountry(CountriesEnum.getEnumByString(value));
         } else if (attrName.equals(Attribute.REGION.getText())) {
             if (getCountry() != null && !regionsNZ.contains(value) &&
-                    (getCountry().equalsIgnoreCase(CountriesEnum.NZ.getName().toLowerCase()) ||
-                            getCountry()
-                                    .equalsIgnoreCase(CountriesEnum.NZ.toString().toLowerCase()))) {
+                    (getCountry().getName().equalsIgnoreCase(CountriesEnum.NZ.getName()) ||
+                            getCountry().getName()
+                                    .equalsIgnoreCase(CountriesEnum.NZ.toString()))) {
 
                 throw new IllegalArgumentException("Must be a region within New Zealand");
             }
@@ -1115,19 +1112,19 @@ public class Profile implements Comparable<Profile> {
         this.zipCode = zipCode;
     }
 
-    public String getBirthCountry() {
+    public CountriesEnum getBirthCountry() {
         return birthCountry;
     }
 
-    public void setBirthCountry(String birthCountry) {
+    public void setBirthCountry(CountriesEnum birthCountry) {
         this.birthCountry = birthCountry;
     }
 
-    public String getCountry() {
+    public CountriesEnum getCountry() {
         return country;
     }
 
-    public void setCountry(String country) {
+    public void setCountry(CountriesEnum country) {
         this.country = country;
     }
 
@@ -1139,11 +1136,11 @@ public class Profile implements Comparable<Profile> {
         this.mobilePhone = mobilePhone;
     }
 
-    public String getCountryOfDeath() {
+    public CountriesEnum getCountryOfDeath() {
         return countryOfDeath;
     }
 
-    public void setCountryOfDeath(String countryOfDeath) {
+    public void setCountryOfDeath(CountriesEnum countryOfDeath) {
         this.countryOfDeath = countryOfDeath;
     }
 
@@ -1283,5 +1280,9 @@ public class Profile implements Comparable<Profile> {
 
     public String getPassword() {
         return password;
+    }
+
+    public void setBloodDonationPoints(int bloodDonationPoints) {
+        this.bloodDonationPoints = bloodDonationPoints;
     }
 }

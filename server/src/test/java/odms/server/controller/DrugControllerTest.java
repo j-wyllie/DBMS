@@ -8,8 +8,14 @@ import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import server.controller.DrugController;
 import server.model.database.DAOFactory;
+import server.model.database.PasswordUtilities;
 import server.model.database.medication.MedicationDAO;
 import server.model.database.profile.ProfileDAO;
 import server.model.enums.KeyEnum;
@@ -31,6 +37,9 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(PasswordUtilities.class)
+@PowerMockIgnore("javax.management.*")
 public class DrugControllerTest extends CommonTestUtils {
 
     // Data access object variables.
@@ -65,11 +74,15 @@ public class DrugControllerTest extends CommonTestUtils {
 
     @Before
     public void setup() throws SQLException {
+        PowerMockito.stub(
+                PowerMockito.method(PasswordUtilities.class, "getSaltedHash")
+        ).toReturn("test");
+
         profileA = new Profile("Alice", "Smith",
                 genericDate, "LPO7236");
         profileDAO.add(profileA);
         profileA.setUsername("alices");
-        profileA.setPassword("12345");
+        profileA.setPassword("test");
         profileA = profileDAO.get(profileA.getNhi());
 
         drugA = new Drug("Reserpine");

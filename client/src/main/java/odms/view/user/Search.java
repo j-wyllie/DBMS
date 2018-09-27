@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.PauseTransition;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,9 +23,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
+import odms.commons.model.profile.Profile;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
+import odms.data.DefaultLocale;
 import odms.view.CommonView;
 import org.controlsfx.control.CheckComboBox;
 
@@ -38,6 +41,8 @@ public class Search extends CommonView {
     private static final int PAGESIZE = 25;
     // Constant that holds the max number of search results that can be displayed.
     private static final int MAXPAGESIZE = 200;
+    // Constant that displays the start of the search result message.
+    private static final String SEARCHDISPLAY = "displaying 1 to ";
 
     private User currentUser;
     private ObservableList<String> genderStrings = FXCollections.observableArrayList();
@@ -67,7 +72,7 @@ public class Search extends CommonView {
     @FXML
     private TableColumn<Profile, String> donorReceiverColumn;
     @FXML
-    private TableColumn<Profile, Integer> ageColumn;
+    private TableColumn<Profile, String> ageColumn;
     @FXML
     private TableColumn<Profile, String> genderColumn;
     @FXML
@@ -101,7 +106,9 @@ public class Search extends CommonView {
         searchTable.setItems(donorObservableList);
         fullNameColumn.setCellValueFactory(new PropertyValueFactory<>("fullPreferredName"));
         regionColumn.setCellValueFactory(new PropertyValueFactory<>("region"));
-        ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
+        ageColumn.setCellValueFactory(profile -> new SimpleStringProperty(
+                DefaultLocale.format(profile.getValue().getAge())
+        ));
         genderColumn.setCellValueFactory(new PropertyValueFactory<>("gender"));
         donorReceiverColumn.setCellValueFactory(p -> {
             Profile x = p.getValue();
@@ -168,7 +175,7 @@ public class Search extends CommonView {
         buttonShowAll.setVisible(false);
         buttonShowNext.setVisible(false);
         updateTable(true, false);
-        labelCurrentOnDisplay.setText("displaying 1 to " + searchTable.getItems().size());
+        labelCurrentOnDisplay.setText(SEARCHDISPLAY + searchTable.getItems().size());
     }
 
     /**
@@ -180,7 +187,7 @@ public class Search extends CommonView {
     private void handleGetXResults(ActionEvent event) {
         updateTable(false, true);
         updateLabels();
-        labelCurrentOnDisplay.setText("displaying 1 to " + searchTable.getItems().size());
+        labelCurrentOnDisplay.setText(SEARCHDISPLAY + searchTable.getItems().size());
     }
 
     /**
@@ -195,11 +202,11 @@ public class Search extends CommonView {
             buttonShowNext.setVisible(false);
         } else {
             if (profileSearchResults.size() <= PAGESIZE) {
-                labelCurrentOnDisplay.setText("displaying 1 to " + profileSearchResults.size());
+                labelCurrentOnDisplay.setText(SEARCHDISPLAY + profileSearchResults.size());
                 buttonShowAll.setVisible(false);
                 buttonShowNext.setVisible(false);
             } else {
-                labelCurrentOnDisplay.setText("displaying 1 to " + PAGESIZE);
+                labelCurrentOnDisplay.setText(SEARCHDISPLAY + PAGESIZE);
                 if (profileSearchResults.size() > MAXPAGESIZE) {
                     labelToManyResults.setVisible(true);
                     buttonShowAll.setVisible(false);

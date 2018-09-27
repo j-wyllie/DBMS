@@ -1,8 +1,14 @@
 package odms.server.controller;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.google.gson.Gson;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
 import odms.commons.model.enums.OrganEnum;
-import odms.commons.model.profile.Condition;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
@@ -10,9 +16,14 @@ import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import server.controller.ProcedureController;
 import server.model.database.DAOFactory;
-import server.model.database.condition.ConditionDAO;
+import server.model.database.PasswordUtilities;
 import server.model.database.organ.OrganDAO;
 import server.model.database.procedure.ProcedureDAO;
 import server.model.database.profile.ProfileDAO;
@@ -21,15 +32,9 @@ import server.model.enums.ResponseMsgEnum;
 import spark.Request;
 import spark.Response;
 
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(PasswordUtilities.class)
+@PowerMockIgnore("javax.management.*")
 public class ProcedureControllerTest extends CommonTestUtils {
 
     // Data access object variables.
@@ -65,11 +70,15 @@ public class ProcedureControllerTest extends CommonTestUtils {
 
     @Before
     public void setup() throws SQLException, OrganConflictException {
+        PowerMockito.stub(
+                PowerMockito.method(PasswordUtilities.class, "getSaltedHash")
+        ).toReturn("test");
+
         profileA = new Profile("Alice", "Smith",
                 genericDate, "LPO7236");
         profileDAO.add(profileA);
         profileA.setUsername("alices");
-        profileA.setPassword("12345");
+        profileA.setPassword("test");
         profileA = profileDAO.get(profileA.getNhi());
         organDAO.addDonating(profileA, OrganEnum.BONE);
         organDAO.addDonating(profileA, OrganEnum.BONE_MARROW);

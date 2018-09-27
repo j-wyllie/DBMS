@@ -1,0 +1,25 @@
+.button-import {
+    -fx-border-radius: 4;
+    -fx-border-width: 1;
+    -fx-background-image: url(/icons/import.png);
+    -fx-background-size: 30px 30px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.button-settings {
+    -fx-border-radius: 4;
+    -fx-border-width: 1;
+    -fx-background-image: url(/icons/settings.png);
+    -fx-background-size: 30px 30px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.textArea-cli {
+    -fx-text-fill: #81a2be;
+}
+
+.textArea-cli .content {
+    -fx-background-color: #1d1f21;
+}

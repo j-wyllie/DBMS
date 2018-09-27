@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-
 import server.model.enums.KeyEnum;
 import spark.Request;
 import odms.commons.model.enums.UserType;

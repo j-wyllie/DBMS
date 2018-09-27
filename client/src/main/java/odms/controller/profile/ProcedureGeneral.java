@@ -10,6 +10,7 @@ import odms.controller.database.procedure.ProcedureDAO;
 import odms.view.profile.ProceduresDisplay;
 
 public class ProcedureGeneral {
+
     ProceduresDisplay view;
 
     public ProcedureGeneral(ProceduresDisplay v) {

@@ -41,7 +41,7 @@ import odms.controller.AlertController;
 import odms.controller.DateTimePicker;
 import odms.controller.HlaController;
 import odms.controller.database.DAOFactory;
-import odms.controller.database.country.CountryDAO;
+import odms.controller.database.settings.SettingsDAO;
 import odms.controller.database.hla.HLADAO;
 import odms.view.CommonView;
 
@@ -60,6 +60,9 @@ public class ProfileEdit extends CommonView {
 
     @FXML
     private Label donorStatusLabel;
+
+    @FXML
+    private Label receiverStatusLabel;
 
     @FXML
     private TextField givenNamesField;
@@ -426,8 +429,18 @@ public class ProfileEdit extends CommonView {
 
         donorStatusLabel.setText("Donor Status: Unregistered");
 
-        if (currentProfile.getDonor() != null && currentProfile.getDonor()) {
+        if (!currentProfile.getOrgansDonated().isEmpty() || !currentProfile.getOrgansDonating()
+                .isEmpty()) {
             donorStatusLabel.setText("Donor Status: Registered");
+        }
+        if (currentProfile.getOrgansRequired().isEmpty()) {
+            currentProfile.setReceiver(false);
+        } else {
+            currentProfile.setReceiver(true);
+        }
+
+        if (!currentProfile.getOrgansReceived().isEmpty() || !currentProfile.getOrgansRequired().isEmpty()) {
+            receiverStatusLabel.setText("Receiver Status: Registered");
         }
         if (currentProfile.getGivenNames() != null) {
             givenNamesField.setText(currentProfile.getGivenNames());
@@ -578,9 +591,9 @@ public class ProfileEdit extends CommonView {
      */
     private void setUpLocationFields() {
         //Populating combo box values
-        CountryDAO database = DAOFactory.getCountryDAO();
+        SettingsDAO database = DAOFactory.getSettingsDAO();
 
-        List<String> validCountries = database.getAll(true);
+        List<String> validCountries = database.getAllCountries(true);
         comboCountry.getItems().addAll(validCountries);
         comboCountryOfDeath.getItems().addAll(validCountries);
 
@@ -590,7 +603,7 @@ public class ProfileEdit extends CommonView {
         }
         if (currentProfile.getCountry() != null) {
             comboCountry.setValue(
-                    CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
+                    CountriesEnum.getValidNameFromString(currentProfile.getCountry().getName()));
         } else if (validCountries.contains(MAINCOUNTRY)) {
             comboCountry.setValue(CountriesEnum.getValidNameFromString(MAINCOUNTRY));
         }
@@ -927,8 +940,8 @@ public class ProfileEdit extends CommonView {
         isSmokerCheckBox.setSelected(b);
     }
 
-    public String getComboCountryOfDeath() {
-        return comboCountryOfDeath.getValue().toString();
+    public CountriesEnum getComboCountryOfDeath() {
+        return CountriesEnum.valueOf(comboCountryOfDeath.getValue().toString());
     }
 
     public String getRegionOfDeathField() {
