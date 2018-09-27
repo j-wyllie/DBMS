@@ -16,6 +16,7 @@ import odms.controller.database.medication.HttpMedicationDAO;
 import odms.controller.database.medication.MedicationDAO;
 import odms.controller.database.organ.HttpOrganDAO;
 import odms.controller.database.organ.OrganDAO;
+import odms.controller.database.picture.PictureDAO;
 import odms.controller.database.procedure.HttpProcedureDAO;
 import odms.controller.database.procedure.ProcedureDAO;
 import odms.controller.database.profile.HttpProfileDAO;
@@ -27,6 +28,8 @@ import odms.controller.database.user.UserDAO;
  * Factory method to get new HTTPDAO's.
  */
 public class DAOFactory {
+
+    public static PictureDAO getPictureDao() { return new odms.controller.database.picture.HttpProfileDAO(); }
 
     /**
      * Gives the data access object class for other common transactions.

@@ -19,9 +19,10 @@ import odms.controller.AlertController;
 import odms.controller.CommonController;
 import odms.controller.HlaController;
 import odms.controller.data.AddressIO;
-import odms.controller.data.ImageDataIO;
+//import odms.controller.data.ImageDataIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.hla.HttpHLADAO;
+import odms.controller.database.picture.PictureDAO;
 import odms.controller.database.profile.ProfileDAO;
 
 import java.io.File;
@@ -54,14 +55,14 @@ public class ProfileEdit extends CommonController {
     @FXML
     public void save() throws SQLException, IOException, IllegalArgumentException {
         // History Generation
-        History action = new History(
-                "profile",
-                currentProfile.getId(),
-                "update",
-                "previous " + currentProfile.getAttributesSummary(),
-                -1,
-                null
-        );
+//        History action = new History(
+//                "profile",
+//                currentProfile.getId(),
+//                "update",
+//                "previous " + currentProfile.getAttributesSummary(),
+//                -1,
+//                null
+//        );
 
         saveDeathDetails();
 
@@ -99,10 +100,10 @@ public class ProfileEdit extends CommonController {
         server.update(currentProfile);
 
         // history Changes
-        action.setHistoryData(
-                action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
-        action.setHistoryTimestamp(LocalDateTime.now());
-        CurrentHistory.updateHistory(action);
+//        action.setHistoryData(
+//                action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
+//        action.setHistoryTimestamp(LocalDateTime.now());
+//        CurrentHistory.updateHistory(action);
     }
 
     /**
@@ -256,17 +257,32 @@ public class ProfileEdit extends CommonController {
      */
     public void saveChosenImage() throws IOException {
         File chosenFile = view.getChosenFile();
+        PictureDAO server = DAOFactory.getPictureDao();
+
+        System.out.println(111);
+
         if (chosenFile != null) {
 
-            // Packages this into a request, set, which replaces current photo TODO
+            System.out.println(222);
 
-            currentProfile.setPictureName(
-                    ImageDataIO.deleteAndSaveImage(
-                            chosenFile, currentProfile.getNhi()
-                    )
-            );
+            // Packages this into a request, set, which replaces current photo TODO
+            server.update(chosenFile, currentProfile.getNhi());
+
+
+            // Old stuff to delete
+//            currentProfile.setPictureName(
+//                    ImageDataIO.deleteAndSaveImage(
+//                            chosenFile, currentProfile.getNhi()
+//                    )
+//            );
+
         } else if (view.getRemovePhoto()) {
-            ImageDataIO.deleteImage(currentProfile.getNhi());
+            server.delete(currentProfile.getNhi());
+
+            //Old
+//            ImageDataIO.deleteImage(currentProfile.getNhi());
+
+            // Keep
             currentProfile.setPictureName(null);
         }
     }

@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import odms.commons.model.history.History;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
-import odms.controller.data.ImageDataIO;
+//import odms.controller.data.ImageDataIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.history.CurrentHistory;
 import odms.commons.model.user.User;
@@ -35,17 +35,17 @@ public class ClinicianEdit extends CommonController {
         currentUser.setWorkAddress(view.getAddressField());
         currentUser.setRegion(view.getRegionField());
 
-        if (view.getChosenFile() != null) {
-            currentUser.setPictureName(
-                    ImageDataIO.deleteAndSaveImage(
-                            view.getChosenFile(),
-                            currentUser.getStaffID().toString()
-                    )
-            );
-        } else if (view.getRemovePhoto()) {
-            ImageDataIO.deleteImage(currentUser.getStaffID().toString());
-            currentUser.setPictureName(null);
-        }
+//        if (view.getChosenFile() != null) {
+//            currentUser.setPictureName(
+//                    ImageDataIO.deleteAndSaveImage(
+//                            view.getChosenFile(),
+//                            currentUser.getStaffID().toString()
+//                    )
+//            );
+//        } else if (view.getRemovePhoto()) {
+//            ImageDataIO.deleteImage(currentUser.getStaffID().toString());
+//            currentUser.setPictureName(null);
+//        }
 
         CurrentHistory.updateHistory(action);
 

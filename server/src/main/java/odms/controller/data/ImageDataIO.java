@@ -16,13 +16,17 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
  */
 @Slf4j
 public final class ImageDataIO {
-    private static final String IMAGES_DIR = "images";
+    private static final String IMAGES_DIR = "profile_pictures";
 //    private static final File WORKING_DIR = new File(System.getProperty("user.dir"));
     private static  String WORKING_DIR;
     private static File PATH;
 
     private static void createWorkingDir() throws IOException {
         WORKING_DIR = new File(".").getCanonicalPath();
+
+        // TODO get the server path rather than specifying
+        WORKING_DIR = new File("/home/cosc/student/lbr63/1 2nd pro/Seng302/team-200/server/src/main/resources/").getCanonicalPath();
+
         PATH = new File(WORKING_DIR + File.separator + IMAGES_DIR);
     }
 
@@ -40,6 +44,9 @@ public final class ImageDataIO {
      * @param dest File destination in local directory.
      */
     private static void copyFileUsingStream(File source, File dest) throws IOException {
+
+        System.out.println(dest.toPath());
+
         InputStream is = null;
         OutputStream os = null;
 
@@ -57,14 +64,14 @@ public final class ImageDataIO {
                     is.close();
                 }
             } catch (IOException e) {
-                System.out.println("Error in closing input stream for source." + source);
+                log.error("Error in closing input stream for source." + source);
             }
             try {
                 if (os != null) {
                     os.close();
                 }
             } catch (IOException e) {
-                System.out.println("Error in closing output stream for destination." + dest);
+                log.error("Error in closing output stream for destination." + dest);
             }
         }
     }
@@ -85,7 +92,9 @@ public final class ImageDataIO {
         }
 
         File destination = getSaveDestination(image, name);
-        copyFileUsingStream(image, destination);
+
+
+        copyFileUsingStream(image, destination); // Migrate this to be on server end
 
         return destination.getName();
     }
@@ -96,13 +105,14 @@ public final class ImageDataIO {
      * @param name the profile or user name to check against.
      */
     public static void deleteImage(String name) {
+
         try {
             for (File file : getExistingImages(name)) {
                 Files.delete(file.toPath());
             }
         } catch (IOException e) {
-            System.out.println("Failed to delete the old file.");
-            System.out.println("Error: " + e.getMessage());
+            log.error("Failed to delete the old file.");
+            log.error("Error: " + e.getMessage());
         }
     }
 
@@ -154,11 +164,10 @@ public final class ImageDataIO {
             log.error(e.getMessage(), e);
         }
 
-        System.out.println(PATH);
-
         if (!PATH.exists()) {
             PATH.mkdirs();
         }
+
         return PATH;
     }
 
@@ -171,6 +180,7 @@ public final class ImageDataIO {
      */
     private static File getSaveDestination(File image, String name) {
         String extension = getFileExtension(image).toLowerCase();
+
         return new File(getImagePath(name) + "." + extension);
     }
 

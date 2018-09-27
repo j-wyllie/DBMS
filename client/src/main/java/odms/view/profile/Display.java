@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.AlertController;
-import odms.controller.data.ImageDataIO;
+//import odms.controller.data.ImageDataIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.common.CommonDAO;
 import odms.view.CommonView;
@@ -288,15 +288,15 @@ public class Display extends CommonView {
     }
 
     private void setProfileImage() throws MalformedURLException {
-        File image = ImageDataIO.getImagePath(currentProfile.getPictureName());
-
-        if (image == null || !image.exists()) {
-            image = new File(
-                    getClass().getResource("/profile_images/default.png").getFile()
-            );
-        }
-
-        profileImage.setImage(new Image(image.toURI().toURL().toString()));
+//        File image = ImageDataIO.getImagePath(currentProfile.getPictureName());
+//
+//        if (image == null || !image.exists()) {
+//            image = new File(
+//                    getClass().getResource("/profile_images/default.png").getFile()
+//            );
+//        }
+//
+//        profileImage.setImage(new Image(image.toURI().toURL().toString()));
     }
 
     /**

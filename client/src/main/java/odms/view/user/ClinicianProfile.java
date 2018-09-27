@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
 import odms.controller.CommonController;
-import odms.controller.data.ImageDataIO;
+//import odms.controller.data.ImageDataIO;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.common.CommonDAO;
 import odms.controller.user.Display;
@@ -280,14 +280,14 @@ public class ClinicianProfile extends CommonView {
      * @throws MalformedURLException if the URL to the image is malformed
      */
     private void setProfileImage() throws MalformedURLException {
-        File image = ImageDataIO.getImagePath(currentUser.getPictureName());
-
-        if (image == null || !image.exists()) {
-            image = new File(
-                    getClass().getResource("/profile_images/default.png").getFile()
-            );
-        }
-        profileImage.setImage(new Image(image.toURI().toURL().toString()));
+//        File image = ImageDataIO.getImagePath(currentUser.getPictureName());
+//
+//        if (image == null || !image.exists()) {
+//            image = new File(
+//                    getClass().getResource("/profile_images/default.png").getFile()
+//            );
+//        }
+//        profileImage.setImage(new Image(image.toURI().toURL().toString()));
     }
 
     /**

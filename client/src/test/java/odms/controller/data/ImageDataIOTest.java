@@ -76,63 +76,63 @@ public class ImageDataIOTest {
         this.createTestDir();
     }
 
-    @After
-    public void cleanup() {
-        ImageDataIO.deleteImage(imageNamePng);
-        this.deleteTestImages();
-    }
-
-    @Test
-    public void testDeleteAndSaveImageWithValidFile() throws IOException {
-        copyTestImagesToImages();
-
-        ImageDataIO.deleteAndSaveImage(testImageFile, this.accountName);
-
-        assertFalse(testImagePng.exists());
-        assertTrue(testImageJpg.exists());
-    }
-
-    @Test
-    public void testDeleteAndSaveImageWithInvalidFile()
-            throws IOException, UnsupportedOperationException {
-
-        copyTestImagesToImages();
-
-        try {
-            ImageDataIO.deleteAndSaveImage(null, this.accountName);
-
-            throw new UnsupportedOperationException(
-                    "Test failed, deleteAndSaveImage did not throw IOException"
-            );
-        } catch (IOException e) {
-            assertNotNull(e);
-            assertEquals("No file specified", e.getMessage());
-        }
-    }
-
-    @Test
-    public void testDeleteImage() throws IOException {
-        copyTestImagesToImages();
-
-        ImageDataIO.deleteImage(accountName);
-        assertFalse(this.testImageJpg.exists());
-        assertFalse(this.testImagePng.exists());
-    }
-
-    @Test
-    public void testGetImagePathWithValidName() {
-        File imagePath = ImageDataIO.getImagePath(this.imageNameJpg);
-
-        assertNotNull(imagePath);
-        assertEquals(this.imageNameJpg, imagePath.getName());
-        assertTrue(imagePath.getPath().contains(this.imagePath));
-    }
-
-    @Test
-    public void testGetImagePathWithInvalidName() {
-        File imagePath = ImageDataIO.getImagePath(null);
-
-        assertNull(imagePath);
-    }
+//    @After
+//    public void cleanup() {
+//        ImageDataIO.deleteImage(imageNamePng);
+//        this.deleteTestImages();
+//    }
+//
+//    @Test
+//    public void testDeleteAndSaveImageWithValidFile() throws IOException {
+//        copyTestImagesToImages();
+//
+//        ImageDataIO.deleteAndSaveImage(testImageFile, this.accountName);
+//
+//        assertFalse(testImagePng.exists());
+//        assertTrue(testImageJpg.exists());
+//    }
+//
+//    @Test
+//    public void testDeleteAndSaveImageWithInvalidFile()
+//            throws IOException, UnsupportedOperationException {
+//
+//        copyTestImagesToImages();
+//
+//        try {
+//            ImageDataIO.deleteAndSaveImage(null, this.accountName);
+//
+//            throw new UnsupportedOperationException(
+//                    "Test failed, deleteAndSaveImage did not throw IOException"
+//            );
+//        } catch (IOException e) {
+//            assertNotNull(e);
+//            assertEquals("No file specified", e.getMessage());
+//        }
+//    }
+//
+//    @Test
+//    public void testDeleteImage() throws IOException {
+//        copyTestImagesToImages();
+//
+//        ImageDataIO.deleteImage(accountName);
+//        assertFalse(this.testImageJpg.exists());
+//        assertFalse(this.testImagePng.exists());
+//    }
+//
+//    @Test
+//    public void testGetImagePathWithValidName() {
+//        File imagePath = ImageDataIO.getImagePath(this.imageNameJpg);
+//
+//        assertNotNull(imagePath);
+//        assertEquals(this.imageNameJpg, imagePath.getName());
+//        assertTrue(imagePath.getPath().contains(this.imagePath));
+//    }
+//
+//    @Test
+//    public void testGetImagePathWithInvalidName() {
+//        File imagePath = ImageDataIO.getImagePath(null);
+//
+//        assertNull(imagePath);
+//    }
 
 }

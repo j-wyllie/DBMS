@@ -217,6 +217,14 @@ public class Server {
                     delete("", HLAController::delete);
                 });
             });
+
+            // Pictures api endpoints
+            path("/pictures:name", () -> {
+                // id references profile
+                get("", PictureController::get);
+                patch("", PictureController::update);
+                delete("", PictureController::delete);
+            });
         });
     }
 }
