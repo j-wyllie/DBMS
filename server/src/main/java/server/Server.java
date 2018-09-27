@@ -85,6 +85,8 @@ public class Server {
 
                 get("", ProfileController::get);
 
+                path("/create", () -> {post("", ProfileController::create);});
+
                 path("/:id", () -> {
                     patch("", ProfileController::edit);
                     path("/blood-donation", () -> post("", ProfileController::updateBloodDonation));

@@ -59,7 +59,7 @@ public class HttpProfileDAO implements ProfileDAO {
     @Override
     public void add(Profile profile) throws NHIConflictException, SQLException {
         Gson gson = new Gson();
-        String url = PROFILES_URL;
+        String url = "http://localhost:6969/api/v1/profiles/create";
         Map<String, Object> queryParams = new HashMap<>();
         Response response = null;
 
