@@ -497,7 +497,7 @@ public class ProfileEdit extends CommonController {
             hlas.add(view.getHLAYDQField());
             hlas.add(view.getHLAYDRField());
 
-            if (hlas.toString().isEmpty()) {
+            if (String.join("", hlas).equals("")) {
                 return;
             }
 
