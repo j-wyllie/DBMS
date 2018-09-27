@@ -777,7 +777,6 @@ public class AvailableOrgans {
         ProfileDAO database = DAOFactory.getProfileDao();
 
         List<Profile> allDonators = database.getDead();
-        System.out.println(allDonators.toString());
         for (Profile profile : allDonators) {
             checkForManuallyExpiredOrgans(profile);
         }

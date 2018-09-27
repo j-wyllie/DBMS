@@ -17,6 +17,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
+import odms.Session;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
 import odms.controller.data.ImageDataIO;
@@ -104,6 +105,7 @@ public class ClinicianProfile extends CommonView {
         CommonDAO server = DAOFactory.getCommonDao();
         server.logout();
         currentUser = null;
+        Session.setCurrentUser(currentUser, null);
         if (socialFeed != null) {
             socialFeed.pauseTimer();
         }
