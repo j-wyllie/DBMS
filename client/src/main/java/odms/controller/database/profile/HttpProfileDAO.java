@@ -58,8 +58,9 @@ public class HttpProfileDAO implements ProfileDAO {
 
     @Override
     public void add(Profile profile) throws NHIConflictException, SQLException {
+        JsonParser parser = new JsonParser();
         Gson gson = new Gson();
-        String url = "http://localhost:6969/api/v1/profiles/create";
+        String url = "http://localhost:6969/api/v1/setup/create";
         Map<String, Object> queryParams = new HashMap<>();
         Response response = null;
 
@@ -72,7 +73,14 @@ public class HttpProfileDAO implements ProfileDAO {
         }
 
         if (response != null) {
-            if (response.getStatus() == 400) {
+            if (response.getStatus() == 200) {
+                System.out.println("a");
+                JsonObject bodye = parser.parse(response.getBody()).getAsJsonObject();
+                profile.setId(bodye.get("id").getAsInt());
+                Session.setCurrentUser(profile, UserType.PROFILE);
+                Session.setToken(bodye.get("Token").getAsInt());
+                }
+                if (response.getStatus() == 400) {
                 throw new NHIConflictException("NHI in use.", profile.getNhi());
             } else if (response.getStatus() == 500) {
                 throw new SQLException(response.getBody());

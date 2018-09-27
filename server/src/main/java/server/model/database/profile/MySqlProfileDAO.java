@@ -177,8 +177,9 @@ public class MySqlProfileDAO implements ProfileDAO {
             stmt.setString(1, nhi);
 
             try (ResultSet result = stmt.executeQuery()) {
-                result.next();
-                id = result.getInt("ProfileId");
+                if(result.next()) {
+                    id = result.getInt("ProfileId");
+                }
                 return id;
             }
         } catch (SQLException e) {
