@@ -1,18 +1,24 @@
 package odms.commons.model.profile;
 
 public enum Attribute {
-    GIVENNAMES("given-names"),
-    LASTNAMES("last-names"),
-    DATEOFBIRTH("dob"),
-    DATEOFDEATH("dod"),
+    ADDRESS("address"),
+    ALCOHOL_CONSUMPTION("alcohol-consumption"),
+    BLOOD_PRESSURE_DIASTOLIC("blood-pressure-diastolic"),
+    BLOOD_PRESSURE_SYSTOLIC("blood-pressure-systolic"),
+    BLOOD_TYPE("blood-type"),
+    COUNTRY("country"),
+    DATE_OF_BIRTH("dob"),
+    DATE_OF_DEATH("dod"),
+    EMAIL("email"),
+    GIVEN_NAMES("given-names"),
     GENDER("gender"),
     HEIGHT("height"),
-    WEIGHT("weight"),
-    BLOODTYPE("blood-type"),
-    ADDRESS("address"),
+    IS_SMOKER("is-smoker"),
+    LAST_NAMES("last-names"),
+    NHI("nhi"),
+    PHONE("phone"),
     REGION("region"),
-    COUNTRY("country"),
-    NHI("nhi");
+    WEIGHT("weight");
 
     private String text;
 

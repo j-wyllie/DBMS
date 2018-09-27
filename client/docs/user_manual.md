@@ -150,12 +150,3 @@ This can be limited to only those profile profiles that currently are registered
 with the following command:
     
     print profiles
-    
-#### UNDO/REDO Actions
-Undo undoes previously done actions in the command line and GUI.
-
-    undo
-    
-Redo redoes previously undone actions in the command line and GUI.
-
-    redo

@@ -1,15 +1,27 @@
 package odms.controller.profile;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.history.CurrentHistory;
 import odms.commons.model.history.History;
+import odms.commons.model.profile.HLAType;
 import odms.commons.model.profile.Profile;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
+import odms.controller.HlaController;
 import odms.controller.data.AddressIO;
 import odms.controller.data.ImageDataIO;
 import odms.controller.database.DAOFactory;
+import odms.controller.database.hla.HttpHLADAO;
 import odms.controller.database.profile.ProfileDAO;
 
 import java.io.File;
@@ -77,6 +89,7 @@ public class ProfileEdit extends CommonController {
         saveBloodPressure();
         saveBloodType();
         saveIsSmoker();
+        saveHLAtype();
 
         saveCity();
         saveCountry();
@@ -134,7 +147,6 @@ public class ProfileEdit extends CommonController {
         if (view.getComboCountryOfDeath().equals(MAINCOUNTRY)) {
             if (view.getComboRegionOfDeath() != null && AddressIO
                     .checkValidRegion(
-                            view.getComboRegionOfDeath() + " " + view.getComboCountryOfDeath(),
                             view.getComboRegionOfDeath(), view.getComboCountryOfDeath())) {
                 return view.getComboRegionOfDeath();
             } else {
@@ -145,14 +157,12 @@ public class ProfileEdit extends CommonController {
             }
         } else {
             if (view.getRegionOfDeathField() != null && AddressIO
-                    .checkValidRegion(
-                            view.getRegionOfDeathField() + " " + view.getComboCountryOfDeath(),
-                            view.getRegionOfDeathField(), view.getComboCountryOfDeath())) {
+                    .checkValidRegion(view.getRegionOfDeathField(),
+                            view.getComboCountryOfDeath())) {
                 return view.getRegionOfDeathField();
             } else if (view.getRegionOfDeathField() != null && !AddressIO
-                    .checkValidRegion(
-                            view.getRegionOfDeathField() + " " + view.getComboCountryOfDeath(),
-                            view.getRegionOfDeathField(), view.getComboCountryOfDeath())) {
+                    .checkValidRegion(view.getRegionOfDeathField(),
+                            view.getComboCountryOfDeath())) {
                 throw new IllegalArgumentException(
                         "Invalid Region of Death"
                 );
@@ -469,6 +479,48 @@ public class ProfileEdit extends CommonController {
         currentProfile.setIsSmoker(view.getIsSmokerCheckBox());
     }
 
+    public void saveHLAtype() {
+        try {
+            // add primary HLA values
+            List<String> hlas = new ArrayList<>();
+            hlas.add(view.getHLAXAField());
+            hlas.add(view.getHLAXBField());
+            hlas.add(view.getHLAXCField());
+            hlas.add(view.getHLAXDPField());
+            hlas.add(view.getHLAXDQField());
+            hlas.add(view.getHLAXDRField());
+            hlas.add(view.getHLAYAField());
+            hlas.add(view.getHLAYBField());
+            hlas.add(view.getHLAYCField());
+            hlas.add(view.getHLAYDPField());
+            hlas.add(view.getHLAYDQField());
+            hlas.add(view.getHLAYDRField());
+
+            if (String.join("", hlas).equals("")) {
+                return;
+            }
+
+            List<Integer> hlasInt = new ArrayList<>();
+            for (String hla : hlas) {
+                hlasInt.add(Integer.valueOf(hla));
+            }
+            HLAType hlaType = new HLAType(hlasInt);
+
+            // add secondary HLA values (move to hla controller)
+            for (Object secondaryHlaObject : view.getSecondaryHlaListView().getItems().toArray()) {
+                String secondaryHla = String.valueOf(secondaryHlaObject);
+                String gene = secondaryHla.replaceAll(HLAType.ALELLE, "");
+                String allele = secondaryHla.replaceAll(HLAType.GENE, "");
+                hlaType.addSecondaryAntigen(gene, Integer.valueOf(allele));
+            }
+
+            HttpHLADAO httpHLADAO = new HttpHLADAO();
+            httpHLADAO.edit(currentProfile.getId(), hlaType);
+        } catch (NumberFormatException exception) {
+            throw new IllegalArgumentException("All Primary HLA Antigen values must be entered");
+        }
+    }
+
     /**
      * Save Country field to profile.
      */
@@ -537,6 +589,24 @@ public class ProfileEdit extends CommonController {
             } else {
                 view.setRegionOfDeathField(currentProfile.getRegionOfDeath());
             }
+        }
+    }
+
+    public void handelSecondaryHlaEntered() {
+        String newHla = view.getSecondaryHlaField().toUpperCase();
+        if (newHla.isEmpty() || !newHla.matches(HLAType.SECONDARY_TYPE)) {
+            return;
+        }
+        view.clearSecondaryHlaField();
+
+        ObservableList<String> secondaryHlas = view.getSecondaryHlaListView().getItems();
+        secondaryHlas.add(0, newHla);
+        view.getSecondaryHlaListView().setItems(secondaryHlas);
+    }
+
+    public void handelSecondaryHlaDeleted(List<String> HLAsToRemove) {
+        for (String hla : HLAsToRemove) {
+            view.getSecondaryHlaListView().getItems().remove(hla);
         }
     }
 

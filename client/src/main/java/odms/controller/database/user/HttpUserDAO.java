@@ -1,10 +1,9 @@
 package odms.controller.database.user;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import lombok.extern.slf4j.Slf4j;
+import odms.Session;
+import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
 import odms.controller.http.Request;
 import odms.controller.http.Response;
@@ -24,7 +23,7 @@ public class HttpUserDAO implements UserDAO {
 
     private static final String USERS_ALL = "http://localhost:6969/api/v1/users/all";
     private static final String USERS = "http://localhost:6969/api/v1/users";
-    private static final String USERS_LOGIN = "http://localhost:6969/api/v1/users/login";
+    private static final String USERS_LOGIN = "http://localhost:6969/api/v1/login";
 
     @Override
     public List<User> getAll() {
@@ -52,7 +51,7 @@ public class HttpUserDAO implements UserDAO {
         Map<String, Object> queryParams = new HashMap<>();
 
         String body = gson.toJson(user);
-        Request request = new Request(USERS, 0, queryParams, body);
+        Request request = new Request(USERS, queryParams, body);
         Response response = null;
         try {
             response = request.post();
@@ -72,7 +71,7 @@ public class HttpUserDAO implements UserDAO {
     @Override
     public void remove(User user) {
         String url = USERS + user.getStaffID();
-        Request request = new Request(url, 0, new HashMap<>());
+        Request request = new Request(url, new HashMap<>());
         try {
             request.delete();
         } catch (IOException e) {
@@ -85,7 +84,7 @@ public class HttpUserDAO implements UserDAO {
         Gson gson = new Gson();
         String url = USERS + user.getStaffID();
         String body = gson.toJson(user);
-        Request request = new Request(url, 0, new HashMap<>(), body);
+        Request request = new Request(url, new HashMap<>(), body);
         try {
             Response response = request.patch();
             if (response.getStatus() == 403) {
@@ -112,16 +111,26 @@ public class HttpUserDAO implements UserDAO {
 
     @Override
     public Boolean checkCredentials(String username, String password) {
+        JsonParser parser = new JsonParser();
+        Gson gson = new Gson();
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("username", username);
         queryParams.put("password", password);
+        queryParams.put("UserType", UserType.ADMIN);
 
-        Request request = new Request(USERS_LOGIN, 0, queryParams, "{}");
+        Request request = new Request(USERS_LOGIN, queryParams, "{}");
         Response response;
         try {
             response = request.post();
 
             if (response.getStatus() == 200) {
+                JsonObject body = parser.parse(response.getBody()).getAsJsonObject();
+
+                User user = new User(null, (String) null);
+                user.setStaffID(body.get("id").getAsInt());
+                Session.setCurrentUser(user, UserType.ADMIN);
+
+                Session.setToken(body.get("Token").getAsInt());
                 return true;
             }
 
@@ -142,9 +151,11 @@ public class HttpUserDAO implements UserDAO {
             throws UserNotFoundException {
         Gson parser = new Gson();
         Response response = null;
-        Request request = new Request(url, 0, queryParams);
+        Request request = new Request(url, queryParams);
         try {
             response = request.get();
+
+            System.out.println(response.getBody());
 
             if (response.getStatus() == 200) {
                 return parser.fromJson(response.getBody(), User.class);
@@ -168,7 +179,7 @@ public class HttpUserDAO implements UserDAO {
         JsonParser parser = new JsonParser();
         Gson gson = new Gson();
         Response response;
-        Request request = new Request(url, 0, queryParams);
+        Request request = new Request(url, queryParams);
         List<User> users = new ArrayList<>();
 
         try {

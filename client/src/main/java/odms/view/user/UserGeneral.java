@@ -48,8 +48,6 @@ public class UserGeneral {
     @FXML
     private TableColumn<CountriesEnum, Boolean> allowedColumn;
 
-    //private Redo redoController = new Redo();
-    //private Undo undoController = new Undo();
     private User currentUser;
     private CountryDAO server = DAOFactory.getCountryDAO();
     private ObservableList<CountriesEnum> countriesEnumObservableList = FXCollections
@@ -64,8 +62,6 @@ public class UserGeneral {
      */
     @FXML
     private void handleUndoButtonClicked(ActionEvent event) throws IOException {
-        //todo replace with standardised?
-        //undoController.undo(GuiMain.getCurrentDatabase());
         Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -81,7 +77,6 @@ public class UserGeneral {
     @FXML
     private void handleRedoButtonClicked(ActionEvent event) throws IOException {
         //todo replace with standardised?
-        //redoController.redo(GuiMain.getCurrentDatabase());
         Parent parent = FXMLLoader.load(getClass().getResource("/view/ClinicianProfile.fxml"));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -167,7 +162,7 @@ public class UserGeneral {
                 countriesEnum.setValid(!countriesEnum.getValid());
                 countriesEnumObservableList.set(tableCell.getTableRow().getIndex(), countriesEnum);
 
-                Integer count = 0;
+                int count = 0;
                 for (CountriesEnum country : countriesEnumObservableList) {
                     if (country.getValid()) {
                         count++;

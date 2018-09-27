@@ -8,6 +8,10 @@ import odms.commons.model.enums.OrganEnum;
 
 public class AlertController {
 
+    private AlertController() {
+        throw new UnsupportedOperationException();
+    }
+
     /**
      * Creates a generic popup when details are entered incorrectly.
      */
@@ -131,6 +135,38 @@ public class AlertController {
         if (invalidAlert.getResult() == ButtonType.CLOSE) {
             invalidAlert.close();
         }
+    }
+
+    /**
+     * Creates a info popup with a personalized message from the controller
+     * @param message the message to be displayed
+     */
+    public static void guiPopupInfo(String message) {
+        Alert invalidAlert = new Alert(
+                AlertType.INFORMATION,
+                message,
+                ButtonType.CLOSE
+        );
+
+        invalidAlert.show();
+        if (invalidAlert.getResult() == ButtonType.CLOSE) {
+            invalidAlert.close();
+        }
+    }
+
+    /**
+     * Creates a help popup with a personalized message from the controller
+     * @param message the message to be displayed
+     */
+    public static void guiPopupHelp(String message) {
+
+        Alert helpAlert = new Alert(
+                AlertType.INFORMATION
+        );
+        helpAlert.setTitle("Help");
+        helpAlert.setHeaderText("");
+        helpAlert.setContentText(message);
+        helpAlert.showAndWait();
     }
 
     /**

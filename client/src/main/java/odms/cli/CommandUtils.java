@@ -11,7 +11,7 @@ import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.common.CommonDAO;
 import odms.controller.database.profile.ProfileDAO;
-import odms.controller.profile.UndoRedoCLIService;
+import odms.controller.profile.OrganCLIService;
 
 @Slf4j
 public class CommandUtils {
@@ -20,29 +20,26 @@ public class CommandUtils {
         throw new UnsupportedOperationException();
     }
 
-    private static final String CMD_REGEX_CREATE =
-            "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]"
-                    + "([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)?)+)"
-                    + "[\"]))*";
+    private static final String CMD_REGEX_START = "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]";
+    private static final String CMD_REGEX_END = "[\"]))*";
+
+    private static final String CMD_REGEX_CREATE = CMD_REGEX_START
+                    + "([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)?)+)" + CMD_REGEX_END;
 
     private static final String CMD_REGEX_PROFILE_VIEW =
             "([a-z]+)((\\s)([a-z]+)(([-]([a-z]+))?)([=][\"]"
                     + "(([a-zA-Z0-9][-]?(\\s)?)+)[\"]))+(\\s[>]\\s"
                     + "([a-z]+)([-]([a-z]+))?)";
 
-    private static final String CMD_REGEX_PROFILE_UPDATE =
-            "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]"
+    private static final String CMD_REGEX_PROFILE_UPDATE = CMD_REGEX_START
                     + "([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)"
                     + "?)+)[\"]))*(\\s[>])((\\s([a-z]+)([-]([a-z]"
-                    + "+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)?)+)"
-                    + "[\"]))*";
+                    + "+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)?)+)" + CMD_REGEX_END;
 
-    private static final String CMD_REGEX_ORGAN_UPDATE =
-            "([a-z]+)([-]([a-z]+))?((\\s)([a-z]+)(([-]"
+    private static final String CMD_REGEX_ORGAN_UPDATE = CMD_REGEX_START
                     + "([a-z]+))?)([=][\"](([a-zA-Z0-9][-]?(\\s)"
                     + "?)+)[\"]))*(\\s[>](\\s([a-z]+)([-]([a-z]+)"
-                    + ")?)([=][\"](([a-zA-Z]([-])?([,](\\s)?)*)+)"
-                    + "[\"]))*";
+                    + ")?)([=][\"](([a-zA-Z]([-])?([,](\\s)?)*)+)" + CMD_REGEX_END;
 
     private static final String ERR_ORGAN_EXISTS = "This organ already exists.";
 
@@ -81,10 +78,6 @@ public class CommandUtils {
                 return Commands.IMPORT;
             case "export":
                 return Commands.EXPORT;
-            case "undo":
-                return Commands.UNDO;
-            case "redo":
-                return Commands.REDO;
             case "create-profile":
                 if (rawInput.matches(CMD_REGEX_CREATE)) {
                     return Commands.PROFILECREATE;
@@ -119,7 +112,7 @@ public class CommandUtils {
                             return Commands.RECEIVERADD;
                         case "remove-organ":
                             return Commands.ORGANREMOVE;
-                        case "removereceive-organ":
+                        case "remove-receive-organ":
                             return Commands.RECEIVEREMOVE;
                         case "donate-organ":
                             return Commands.ORGANDONATE;
@@ -285,7 +278,7 @@ public class CommandUtils {
 
             for (Profile profile : profileList) {
                 try {
-                    UndoRedoCLIService.addOrgansDonating(organSet, profile);
+                    OrganCLIService.addOrgansDonating(organSet, profile);
                 } catch (IllegalArgumentException e) {
                     System.out.println(ERR_ORGAN_EXISTS);
                 } catch (Exception e) {
@@ -310,7 +303,7 @@ public class CommandUtils {
 
             for (Profile profile : profileList) {
                 try {
-                    UndoRedoCLIService.addOrgansRequired(organSet, profile);
+                    OrganCLIService.addOrgansRequired(organSet, profile);
                 } catch (IllegalArgumentException e) {
                     System.out.println(ERR_ORGAN_EXISTS);
                 } catch (Exception e) {
@@ -334,7 +327,7 @@ public class CommandUtils {
         if (!profileList.isEmpty()) {
             for (Profile profile : profileList) {
                 try {
-                    UndoRedoCLIService.addOrgansDonated(
+                    OrganCLIService.addOrgansDonated(
                             OrganEnum.stringListToOrganSet(Arrays.asList(organList)), profile);
                     profile.setDonor(true);
                 } catch (IllegalArgumentException e) {
@@ -355,7 +348,7 @@ public class CommandUtils {
         if (!profileList.isEmpty()) {
             for (Profile profile : profileList) {
                 try {
-                    UndoRedoCLIService.removeOrgansDonating(
+                    OrganCLIService.removeOrgansDonating(
                             OrganEnum.stringListToOrganSet(Arrays.asList(organList)), profile);
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ doesn't exist.");
@@ -376,7 +369,7 @@ public class CommandUtils {
         if (!profileList.isEmpty()) {
             for (Profile profile : profileList) {
                 try {
-                    UndoRedoCLIService.removeOrgansRequired(
+                    OrganCLIService.removeOrgansRequired(
                             OrganEnum.stringListToOrganSet(Arrays.asList(organList)), profile);
                 } catch (IllegalArgumentException e) {
                     System.out.println("This organ doesn't exist.");

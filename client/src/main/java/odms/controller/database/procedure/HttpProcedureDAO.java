@@ -26,7 +26,7 @@ public class HttpProcedureDAO implements ProcedureDAO {
         List<Procedure> procedures = new ArrayList<>();
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("pending", pending);
-        Request request = new Request(url, 0, queryParams);
+        Request request = new Request(url, queryParams);
 
         Response response = null;
         try {
@@ -48,15 +48,17 @@ public class HttpProcedureDAO implements ProcedureDAO {
     }
 
     @Override
-    public void add(Profile profile, Procedure procedure) {
+    public boolean add(Profile profile, Procedure procedure) {
         Gson gson = new Gson();
         String url = Request.getUrl() + String.format("profiles/%s/procedures", profile.getId());
         String body = gson.toJson(procedure);
-        Request request = new Request(url, 0, new HashMap<>(), body);
+        Request request = new Request(url, new HashMap<>(), body);
         try {
             request.post();
+            return true;
         } catch (IOException e) {
             log.error(e.getMessage(), e);
+            return false;
         }
     }
 
@@ -64,7 +66,7 @@ public class HttpProcedureDAO implements ProcedureDAO {
     public void remove(Procedure procedure) {
         // profile id does not matter
         String url = Request.getUrl() + "procedures/" + procedure.getId();
-        Request request = new Request(url, 0, new HashMap<>());
+        Request request = new Request(url, new HashMap<>());
         try {
             request.delete();
         } catch (IOException e) {
@@ -80,11 +82,10 @@ public class HttpProcedureDAO implements ProcedureDAO {
         Map<String, Object> queryParams = new HashMap<>();
         if (procedure.getDate().isBefore(LocalDate.now())) {
             queryParams.put("pending", false);
-        }
-        else {
+        } else {
             queryParams.put("pending", true);
         }
-        Request request = new Request(url, 0, queryParams, body);
+        Request request = new Request(url, queryParams, body);
         try {
             request.patch();
         } catch (IOException e) {
@@ -96,7 +97,7 @@ public class HttpProcedureDAO implements ProcedureDAO {
     public List<OrganEnum> getAffectedOrgans(int procedureId) {
         List<OrganEnum> affectedOrgans = new ArrayList<OrganEnum>();
         String url = Request.getUrl() + "procedures/" + procedureId + "/organs";
-        Request request = new Request(url, 0, new HashMap<>());
+        Request request = new Request(url, new HashMap<>());
         Response response = null;
         try {
             response = request.get();
@@ -120,7 +121,7 @@ public class HttpProcedureDAO implements ProcedureDAO {
         Gson gson = new Gson();
         String url = Request.getUrl() + "procedures/" + procedure.getId() + "/organs";
         String body = gson.toJson(organ);
-        Request request = new Request(url,0, new HashMap<>(), body);
+        Request request = new Request(url, new HashMap<>(), body);
         try {
             request.post();
         } catch (IOException e) {
@@ -133,7 +134,7 @@ public class HttpProcedureDAO implements ProcedureDAO {
         String url = Request.getUrl() + "procedures/" + procedure.getId() + "/organs";
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("name", organ);
-        Request request = new Request(url, 0, queryParams);
+        Request request = new Request(url, queryParams);
         try {
             request.delete();
         } catch (IOException e) {

@@ -104,7 +104,7 @@ public class HttpOrganDAO implements OrganDAO {
     private void post(String url, Map<String, Object> organInfo) {
         Gson gson = new Gson();
         String body = gson.toJson(organInfo);
-        Request request = new Request(url, 0, new HashMap<>(), body);
+        Request request = new Request(url, new HashMap<>(), body);
         try {
             request.post();
         } catch (IOException e) {
@@ -117,7 +117,6 @@ public class HttpOrganDAO implements OrganDAO {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
-        organInfo.put("date", organ.getDate(profile));
         organInfo.put("donated", true);
         delete(url, organInfo);
     }
@@ -127,7 +126,6 @@ public class HttpOrganDAO implements OrganDAO {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
-        organInfo.put("date", organ.getDate(profile));
         organInfo.put("donating", true);
         delete(url, organInfo);
     }
@@ -137,7 +135,6 @@ public class HttpOrganDAO implements OrganDAO {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
-        organInfo.put("date", organ.getDate(profile));
         organInfo.put("required", true);
         delete(url, organInfo);
     }
@@ -147,21 +144,20 @@ public class HttpOrganDAO implements OrganDAO {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
-        organInfo.put("date", organ.getDate(profile));
         organInfo.put("received", true);
         delete(url, organInfo);
     }
 
     @Override
     public void setExpired(Profile profile, String organ, Integer expired, String note,
-            Integer userId) throws SQLException {
+            Integer userId) {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs/expired", profile.getId());
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("organ", organ);
+        queryParams.put("organ", organ.replace(" ", "+"));
         queryParams.put("expired", expired);
-        queryParams.put("note", note);
+        queryParams.put("note", note. replace(" ", "+"));
         queryParams.put("userId", userId);
-        Request request = new Request(url, 0, queryParams,"");
+        Request request = new Request(url, queryParams,"");
         try {
             request.post();
         } catch (IOException e) {
@@ -173,9 +169,9 @@ public class HttpOrganDAO implements OrganDAO {
     public void revertExpired(Integer profileId, String organ) {
         String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs/expired", profileId);
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("organ", organ);
+        queryParams.put("organ", organ.replace(" ", "+"));
         queryParams.put("expired", 0);
-        Request request = new Request(url, 0, queryParams, "");
+        Request request = new Request(url, queryParams, "");
         try {
             request.post();
         } catch (IOException e) {
@@ -184,7 +180,7 @@ public class HttpOrganDAO implements OrganDAO {
     }
 
     private void delete(String url, Map<String, Object> organInfo) {
-        Request request = new Request(url, 0, organInfo);
+        Request request = new Request(url, organInfo);
         try {
             request.delete();
         } catch (IOException e) {
@@ -196,7 +192,7 @@ public class HttpOrganDAO implements OrganDAO {
         JsonParser parser = new JsonParser();
         Gson gson = new Gson();
         Response response = null;
-        Request request = new Request(url, 0, queryParams);
+        Request request = new Request(url, queryParams);
         try {
             response = request.get();
         } catch (IOException e) {
@@ -216,7 +212,7 @@ public class HttpOrganDAO implements OrganDAO {
         JsonParser parser = new JsonParser();
         Gson gson = new Gson();
         Response response = null;
-        Request request = new Request(url, 0, queryParams);
+        Request request = new Request(url, queryParams);
         try {
             response = request.get();
         } catch (IOException e) {

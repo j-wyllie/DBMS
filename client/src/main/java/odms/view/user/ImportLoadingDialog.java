@@ -24,8 +24,6 @@ public class ImportLoadingDialog extends CommonView {
 
     private ProfileImportTask profileImportTask;
 
-    private odms.controller.user.ImportLoadingDialog controller = new odms.controller.user.ImportLoadingDialog(this);
-
     @FXML
     private ProgressBar progressBarImport;
 

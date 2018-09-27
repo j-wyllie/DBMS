@@ -5,7 +5,11 @@ package server.model.enums;
  */
 public enum KeyEnum {
     ID("id"),
+    AUTH("Authorization"),
     NAME("name"),
+    USERTYPE("UserType"),
+    DATETIMELOCALE("DateTimeLocale"),
+    NUMBERLOCALE("NumberLocale"),
     PENDING("pending"),
     VALID("valid");
 

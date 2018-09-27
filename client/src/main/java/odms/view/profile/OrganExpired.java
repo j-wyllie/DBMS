@@ -1,10 +1,5 @@
 package odms.view.profile;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -12,7 +7,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -22,6 +19,15 @@ import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
 import odms.controller.AlertController;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * View class for the manually expired organs scene.
+ */
 @Slf4j
 public class OrganExpired extends OrganCommon {
 
@@ -30,8 +36,7 @@ public class OrganExpired extends OrganCommon {
     private Profile currentProfile;
     private User currentUser;
     private List<ExpiredOrgan> organs = new ArrayList<>();
-    private odms.controller.profile.OrganExpired controller =
-            new odms.controller.profile.OrganExpired(this);
+    private odms.controller.profile.OrganExpired controller = new odms.controller.profile.OrganExpired();
 
     @FXML
     private Button btnCancel;
@@ -96,7 +101,7 @@ public class OrganExpired extends OrganCommon {
     @FXML
     public void onBtnRevertClicked() {
         if (expiredOrganTable.getSelectionModel().getSelectedItem() != null) {
-            String organ = expiredOrganTable.getSelectionModel().getSelectedItem().getOrgan();
+            String organ = expiredOrganTable.getSelectionModel().getSelectedItem().getOrganName();
             Integer profileId = currentProfile.getId();
             try {
                 controller.revertExpired(profileId, organ);
@@ -121,7 +126,7 @@ public class OrganExpired extends OrganCommon {
         try {
             Scene scene = new Scene(fxmlLoader.load());
             OrganOverride overrideView = fxmlLoader.getController();
-            overrideView.initialize(organ.getOrgan(), currentProfile, currentUser);
+            overrideView.initialize(organ.getOrganName(), currentProfile, currentUser);
 
             Stage stage = new Stage();
             stage.setScene(scene);

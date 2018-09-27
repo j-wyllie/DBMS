@@ -44,7 +44,7 @@ public class OrganDisplay extends CommonView {
 
     private Profile currentProfile;
     private odms.controller.profile.OrganDisplay controller =
-            new odms.controller.profile.OrganDisplay(this);
+            new odms.controller.profile.OrganDisplay();
 
     private ObservableList<String> checkList = FXCollections.observableArrayList();
 
@@ -132,21 +132,25 @@ public class OrganDisplay extends CommonView {
         if (currentProfile.getDateOfDeath() != null) {
             donatingButton.setDisable(true);
             receivingButton.setDisable(true);
+            if (isClinician) {
+                listViewDonating.setMouseTransparent(false);
+                listViewDonating.setOnMousePressed(event -> {
+                    if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
+                            listViewDonating.getSelectionModel().getSelectedItem() != null) {
+                        giveReasonForOverride(event,
+                                listViewDonating.getSelectionModel().getSelectedItem());
+                    }
+                });
+            }
+        } else {
+            expiredButton.setVisible(false);
         }
 
         if (!isClinician) {
-            this.viewAsProfileSetup();
+            viewAsProfileSetup();
         }
 
         populateOrganLists();
-
-        listViewDonating.setOnMousePressed(event -> {
-            if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
-                    listViewDonating.getSelectionModel().getSelectedItem() != null) {
-                giveReasonForOverride(event,
-                        listViewDonating.getSelectionModel().getSelectedItem());
-            }
-        });
     }
 
     /**
@@ -169,7 +173,6 @@ public class OrganDisplay extends CommonView {
         }
         receivingButton.setVisible(false);
         donatedButton.setVisible(false);
-
         expiredButton.setVisible(false);
 
         if (currentProfile.getDateOfDeath() == null) {
@@ -261,8 +264,8 @@ public class OrganDisplay extends CommonView {
     private void populateOrganLists() {
         currentProfile = controller.getUpdatedProfileDetails(currentProfile);
 
+        populateOrganList(observableListDonating, controller.getDonatingOrgans(currentProfile));
         populateOrganList(observableListDonated, currentProfile.getOrgansDonated());
-        populateOrganList(observableListDonating, currentProfile.getOrgansDonatingNotExpired());
         populateListReceiving(observableListReceiving, currentProfile.getOrgansRequired());
 
         checkList.clear();
@@ -358,10 +361,7 @@ public class OrganDisplay extends CommonView {
         stage.initOwner(source.getScene().getWindow());
         stage.initModality(Modality.WINDOW_MODAL);
         stage.centerOnScreen();
-        stage.setOnHiding(ob -> {
-            populateOrganLists();
-            refreshListViews();
-        });
+        stage.setOnHiding(ob -> refreshListViews());
         stage.show();
     }
 
@@ -393,7 +393,6 @@ public class OrganDisplay extends CommonView {
         stage.initModality(Modality.WINDOW_MODAL);
         stage.centerOnScreen();
         stage.setOnHiding(ob -> {
-            populateOrganLists();
             refreshListViews();
             if (transplantWaitingListView != null) {
                 transplantWaitingListView.refreshTable();

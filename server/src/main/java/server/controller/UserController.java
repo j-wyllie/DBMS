@@ -2,6 +2,8 @@ package server.controller;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
@@ -58,6 +60,7 @@ public class UserController {
         UserDAO database = DAOFactory.getUserDao();
         User user;
         try {
+
             if (req.queryMap().hasKey("id")) {
                 user = database.get(Integer.valueOf(req.queryParams("id")));
             } else {
@@ -76,7 +79,6 @@ public class UserController {
 
         res.type(DataTypeEnum.JSON.toString());
         res.status(200);
-
         return responseBody;
     }
 
@@ -186,32 +188,40 @@ public class UserController {
      * Checks the credentials of a user logging in.
      * @param req request containing the username and password.
      * @param res response from the server.
-     * @return String containg successful user validation.
+     * @return String containing successful user validation.
      */
     public static String checkCredentials(Request req, Response res) {
         UserDAO database = DAOFactory.getUserDao();
+        Gson gson = new Gson();
         Boolean valid;
 
+        String username = req.queryParams("username");
+        String password = req.queryParams("password");
         try {
-            valid = database.checkCredentials(
-                    req.queryParams("username"),
-                    req.queryParams("password")
-            );
+            valid = database.checkCredentials(username, password);
         } catch (UserNotFoundException e) {
-            res.status(400);
-            return e.getMessage();
+            res.status(404);
+            return "User not found";
         } catch (SQLException e) {
             res.status(500);
-            return e.getMessage();
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
 
         if (valid) {
-            res.type(DataTypeEnum.JSON.toString());
-            res.status(200);
+            try {
+                User user = database.get(username);
+                Map<String, Integer> body = Middleware.authenticate(
+                        user.getStaffID(), user.getUserType());
+                res.type(DataTypeEnum.JSON.toString());
+                res.status(200);
+                return gson.toJson(body);
+            } catch (Exception e) {
+                res.status(500);
+                return e.getMessage();
+            }
         } else {
-            res.status(404);
+            res.status(401);
+            return "Unauthorized";
         }
-
-        return "User validated.";
     }
 }

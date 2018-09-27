@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.UserType;
 
 public class User {
@@ -13,11 +15,12 @@ public class User {
     private Integer staffID;
     private String workAddress;
     private String region;
+    private CountriesEnum country;
     private LocalDateTime lastUpdated;
     private ArrayList<String> updateActions = new ArrayList<>();
     private LocalDateTime timeOfCreation;
     private String username;
-    private String password; //not being used yet, but will be in the future.
+    private String password;
     private boolean isDefault;
     private String pictureName;
 
@@ -29,7 +32,7 @@ public class User {
      */
     public User(UserType userType, List<String> attrArray) {
         this.userType = userType;
-        setExtraAttributes(attrArray, this);
+        setExtraAttributes(attrArray);
         timeOfCreation = LocalDateTime.now();
     }
 
@@ -122,10 +125,10 @@ public class User {
      * @param attributes the attributes given in the constructor.
      * @throws IllegalArgumentException when a required attribute is not included or spelt wrong.
      */
-    public void setExtraAttributes(List<String> attributes, User user) throws IllegalArgumentException {
+    public void setExtraAttributes(List<String> attributes) throws IllegalArgumentException {
         for (String val : attributes) {
             String[] parts = val.split("=");
-            setGivenAttribute(parts, user);
+            setGivenAttribute(parts);
         }
     }
 
@@ -135,9 +138,9 @@ public class User {
      * @param parts a string containing the users new attribute to be set.
      * @throws IllegalArgumentException
      */
-    private void setGivenAttribute(String[] parts, odms.commons.model.user.User user) throws IllegalArgumentException {
+    private void setGivenAttribute(String[] parts) throws IllegalArgumentException {
         String attrName = parts[0];
-        String value = parts[1].replace("\"", ""); // get rid of the speech marks;
+        String value = parts[1].replace("\"", "");
 
         if (attrName.startsWith(" ")) {
             attrName = attrName.substring(1);
@@ -272,5 +275,9 @@ public class User {
 
     public void setPictureName(String pictureName) {
         this.pictureName = pictureName;
+    }
+
+    public CountriesEnum getCountry() {
+        return country;
     }
 }
