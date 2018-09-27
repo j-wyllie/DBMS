@@ -224,8 +224,13 @@ public class ProfileController {
         if (newProfile != null) {
             try {
                 if (database.isUniqueNHI(newProfile.getNhi()) == 0
-                        && !database.isUniqueUsername(newProfile.getUsername())) {
+                        && !database.isUniqueUsername(newProfile.getNhi())) {
                     database.add(newProfile);
+                    Profile profile = database.get(newProfile.getNhi());
+                    Map<String, Integer> body = Middleware.authenticate(profile.getId(), UserType.PROFILE);
+                    res.type(DataTypeEnum.JSON.toString());
+                    res.status(200);
+                    return gson.toJson(body);
                 } else {
                     res.status(400);
                     return ResponseMsgEnum.BAD_REQUEST.toString();

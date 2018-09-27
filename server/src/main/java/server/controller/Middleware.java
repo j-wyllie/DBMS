@@ -54,6 +54,7 @@ public class Middleware {
      * @throws SQLException internal error.
      */
     public static boolean isAuthenticated(Request req, Response res) throws SQLException {
+        System.out.println("auth");
         UserType userType;
         int id;
         int token;
@@ -90,6 +91,7 @@ public class Middleware {
      * @throws SQLException internal error.
      */
     public static boolean isAdminAuthenticated(Request request, Response response) throws SQLException {
+        System.out.println("auth2");
         int id;
         int token;
         try {

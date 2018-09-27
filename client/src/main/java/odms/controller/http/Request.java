@@ -23,6 +23,7 @@ public class Request {
     private static final String TYPE_CONTENT = "Content-Type";
     private static final String TYPE_JSON = "application/json";
 
+    // Base request variables.
     private String urlString;
     private Map<String, Object> queryParams;
     private String body;
@@ -193,7 +194,7 @@ public class Request {
      */
     private void setHeaders(HttpURLConnection con) {
         System.out.println(this.urlString);
-        if (!(this.urlString.contains("setup") || this.urlString.contains("login"))) {
+        if (!(this.urlString.contains("setup") || this.urlString.contains("login") || this.urlString.contains("create"))) {
             int id = -1;
             UserType userType = Session.getCurrentUser().getValue();
             if (userType == UserType.ADMIN || userType == UserType.CLINICIAN) {
