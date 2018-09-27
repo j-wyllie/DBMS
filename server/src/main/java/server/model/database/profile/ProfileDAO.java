@@ -172,4 +172,12 @@ public interface ProfileDAO {
      * @throws UserNotFoundException thrown when a user is not found in the database.
      */
     Boolean savePassword(String nhi, String password) throws UserNotFoundException;
+
+    /**
+     * Updates the blood donation points and last donation datetime for a profile.
+     * @param id of the profile.
+     * @param points to update to.
+     * @throws SQLException error.
+     */
+    void updateBloodDonation(int id, int points) throws SQLException;
 }

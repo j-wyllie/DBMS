@@ -37,7 +37,6 @@ public class ProfileController {
 
     /**
      * Gets all profiles stored.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body, a list of all profiles.
@@ -48,7 +47,6 @@ public class ProfileController {
 
     /**
      * Gets all receiving profiles (possibly with search criteria).
-     *
      * @param req received.
      * @return json string of profiles.
      */
@@ -192,7 +190,6 @@ public class ProfileController {
 
     /**
      * Creates and stores a new profile.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -230,7 +227,6 @@ public class ProfileController {
 
     /**
      * Edits a stored profile.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -260,7 +256,6 @@ public class ProfileController {
 
     /**
      * Deletes a profile from storage.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -290,7 +285,6 @@ public class ProfileController {
 
     /**
      * Gets a count of all stored profiles.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -317,7 +311,6 @@ public class ProfileController {
 
     /**
      * Checks that a profile has a password.
-     *
      * @param req the request fields.
      * @param res the response from the server.
      * @return The response body.
@@ -340,7 +333,6 @@ public class ProfileController {
 
     /**
      * Checks the credentials of a profile logging in,
-     *
      * @param request request containg password and username.
      * @param response response from the server.
      * @return String displaying success of validation.
@@ -378,7 +370,6 @@ public class ProfileController {
 
     /**
      * Saves the profiles password.
-     *
      * @param request request being sent with url and password.
      * @param response the server response.
      * @return String confirming success.
@@ -395,10 +386,33 @@ public class ProfileController {
         }
         if (valid) {
             response.status(200);
-            return "Password Set";
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         } else {
             response.status(400);
             return ResponseMsgEnum.BAD_REQUEST.toString();
         }
+    }
+
+    /**
+     * Updates the blood donation points and last donation datetime for a profile.
+     * @param request from the client.
+     * @param response to the client.
+     * @return the response from the server.
+     */
+    public static String updateBloodDonation(Request request, Response response) {
+        ProfileDAO profileDAO = DAOFactory.getProfileDao();
+
+        int points = Integer.valueOf(request.queryParams("points"));
+        int id = Integer.valueOf(request.params(KeyEnum.ID.toString()));
+
+        try {
+            profileDAO.updateBloodDonation(id, points);
+        } catch (SQLException e) {
+            response.status(500);
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
+        }
+
+        response.status(200);
+        return "Points Updated";
     }
 }

@@ -179,4 +179,12 @@ public interface ProfileDAO {
      * @return Boolean, true if successful.
      */
     Boolean savePassword(String nhi, String password);
+
+    /**
+     * Updates the blood donation points and last donation datetime for a profile.
+     * @param profileId of the profile.
+     * @param points to update to.
+     * @throws SQLException error.
+     */
+    void updateBloodDonation(int profileId, int points);
 }
