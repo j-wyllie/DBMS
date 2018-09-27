@@ -2,7 +2,6 @@ package odms.controller.user;
 
 import static org.junit.Assert.assertEquals;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +9,6 @@ import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.profile.OrganConflictException;
 import odms.commons.model.profile.Profile;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 @Slf4j
@@ -41,14 +39,14 @@ public class AvailableOrgansTest {
     }
 
     @Test
-    public void testGetWaitTimeRawinvalid() {
+    public void testGetWaitTimeRawInvalid() {
         int waittime = Math.toIntExact(AvailableOrgans.getWaitTimeRaw(OrganEnum.BONE, profile1.getOrgansRequired(), profile1));
         System.out.println(waittime);
         assert(waittime == -1);
     }
 
     @Test
-    public void testGetwaitTimeInvalid() {
+    public void testGetWaitTimeInvalid() {
         String waittime = AvailableOrgans.getWaitTime(OrganEnum.BONE, profile1.getOrgansRequired(), profile1);
         assertEquals("Insufficient data", waittime);
     }
