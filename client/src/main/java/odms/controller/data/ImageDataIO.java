@@ -8,15 +8,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 /**
  * Support class to manage image IO operations.
  */
+@Slf4j
 public final class ImageDataIO {
-    private static final String IMAGES_DIR = "images";
-    private static final File WORKING_DIR = new File(System.getProperty("user.dir"));
-    private static final File PATH = new File(WORKING_DIR + File.separator + IMAGES_DIR);
+    private static final String IMAGES_DIR = "client/src/main/resources/profile_images";
+    private static  String WORKING_DIR;
+    private static File PATH;
 
     /**
      * Prevent instantiation.
@@ -24,6 +26,12 @@ public final class ImageDataIO {
     private ImageDataIO() {
         throw new UnsupportedOperationException();
     }
+
+    private static void createWorkingDir() throws IOException {
+        WORKING_DIR = new File(".").getCanonicalPath();
+        PATH = new File(WORKING_DIR + File.separator + IMAGES_DIR);
+    }
+
 
     /**
      * Copies a file from source to destination.
@@ -139,6 +147,14 @@ public final class ImageDataIO {
      * @return path object.
      */
     private static File getPath() {
+        try {
+            createWorkingDir();
+        } catch (IOException e) {
+            log.error("Failed to get PATH for images");
+            log.error(e.getMessage(), e);
+        }
+
+
         if (!PATH.exists()) {
             PATH.mkdirs();
         }
