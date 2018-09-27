@@ -17,6 +17,8 @@ import java.time.LocalDate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static odms.controller.AlertController.invalidEntry;
+
 public class CreateAccount extends CommonView {
     @FXML
     private TextField givenNamesField;
@@ -30,7 +32,7 @@ public class CreateAccount extends CommonView {
     @FXML
     private TextField nhiField;
 
-    private ProfileCreate controller = new ProfileCreate(this);
+    private ProfileCreate controller = new ProfileCreate();
 
     /**
      * Scene change to profile view if all required fields are filled in.
@@ -42,9 +44,14 @@ public class CreateAccount extends CommonView {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProfileDisplay.fxml"));
         Scene scene = new Scene(loader.load());
         Display v = loader.getController();
-        Profile profile = controller.createAccount();
+        Profile profile;
+        if(checkDetailsEntered()) {
+            profile = controller.createAccount(getGivenNamesFieldValue(),getsurnamesFieldValue(),getdobDatePickerValue(),getNhiField(),getNhiField().length());
+        } else {
+            profile = null;
+        }
         if (profile != null) {
-            v.initialize(profile, false, null);
+            v.initialize(profile, false, null, null);
             Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             appStage.setScene(scene);
             appStage.show();
@@ -110,5 +117,28 @@ public class CreateAccount extends CommonView {
 
     public ProfileCreate getController() {
         return controller;
+    }
+
+    private boolean checkDetailsEntered() {
+        if (getGivenNamesFieldValue().isEmpty()) {
+            invalidEntry("Please enter Given Name(s)");
+            return false;
+        }
+
+        if (getsurnamesFieldValue().isEmpty()) {
+            invalidEntry("Please enter Surname(s)");
+            return false;
+        }
+
+        if (getdobDatePickerValue() == null) {
+            invalidEntry("Please enter a Date of Birth");
+            return false;
+        }
+        if (getNhiField().isEmpty()) {
+            invalidEntry("Please enter an IRD number");
+            return false;
+        } else {
+            return true;
+        }
     }
 }

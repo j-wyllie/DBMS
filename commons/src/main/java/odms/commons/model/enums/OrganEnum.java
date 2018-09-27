@@ -1,5 +1,6 @@
 package odms.commons.model.enums;
 
+import java.util.Set;
 import odms.commons.model.profile.Profile;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,8 +30,14 @@ public enum OrganEnum {
         return name;
     }
 
-    public LocalDateTime getDate(Profile p) { return p.getOrganDate(this.name); }
-    public void setDate(LocalDateTime date, Profile p) { p.setOrganDate(this.name, date); }
+    public LocalDateTime getDate(Profile p) {
+        return p.getOrganDate(this.name);
+    }
+
+    public void setDate(LocalDateTime date, Profile p) {
+        dateOfRegistration = date;
+        p.setOrganDate(this.name, date);
+    }
 
     /**
      * Correctly space and case the name of the organ for display/printing purposes.
@@ -50,7 +57,7 @@ public enum OrganEnum {
      *
      * @return ArrayList of Organ name Strings
      */
-    public static ArrayList<String> toArrayList() {
+    public static List<String> toArrayList() {
         ArrayList<String> organs = new ArrayList<>();
 
         for (OrganEnum organ : new ArrayList<>(EnumSet.allOf(OrganEnum.class))) {
@@ -68,7 +75,7 @@ public enum OrganEnum {
      * @param organStrings List of Organ Strings
      * @return HashSet of Organs
      */
-    public static HashSet<OrganEnum> stringListToOrganSet(List<String> organStrings) {
+    public static Set<OrganEnum> stringListToOrganSet(List<String> organStrings) {
         HashSet<OrganEnum> organs = new HashSet<>();
 
         for (String organ : organStrings) {
@@ -80,10 +87,11 @@ public enum OrganEnum {
 
     /**
      * Take a HashSet of Organ objects and return a sorted comma delimited string
+     *
      * @param organs Organ HashSet to be converted
      * @return comma delimited string
      */
-    public static String organSetToString(HashSet<OrganEnum> organs) {
+    public static String organSetToString(Set<OrganEnum> organs) {
         List<String> organsList = new ArrayList<>();
 
         for (OrganEnum organ : organs) {

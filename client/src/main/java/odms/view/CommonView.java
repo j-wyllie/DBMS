@@ -1,9 +1,8 @@
 package odms.view;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,17 +20,27 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Profile;
-import odms.controller.GuiMain;
 import odms.commons.model.user.User;
 import odms.view.profile.Display;
 import odms.view.profile.ProfileEdit;
 import odms.view.user.ClinicianProfile;
 import org.controlsfx.control.Notifications;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * Contains common methods between the views.
+ */
+@Slf4j
 public class CommonView {
+
     private static boolean isEdited = false;
 
     protected static Collection<Stage> openProfileStages = new ArrayList<>();
@@ -42,7 +51,8 @@ public class CommonView {
      * @param event clicking on the logout button.
      */
     @FXML
-    protected void changeScene(ActionEvent event, String resourceName, String title) throws IOException {
+    protected void changeScene(ActionEvent event, String resourceName, String title)
+            throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource(resourceName));
         Scene newScene = new Scene(parent);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -54,7 +64,6 @@ public class CommonView {
     @FXML
     protected void createPopup(ActionEvent actionEvent, String fxmlFile, String title) {
         try {
-            //todo create a general pop-up window method?
             Node source = (Node) actionEvent.getSource();
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource(fxmlFile));
@@ -67,12 +76,15 @@ public class CommonView {
             stage.setScene(scene);
             stage.setResizable(false);
             stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e);
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
         }
     }
 
+    /**
+     * Creates a new admin window.
+     * @param currentUser the current user.
+     */
     protected void createNewAdminWindow(User currentUser) {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/view/ClinicianProfile.fxml"));
@@ -89,14 +101,13 @@ public class CommonView {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
     /**
-     * checks whether the window has been edited
+     * checks whether the window has been edited.
      *
-     * @param stage
      * @return true if window has unsaved changes.
      */
     protected static boolean isEdited(Stage stage) {
@@ -108,11 +119,12 @@ public class CommonView {
      *
      * @param event clicking on the edit button.
      */
-    protected void handleProfileEditButtonClicked(ActionEvent event, Profile currentProfile, Boolean isOpenedByClinician) throws IOException {
+    protected void handleProfileEditButtonClicked(ActionEvent event, Profile currentProfile,
+            Boolean isOpenedByClinician, User currentUser) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileEdit.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         ProfileEdit controller = fxmlLoader.getController();
-        controller.initialize(currentProfile, isOpenedByClinician);
+        controller.initialize(currentProfile, isOpenedByClinician, currentUser);
 
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
@@ -120,50 +132,11 @@ public class CommonView {
         appStage.show();
     }
 
-    /**
-     * Button handler to make fields editable.
-     *
-     * @param event clicking on the edit button.
-     */
-    @FXML
-    private void handleUserEditButtonClicked(ActionEvent event) throws IOException {
-//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/ProfileEdit.fxml"));
-//        Scene scene = new Scene(fxmlLoader.load());
-//        ProfileEditController controller = fxmlLoader.getController();
-//        controller.setCurrentProfile(currentProfile);
-//        controller.setIsClinician(isOpenedByClinician);
-//        controller.initialize();
-//
-//        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-//
-//        appStage.setScene(scene);
-//        appStage.show();
-    }
-
-    /**
-     * Button handler to undo last action.
-     */
-    @FXML
-    private void handleUndoButtonClicked() {
-        //undoController.undo(GuiMain.getCurrentDatabase());
-    }
-
-    /**
-     * Button handler to redo last undo action.
-     */
-    @FXML
-    private void handleRedoButtonClicked() {
-        //redoController.redo(GuiMain.getCurrentDatabase());
-    }
-
-    //private Redo redoController = new Redo();
-    //private Undo undoController = new Undo();
-
     public Boolean getEdited() {
         return isEdited;
     }
 
-    private void setEdited(Boolean edited) {
+    private static void setEdited(Boolean edited) {
         isEdited = edited;
     }
 
@@ -193,8 +166,8 @@ public class CommonView {
         setEdited(true);
     }
 
-    /** //todo should these be in commonview?
-     * Changes the Edit profile title to include an astrix to indicate a value has been edited.
+    /**
+      * indicate a value has been edited.
      *
      * @param event Any click event within the text boxes.
      */
@@ -233,7 +206,7 @@ public class CommonView {
     /**
      * Shows a notification on the parent of which the event occurred shows for 2.5 seconds.
      *
-     * @param event       The event which is wanted to trigger a notification
+     * @param event The event which is wanted to trigger a notification
      * @param editedField String of which is the thing edited.
      */
     @FXML
@@ -256,11 +229,12 @@ public class CommonView {
      * Shows a notification on the parent of which the event occurred shows for 2.5 seconds. For
      * unsuccessful events.
      *
-     * @param event       The event which is wanted to trigger a notification
+     * @param event The event which is wanted to trigger a notification
      * @param editedField String of which is the thing edited.
      */
     @FXML
-    protected void showNotificationFailed(String editedField, ActionEvent event) throws IOException {
+    protected void showNotificationFailed(String editedField, ActionEvent event)
+            throws IOException {
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         if (currentStage.getTitle().contains("(*)")) {
             currentStage.setTitle(currentStage.getTitle().replace("(*)", ""));
@@ -281,16 +255,17 @@ public class CommonView {
      *
      * @param profile The donor object that has been clicked on
      * @param parentView The parent view of the stage being created
+     * @param user the current logged in clin/admin
      */
     @FXML
-    protected void createNewDonorWindow(Profile profile, ClinicianProfile parentView) {
+    protected void createNewDonorWindow(Profile profile, ClinicianProfile parentView, User user) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/view/ProfileDisplay.fxml"));
 
             Scene scene = new Scene(fxmlLoader.load());
             Display controller = fxmlLoader.getController();
-            controller.initialize(profile, true, parentView.getTransplantWaitingList());
+            controller.initialize(profile, true, parentView.getTransplantWaitingList(), user);
 
             Stage stage = new Stage();
             if (profile.getPreferredName() != null && !profile.getPreferredName().isEmpty()) {
@@ -301,11 +276,9 @@ public class CommonView {
             stage.setScene(scene);
             parentView.addToOpenProfileStages(stage);
             stage.show();
-            stage.setOnCloseRequest((WindowEvent event) -> {
-                parentView.closeStage(stage);
-            });
+            stage.setOnCloseRequest((WindowEvent event) -> parentView.closeStage(stage));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -345,27 +318,12 @@ public class CommonView {
      */
     public static boolean checkUnsavedChanges(Stage currentStage) {
         for (Stage stage : openProfileStages) {
-            //todo maybe need to move isEdited from common controller to common view?
             if (isEdited(stage) && stage.isShowing()) {
                 return true;
             }
         }
 
         return isEdited(currentStage);
-    }
-
-    /**
-     * returns a string that is the file extension of given file
-     *
-     * @param file File to retrieve extension from
-     */
-    protected String getFileExtension(File file) {
-        String name = file.getName();
-        try {
-            return name.substring(name.lastIndexOf('.') + 1);
-        } catch (Exception e) {
-            return "";
-        }
     }
 
     /**
@@ -389,5 +347,41 @@ public class CommonView {
                 header.setVisible(false);
             }
         });
+    }
+
+    /**
+     * Checks if the nhi is valid (3 characters (no O or I) followed by 4 numbers).
+     *
+     * @param nhi the nhi to check.
+     * @return true if valid and false if not valid.
+     */
+    static boolean isValidNHI(String nhi) {
+        String pattern = "^[A-HJ-NP-Z]{3}\\d{4}$";
+        Pattern r = Pattern.compile(pattern);
+
+        Matcher m = r.matcher(nhi.toUpperCase());
+        return m.find();
+    }
+
+    /**
+     * Tries to connect to the twitter api.
+     *
+     * @return True if the connection can be established.
+     */
+    protected static boolean netIsAvailable() {
+        try {
+            final URL url = new URL("https://google.com/");
+            final URLConnection conn = url.openConnection();
+            conn.setConnectTimeout(1000);
+            conn.connect();
+            conn.getInputStream().close();
+            return true;
+
+        } catch (MalformedURLException e) {
+            log.error(e.getMessage(), e);
+        } catch (IOException e) {
+            return false;
+        }
+        return false;
     }
 }

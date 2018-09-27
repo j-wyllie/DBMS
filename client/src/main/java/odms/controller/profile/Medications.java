@@ -1,11 +1,18 @@
 package odms.controller.profile;
 
+import static odms.controller.data.MedicationDataIO.getActiveIngredients;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import java.util.Map;
 import javafx.fxml.FXML;
 import odms.commons.model.history.History;
+import odms.commons.model.medications.Drug;
+import odms.commons.model.medications.Interaction;
 import odms.commons.model.profile.Profile;
 import odms.controller.AlertController;
 import odms.controller.CommonController;
@@ -14,31 +21,17 @@ import odms.controller.database.DAOFactory;
 import odms.controller.database.interactions.MedicationInteractionsDAO;
 import odms.controller.database.medication.MedicationDAO;
 import odms.controller.history.CurrentHistory;
-import odms.commons.model.medications.Drug;
-import odms.commons.model.medications.Interaction;
-import odms.view.profile.MedicationsGeneral;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Map;
-
-import static odms.controller.data.MedicationDataIO.getActiveIngredients;
 
 public class Medications extends CommonController {
 
-    private MedicationsGeneral view;
     private MedicationInteractionsDAO cache;
     private List<Drug> deletedDrugs;
 
     /**
      * Constructor for ProfileMedicationsController class. Takes a view as a param since the
      * controller and view classes are linked.
-     * @param profileMedicationsView instance of profileMedicationsView class
      */
-    public Medications(MedicationsGeneral profileMedicationsView) {
-        view = profileMedicationsView;
+    public Medications() {
         cache = DAOFactory.getMedicalInteractionsDao();
         cache.load();
         deletedDrugs = new ArrayList<>();
@@ -47,26 +40,26 @@ public class Medications extends CommonController {
     /**
      * Refreshes the current and historic drug lists for the current profile.
      */
-    private void getDrugs() {
-        view.getCurrentProfile().setCurrentMedications(DAOFactory.getMedicationDao().getAll(view.getCurrentProfile(), true));
-        view.getCurrentProfile().setHistoryOfMedication(DAOFactory.getMedicationDao().getAll(view.getCurrentProfile(), false));
+    private void getDrugs(Profile profile) {
+       profile.setCurrentMedications(DAOFactory.getMedicationDao().getAll(profile, true));
+       profile.setHistoryOfMedication(DAOFactory.getMedicationDao().getAll(profile, false));
     }
 
     /**
      * Saves the current and past medications for a profile.
      */
-    public void saveDrugs() {
+    public void saveDrugs(Profile profile) {
         MedicationDAO medicationDAO = DAOFactory.getMedicationDao();
-        for (Drug drug : view.getCurrentProfile().getCurrentMedications()) {
+        for (Drug drug : profile.getCurrentMedications()) {
             if (drug.getId() == null) {
-                medicationDAO.add(drug, view.getCurrentProfile(), true);
+                medicationDAO.add(drug, profile, true);
             } else {
                 medicationDAO.update(drug, true);
             }
         }
-        for (Drug drug : view.getCurrentProfile().getHistoryOfMedication()) {
+        for (Drug drug : profile.getHistoryOfMedication()) {
             if (drug.getId() == null) {
-                medicationDAO.add(drug, view.getCurrentProfile(), false);
+                medicationDAO.add(drug, profile, false);
             } else {
                 medicationDAO.update(drug, false);
             }
@@ -76,7 +69,7 @@ public class Medications extends CommonController {
                 medicationDAO.remove(drug);
             }
         }
-        getDrugs();
+        getDrugs(profile);
     }
 
     /**
@@ -96,10 +89,8 @@ public class Medications extends CommonController {
                 " at " +
                 currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         profile.getMedicationTimestamps().add(data);
-        //todo improve generateUpdateInfo
         ProfileGeneralControllerTODOContainsOldProfileMethods
                 .generateUpdateInfo(drug.getDrugName(), profile);
-        //todo maybe "profile" needs to be changed to "profile"
         History history = new History("profile", profile.getId(), "added drug",
                 drug.getDrugName(), Integer.parseInt(
                 data.substring(data.indexOf("index of") + 9, data.indexOf(" at"))),
@@ -204,70 +195,16 @@ public class Medications extends CommonController {
      *
      */
     @FXML
-    public ArrayList<String> viewActiveIngredients() throws IOException {
-        Drug drug = getSelectedDrug();
-        ArrayList<String> activeIngredients;
+    public List<String> viewActiveIngredients(Drug drug) throws IOException {
+        List<String> activeIngredients;
         activeIngredients = getActiveIngredients(drug.getDrugName());
         return activeIngredients;
 
     }
 
-    public Drug getSelectedDrug() {
-        Drug drug = view.getSelectedCurrentDrug();
-        if (drug == null) {
-            drug = view.getSelectedHistoricDrug();
-        }
-        if (drug == null) {
-            return null;
-        }
-        return drug;
-    }
-
-    /**
-     * Converts ObservableList of drugs to ArrayList of drugs.
-     *
-     * @param drugs ObservableList of drugs.
-     * @return ArrayList of drugs.
-     */
-    public ArrayList<Drug> convertObservableToArray(ObservableList<Drug> drugs) {
-        ArrayList<Drug> toReturn = new ArrayList<>();
-        for (Drug drug : drugs) {
-            if (drug != null) {
-                toReturn.add(drug);
-            }
-        }
-        return toReturn;
-    }
-
-    /**
-     * Button handler to get and display drug interactions on TableView
-     * tableViewDrugInteractionsName and tableViewDrugInteractions.
-     *
-     */
-    private ArrayList<Drug> getDrugsList() {
-        ArrayList<Drug> drugs;
-        if (convertObservableToArray(
-                view.getSelectedCurrentDrugs()).size() == 2) {
-            drugs = convertObservableToArray(
-                    view.getSelectedCurrentDrugs());
-        } else {
-            if (view.getSelectedHistoricDrugs().size() == 2) {
-                drugs = convertObservableToArray(
-                        view.getSelectedHistoricDrugs());
-            } else {
-                drugs = convertObservableToArray(
-                        view.getSelectedCurrentDrugs());
-                drugs.add(view.getSelectedHistoricDrug());
-            }
-        }
-        return drugs;
-    }
-
-    public Map<String, String> getRawInteractions(Profile p) throws IOException {
+    public Map<String, String> getRawInteractions(Profile p, ArrayList<Drug> drugs) throws IOException {
         Map<String, String> interactionsRaw = new HashMap<>();
         Profile currentProfile = p;
-        ArrayList<Drug> drugs = getDrugsList();
-
         Interaction interaction = cache.get(drugs.get(0).getDrugName(), drugs.get(1).getDrugName());
 
         if (interaction != null) {
@@ -293,24 +230,11 @@ public class Medications extends CommonController {
         }
     }
 
-
-    public ObservableList<String> getObservableDrugsList() {
-        ArrayList<Drug> drugs = getDrugsList();
-        ObservableList<String> drugsList = FXCollections.observableArrayList();
-        drugsList.add("Interactions between:");
-        drugsList.add(drugs.get(0).getDrugName());
-        drugsList.add(drugs.get(1).getDrugName());
-        return drugsList;
-    }
-
     /**
      * Button handler to remove medications from the current medications and move them to historic.
      *
      */
-    public void moveToHistory(Profile currentProfile) {
-        ArrayList<Drug> drugs = convertObservableToArray(
-                view.getSelectedCurrentDrugs());
-
+    public void moveToHistory(Profile currentProfile, ArrayList<Drug> drugs) {
         for (Drug drug : drugs) {
             if (drug != null) {
                 moveDrugToHistory(drug, currentProfile);
@@ -331,10 +255,7 @@ public class Medications extends CommonController {
      * list of drugs.
      *
      */
-    public void moveToCurrent(Profile currentProfile) {
-        ArrayList<Drug> drugs = convertObservableToArray(
-                view.getSelectedHistoricDrugs());
-
+    public void moveToCurrent(Profile currentProfile,ArrayList<Drug> drugs) {
         for (Drug drug : drugs) {
             if (drug != null) {
                 moveDrugToCurrent(drug, currentProfile);

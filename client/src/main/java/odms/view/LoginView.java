@@ -1,30 +1,40 @@
 package odms.view;
 
+import static odms.controller.AlertController.invalidUsername;
+
+import java.io.IOException;
 import java.sql.SQLException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import lombok.extern.slf4j.Slf4j;
+import odms.Session;
+import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.Profile;
+import odms.commons.model.user.User;
+import odms.controller.AlertController;
+import odms.controller.CommonController;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.profile.ProfileDAO;
 import odms.controller.database.user.UserDAO;
-import odms.view.profile.Display;
-import odms.controller.AlertController;
-import odms.controller.CommonController;
 import odms.controller.user.UserNotFoundException;
-import odms.commons.model.user.User;
+import odms.view.profile.Display;
+import odms.view.profile.PasswordPrompt;
 import odms.view.user.ClinicianProfile;
-import java.io.IOException;
 
-import static odms.controller.AlertController.invalidUsername;
-import static odms.controller.AlertController.invalidUsernameOrPassword;
-
+/**
+ * Login view.
+ */
+@Slf4j
 public class LoginView extends CommonController {
 
-    private static User currentUser;
+    private User currentUser;
 
     /**
      * TextField to input username.
@@ -38,60 +48,114 @@ public class LoginView extends CommonController {
     @FXML
     private TextField passwordField;
 
-    public static User getCurrentUser() {
-        return currentUser;
-    }
-
     /**
      * Scene change to profile profile view if log in credentials are valid.
+     * @param event the login button clicked event.
      */
     @FXML
-    private void handleLoginButtonClicked() {
+    private void handleLoginButtonClicked(ActionEvent event) {
         if (!usernameField.getText().equals("")) {
             String username = usernameField.getText();
 
             try {
-                try {
+                if (CommonView.isValidNHI(usernameField.getText())) {
+                    tryLoginProfile(event, username);
+                } else if (isValidUser()) {
                     currentUser = loadUser(username);
-
+                    Session.setCurrentUser(currentUser, currentUser.getUserType());
                     loadUserView(currentUser);
-                } catch (UserNotFoundException u) {
-                    Profile currentProfile = loadProfile(username);
-
-                    loadProfileView(currentProfile);
+                } else {
+                    AlertController.invalidUsernameOrPassword();
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } catch (UserNotFoundException | SQLException | IllegalArgumentException u) {
+                log.error(u.getMessage(), u);
+                AlertController.invalidUsernameOrPassword();
+
             }
         }
     }
 
     /**
-     * Load a profile from the database.
+     * Attempts to log the profile in with their credentials.
+     * @param event    login button clicked event.
+     * @param username Username entered.
+     * @throws SQLException thrown when there is an error in the sql.
+     */
+    private void tryLoginProfile(ActionEvent event, String username) throws SQLException {
+        Profile profile = new Profile(username);
+        profile.setPassword(passwordField.getText());
+        Session.setCurrentUser(profile, UserType.PROFILE);
+
+        if (!hasPassword()) {
+            try {
+                showPasswordPromptWindow(profile, event);
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+            }
+        } else {
+            if (isValidProfile()) {
+                Profile currentProfile = loadProfile(username);
+                loadProfileView(currentProfile);
+            } else {
+                AlertController.invalidUsernameOrPassword();
+            }
+        }
+    }
+
+    /**
+     * Checks the profile has a password.
      *
+     * @return True if they do.
+     */
+    private boolean hasPassword() {
+        ProfileDAO database = DAOFactory.getProfileDao();
+        return database.hasPassword(usernameField.getText());
+    }
+
+    /**
+     * Checks the profiles credentials.
+     * @return boolean if valid credentials.
+     */
+    public boolean isValidProfile() {
+        ProfileDAO database = DAOFactory.getProfileDao();
+        Profile profile = (Profile) Session.getCurrentUser().getKey();
+        return database.checkCredentials(usernameField.getText(), profile.getPassword());
+    }
+
+    /**
+     * Checks the users credentials with the database.
+     * @return Boolean based on if the credentials are correct. True if valid.
+     */
+    private Boolean isValidUser() {
+        UserDAO database = DAOFactory.getUserDao();
+        return database.checkCredentials(usernameField.getText(), passwordField.getText());
+    }
+
+    /**
+     * Load a profile from the database.
      * @param username the username to load
      * @return a profile object
      * @throws SQLException if a SQL error occurs
      */
-    private Profile loadProfile(String username) throws SQLException {
+    public Profile loadProfile(String username) throws SQLException {
         return DAOFactory.getProfileDao().get(username);
     }
 
     /**
      * Load the profile view.
-     *
      * @param profile the profile object whose data will be displayed
      */
-    private void loadProfileView(Profile profile) {
+    public void loadProfileView(Profile profile) {
         try {
             if (profile != null) {
                 FXMLLoader fxmlLoader = new FXMLLoader();
+
                 fxmlLoader.setLocation(
                         getClass().getResource("/view/ProfileDisplay.fxml"));
 
                 Scene scene = new Scene(fxmlLoader.load());
                 Display controller = fxmlLoader.getController();
-                controller.initialize(profile, false, null);
+                controller.initialize(profile, false, null, null);
 
                 Stage stage = new Stage();
                 if (profile.getPreferredName() != null && !profile.getPreferredName().isEmpty()) {
@@ -108,18 +172,16 @@ public class LoginView extends CommonController {
             }
         } catch (NumberFormatException e) {
             AlertController.invalidEntry();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
             invalidUsername();
         }
     }
 
     /**
      * Load a user from the database.
-     *
      * @param username the username to load
      * @return a user object
-     * @throws SQLException if a SQL error occurs
+     * @throws SQLException          if a SQL error occurs
      * @throws UserNotFoundException if a user cannot be found
      */
     private User loadUser(String username) throws SQLException, UserNotFoundException {
@@ -130,33 +192,33 @@ public class LoginView extends CommonController {
 
     /**
      * Load the user view.
+     * @param user user to be loaded.
      */
     private void loadUserView(User user) {
-        if (user.getPassword() != null && passwordField.getText().equals(user.getPassword())) {
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader();
-                fxmlLoader.setLocation(
-                        getClass().getResource("/view/ClinicianProfile.fxml")
-                );
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(
+                    getClass().getResource("/view/ClinicianProfile.fxml")
+            );
 
-                Scene scene = new Scene(fxmlLoader.load());
-                ClinicianProfile v = fxmlLoader.getController();
-                v.setCurrentUser(user);
-                v.initialize();
+            Scene scene = new Scene(fxmlLoader.load());
+            ClinicianProfile v = fxmlLoader.getController();
+            v.setCurrentUser(user);
+            v.initialize();
 
-                Stage stage = new Stage();
-                stage.setTitle(user.getUserType().getName());
-                stage.setScene(scene);
-                stage.show();
-                closeCurrentStage();
-            } catch (IOException e) {
-                invalidUsername();
-            }
-        } else {
-            invalidUsernameOrPassword();
+            Stage stage = new Stage();
+            stage.setTitle(user.getUserType().getName());
+            stage.setScene(scene);
+            stage.show();
+            closeCurrentStage();
+        } catch (IOException e) {
+            invalidUsername();
         }
     }
 
+    /**
+     * Closes the current stage.
+     */
     private void closeCurrentStage() {
         Stage currentStage = (Stage) usernameField.getScene().getWindow();
         currentStage.close();
@@ -164,8 +226,8 @@ public class LoginView extends CommonController {
 
     /**
      * Scene change to create account view.
-     *
      * @param event clicking on the create new account link.
+     * @throws IOException thrown when the window can not be created.
      */
     @FXML
     private void handleCreateNewAccountLinkClicked(ActionEvent event) throws IOException {
@@ -175,10 +237,40 @@ public class LoginView extends CommonController {
     }
 
     /**
+     * Displays a password prompt window when a user logs in and doesn't have a password set.
+     * @param currentProfile the current profile being logged in.
+     * @param event          login button clicked mouse event.
+     * @throws IOException thrown when the window can not be created.
+     */
+    private void showPasswordPromptWindow(Profile currentProfile, ActionEvent event)
+            throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/view/PasswordPrompt.fxml"));
+
+        Scene scene = new Scene(fxmlLoader.load());
+
+        PasswordPrompt view = fxmlLoader.getController();
+        view.initialize(currentProfile, this);
+
+        Stage stage = new Stage();
+        stage.initStyle(StageStyle.UTILITY);
+        stage.setTitle("Set up password");
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.initOwner(((Node) event.getSource()).getScene().getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setAlwaysOnTop(true);
+        stage.centerOnScreen();
+
+        stage.show();
+    }
+
+    /**
      * Handle enter button being used to login.
+     * @param event enter key pressed event.
      */
     @FXML
-    private void onEnter() {
-        handleLoginButtonClicked();
+    private void onEnter(ActionEvent event) {
+        handleLoginButtonClicked(event);
     }
 }

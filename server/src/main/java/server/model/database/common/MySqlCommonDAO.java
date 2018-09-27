@@ -1,47 +1,38 @@
 package server.model.database.common;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import server.model.database.DatabaseConnection;
 
+import java.sql.*;
+import java.util.ArrayList;
+
+@Slf4j
 public class MySqlCommonDAO implements CommonDAO {
 
     /**
      * Establishes a connection with the database and executes the supplied query,
-     * before outputing the result set returned.
-     * @param query
+     * before outputting the result set returned.
+     * @param query the query to execute.
      */
     @Override
     public void queryDatabase(String query) {
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
 
         if (isReadOnlyQuery(query)) {
-            try {
-                Connection connection = connectionInstance.getConnection();
-
-                Statement stmt = connection.createStatement();
+            try (Connection conn = DatabaseConnection.getConnection();
+                    PreparedStatement stmt = conn.prepareStatement(query)) {
                 ResultSet result = stmt.executeQuery(query);
 
                 outputResult(result);
-                connection.close();
-                stmt.close();
-
             } catch (SQLException e) {
                 System.out.println("Please enter a valid read-only query.");
-
             }
         }
     }
 
     /**
      * Returns true if the query supplied is a valid read-only query.
-     * @param query
+     * @param query the SQL query.
      * @return whether the query is a valid read-only query or not.
      */
     private boolean isReadOnlyQuery(String query) {
@@ -57,8 +48,8 @@ public class MySqlCommonDAO implements CommonDAO {
 
     /**
      * Formats the output of the result set supplied.
-     * @param result
-     * @throws SQLException
+     * @param result the execution result.
+     * @throws SQLException if a SQL error occurs.
      */
     private void outputResult(ResultSet result) throws SQLException {
         ResultSetMetaData data = result.getMetaData();

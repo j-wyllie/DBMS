@@ -1,12 +1,13 @@
 package odms.commons.model.enums;
 
 /**
- * Constants for the different organ selection views
+ * Constants for the different organ selection views.
  */
 public enum OrganSelectEnum {
     DONATED,
     DONATING,
-    REQUIRED;
+    REQUIRED,
+    PROCEDURE;
 
     @Override
     public String toString() {
@@ -17,6 +18,8 @@ public enum OrganSelectEnum {
                 return "Organs to Donate";
             case REQUIRED:
                 return "Organs Required";
+            case PROCEDURE:
+                return "Procedure Affected Organs";
             default:
                 throw new IllegalArgumentException();
         }

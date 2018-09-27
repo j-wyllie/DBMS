@@ -3,24 +3,16 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: csse-mysql2
--- Generation Time: Aug 11, 2018 at 02:25 AM
+-- Generation Time: Sep 23, 2018 at 09:43 AM
 -- Server version: 5.6.40
 -- PHP Version: 5.4.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
 --
 -- Database: `seng302-2018-team200-test`
 --
-CREATE DATABASE IF NOT EXISTS `seng302-2018-team200-test` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `seng302-2018-team200-test`;
 
 -- --------------------------------------------------------
 
@@ -47,9 +39,9 @@ CREATE TABLE IF NOT EXISTS `conditions` (
   `ProfileId` int(11) NOT NULL,
   `Description` varchar(100) DEFAULT NULL,
   `DiagnosisDate` datetime DEFAULT NULL,
-  `Chronic` tinyint(1) DEFAULT NULL,
-  `Current` tinyint(1) DEFAULT NULL,
-  `Past` tinyint(1) DEFAULT NULL,
+  `Chronic` BOOLEAN DEFAULT NULL,
+  `Current` BOOLEAN DEFAULT NULL,
+  `Past` BOOLEAN DEFAULT NULL,
   `CuredDate` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -63,7 +55,7 @@ DROP TABLE IF EXISTS `countries`;
 CREATE TABLE IF NOT EXISTS `countries` (
   `Id` int(11) NOT NULL,
   `Name` varchar(50) DEFAULT NULL,
-  `Valid` tinyint(1) DEFAULT '1'
+  `Valid` BOOLEAN DEFAULT TRUE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -77,8 +69,7 @@ CREATE TABLE IF NOT EXISTS `drugs` (
   `Id` int(11) NOT NULL,
   `ProfileId` int(11) NOT NULL,
   `Drug` varchar(50) DEFAULT NULL,
-  `Current` tinyint(1) DEFAULT NULL,
-  `Past` tinyint(1) DEFAULT NULL
+  `Current` BOOLEAN DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -101,16 +92,31 @@ CREATE TABLE IF NOT EXISTS `history` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `medical_interactions`
+-- Table structure for table `hla_type`
 --
 
-DROP TABLE IF EXISTS `medical_interactions`;
-CREATE TABLE IF NOT EXISTS `medical_interactions` (
-  `Id` int(11) NOT NULL,
-  `DrugA` varchar(50) DEFAULT NULL,
-  `DrugB` varchar(50) DEFAULT NULL,
-  `Symptom` varchar(50) DEFAULT NULL,
-  `Duration` varchar(50) DEFAULT NULL
+DROP TABLE IF EXISTS `hla_type`;
+CREATE TABLE IF NOT EXISTS `hla_type` (
+  `ProfileId` int(11) NOT NULL,
+  `AlphaValue` varchar(20),
+  `NumericValue` int(11) NOT NULL,
+  `GroupX` BOOLEAN NOT NULL,
+  `GroupY` BOOLEAN NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `locale`
+--
+
+DROP TABLE IF EXISTS `locale`;
+CREATE TABLE IF NOT EXISTS `locale` (
+  `LocaleId` int(11) NOT NULL,
+  `UserId` int(11) DEFAULT NULL,
+  `ProfileId` int(11) DEFAULT NULL,
+  `DateTimeFormat` varchar(50) DEFAULT NULL,
+  `NumberFormat` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -124,11 +130,11 @@ CREATE TABLE IF NOT EXISTS `organs` (
   `Id` int(11) NOT NULL,
   `ProfileId` int(11) NOT NULL,
   `Organ` varchar(30) DEFAULT NULL,
-  `Donated` tinyint(1) DEFAULT NULL,
-  `ToDonate` tinyint(1) DEFAULT NULL,
-  `Required` tinyint(1) DEFAULT NULL,
-  `Received` tinyint(1) DEFAULT NULL,
-  `Expired` tinyint(1) DEFAULT NULL,
+  `Donated` BOOLEAN DEFAULT NULL,
+  `ToDonate` BOOLEAN DEFAULT NULL,
+  `Required` BOOLEAN DEFAULT NULL,
+  `Received` BOOLEAN DEFAULT NULL,
+  `Expired` BOOLEAN DEFAULT NULL,
   `UserId` int(11) DEFAULT NULL,
   `ExpiryDate` datetime DEFAULT NULL,
   `Note` varchar(200) DEFAULT NULL,
@@ -148,8 +154,36 @@ CREATE TABLE IF NOT EXISTS `procedures` (
   `Summary` varchar(100) DEFAULT NULL,
   `Description` varchar(200) NOT NULL,
   `ProcedureDate` datetime DEFAULT NULL,
-  `Pending` tinyint(1) DEFAULT NULL,
-  `Previous` tinyint(1) DEFAULT NULL
+  `Pending` BOOLEAN DEFAULT NULL,
+  `Previous` BOOLEAN DEFAULT NULL,
+  `Hospital` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hospitals`
+--
+
+DROP TABLE IF EXISTS `hospitals`;
+CREATE TABLE IF NOT EXISTS `hospitals` (
+  `Id` INT(11),
+  `Name` VARCHAR(50) UNIQUE DEFAULT NULL,
+  `Address` VARCHAR(100) DEFAULT NULL,
+  `Latitude` DOUBLE DEFAULT NULL,
+  `Longitude` DOUBLE DEFAULT NULL,
+  `Bone` BOOLEAN DEFAULT FALSE,
+  `BoneMarrow` BOOLEAN DEFAULT FALSE,
+  `ConnectiveTissue` BOOLEAN DEFAULT FALSE,
+  `Cornea` BOOLEAN DEFAULT FALSE,
+  `Heart` BOOLEAN DEFAULT FALSE,
+  `Intestine` BOOLEAN DEFAULT FALSE,
+  `Kidney` BOOLEAN DEFAULT FALSE,
+  `Liver` BOOLEAN DEFAULT FALSE,
+  `Lung` BOOLEAN DEFAULT FALSE,
+  `MiddleEar` BOOLEAN DEFAULT FALSE,
+  `Pancreas` BOOLEAN DEFAULT FALSE,
+  `Skin` BOOLEAN DEFAULT FALSE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -160,9 +194,10 @@ CREATE TABLE IF NOT EXISTS `procedures` (
 
 DROP TABLE IF EXISTS `profiles`;
 CREATE TABLE IF NOT EXISTS `profiles` (
-  `ProfileId` int(11) NOT NULL,
+  `ProfileId` int(11) DEFAULT NULL,
   `NHI` varchar(20) UNIQUE DEFAULT NULL,
   `Username` varchar(50) UNIQUE DEFAULT NULL,
+  `Password` varchar(100) DEFAULT NULL,
   `IsDonor` tinyint(1) DEFAULT '0',
   `IsReceiver` tinyint(1) DEFAULT '0',
   `GivenNames` varchar(50) DEFAULT NULL,
@@ -195,7 +230,10 @@ CREATE TABLE IF NOT EXISTS `profiles` (
   `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
   `PreferredName` varchar(50) DEFAULT NULL,
   `PreferredGender` varchar(30) DEFAULT NULL,
-  `ImageName` varchar(50) DEFAULT NULL
+  `ImageName` varchar(50) DEFAULT NULL,
+  `LastBloodDonation` datetime DEFAULT CURRENT_TIMESTAMP,
+  `BloodDonationPoints` int(11) DEFAULT NULL,
+  `Token` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -208,15 +246,17 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `UserId` int(11) NOT NULL,
   `Username` varchar(50) UNIQUE DEFAULT NULL,
-  `Password` varchar(50) DEFAULT NULL,
+  `Password` varchar(100) DEFAULT NULL,
   `Name` varchar(100) DEFAULT NULL,
   `UserType` varchar(30) DEFAULT NULL,
   `Address` varchar(50) DEFAULT NULL,
   `Region` varchar(30) DEFAULT NULL,
+  `Country` varchar(50) DEFAULT NULL,
   `Created` datetime DEFAULT CURRENT_TIMESTAMP,
   `LastUpdated` datetime DEFAULT CURRENT_TIMESTAMP,
-  `IsDefault` tinyint(1) DEFAULT '0',
-  `ImageName` varchar(50) DEFAULT NULL
+  `IsDefault` BOOLEAN DEFAULT FALSE,
+  `ImageName` varchar(50) DEFAULT NULL,
+  `Token` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -258,10 +298,23 @@ ALTER TABLE `history`
   ADD KEY `EntityId` (`EntityId`);
 
 --
--- Indexes for table `medical_interactions`
+-- Indexes for table `hla_type`
 --
-ALTER TABLE `medical_interactions`
-  ADD PRIMARY KEY (`Id`);
+ALTER TABLE `hla_type`
+  ADD KEY `ProfileId` (`ProfileId`);
+
+--
+-- Indexes for table `hospitals`
+--
+ALTER TABLE `hospitals`
+  ADD PRIMARY KEY (`Id`),
+  ADD UNIQUE KEY `Id` (`Id`);
+
+--
+-- Indexes for table `locale`
+--
+ALTER TABLE `locale`
+  ADD PRIMARY KEY (`LocaleId`);
 
 --
 -- Indexes for table `organs`
@@ -275,23 +328,22 @@ ALTER TABLE `organs`
 --
 ALTER TABLE `procedures`
   ADD PRIMARY KEY (`Id`),
-  ADD KEY `ProfileId` (`ProfileId`);
+  ADD KEY `ProfileId` (`ProfileId`),
+  ADD KEY `Hospitals` (`Hospital`);
 
 --
 -- Indexes for table `profiles`
 --
 ALTER TABLE `profiles`
-  ADD PRIMARY KEY (`ProfileId`);
+  ADD PRIMARY KEY (`ProfileId`),
+  ADD KEY (`ProfileId`);
 
 --
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`UserId`);
-
---
--- AUTO_INCREMENT for dumped tables
---
+  ADD PRIMARY KEY (`UserId`),
+  ADD KEY (`UserId`);
 
 --
 -- AUTO_INCREMENT for table `affected_organs`
@@ -319,10 +371,15 @@ ALTER TABLE `drugs`
 ALTER TABLE `history`
   MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `medical_interactions`
+-- AUTO_INCREMENT for table `hospitals`
 --
-ALTER TABLE `medical_interactions`
+ALTER TABLE `hospitals`
   MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `locale`
+--
+ALTER TABLE `locale`
+  MODIFY `LocaleId` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `organs`
 --
@@ -351,44 +408,56 @@ ALTER TABLE `users`
 -- Constraints for table `affected_organs`
 --
 ALTER TABLE `affected_organs`
-  ADD CONSTRAINT `affected_organs_ibfk_1` FOREIGN KEY (`ProcedureId`) REFERENCES `procedures` (`Id`);
+  ADD CONSTRAINT `affected_organs_ibfk_1` FOREIGN KEY (`ProcedureId`) REFERENCES `procedures` (`Id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `conditions`
 --
 ALTER TABLE `conditions`
-  ADD CONSTRAINT `conditions_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`);
+  ADD CONSTRAINT `conditions_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `drugs`
 --
 ALTER TABLE `drugs`
-  ADD CONSTRAINT `drugs_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`);
+  ADD CONSTRAINT `drugs_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `history`
 --
 ALTER TABLE `history`
-  ADD CONSTRAINT `history_ibfk_1` FOREIGN KEY (`EntityId`) REFERENCES `profiles` (`ProfileId`),
-  ADD CONSTRAINT `history_ibfk_2` FOREIGN KEY (`EntityId`) REFERENCES `users` (`UserId`);
+  ADD CONSTRAINT `history_ibfk_1` FOREIGN KEY (`EntityId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE,
+  ADD CONSTRAINT `history_ibfk_2` FOREIGN KEY (`EntityId`) REFERENCES `users` (`UserId`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `hla_type`
+--
+ALTER TABLE `hla_type`
+  ADD CONSTRAINT `hla_type_profile` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `locale`
+--
+ALTER TABLE `locale`
+  ADD CONSTRAINT `locale_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
+ALTER TABLE `locale`
+  ADD CONSTRAINT `locale_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `organs`
 --
 ALTER TABLE `organs`
-  ADD CONSTRAINT `organs_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`);
+  ADD CONSTRAINT `organs_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
 ALTER TABLE `organs`
-  ADD CONSTRAINT `organs_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`);
+  ADD CONSTRAINT `organs_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserId`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `procedures`
 --
 ALTER TABLE `procedures`
-  ADD CONSTRAINT `procedures_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`);
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+  ADD CONSTRAINT `procedures_ibfk_1` FOREIGN KEY (`ProfileId`) REFERENCES `profiles` (`ProfileId`) ON DELETE CASCADE;
+ALTER TABLE `procedures`
+  ADD CONSTRAINT `procedures_ibfk_2` FOREIGN KEY (`Hospital`) REFERENCES `hospitals` (`Id`);
 
 INSERT INTO `countries` (`Id`, `Name`, `Valid`) VALUES
   (1, 'NZ', 1),

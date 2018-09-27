@@ -2,17 +2,30 @@ package server.controller;
 
 import java.sql.SQLException;
 import java.util.List;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.CountriesEnum;
-import odms.commons.model.enums.OrganEnum;
-import org.sonar.api.internal.google.gson.Gson;
-import org.sonar.api.internal.google.gson.JsonObject;
-import org.sonar.api.internal.google.gson.JsonParser;
 import server.model.database.DAOFactory;
 import server.model.database.country.CountryDAO;
+import server.model.enums.DataTypeEnum;
+import server.model.enums.KeyEnum;
+import server.model.enums.ResponseMsgEnum;
 import spark.Request;
 import spark.Response;
 
+@Slf4j
 public class CountriesController {
+
+    /**
+     * Prevent instantiation of static class.
+     */
+    private CountriesController() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Gets a list of all the countries in the database
@@ -22,13 +35,13 @@ public class CountriesController {
      * @return The response body as a list of Json object of countries
      */
     public static String getAll(Request req, Response res) {
-        // This boolean is optional so it needs to be null
+        // This boolean is optional so it needs to be null.
         Boolean valid = null;
         List<String> countries;
 
         // This query is optional so only assign it if it exists
-        if (req.queryMap().hasKey("valid")) {
-            valid = Boolean.valueOf(req.queryParams("valid"));
+        if (req.queryParams(KeyEnum.VALID.toString()) != null) {
+            valid = Boolean.valueOf(req.queryParams(KeyEnum.VALID.toString()));
         }
 
         try {
@@ -41,7 +54,7 @@ public class CountriesController {
         Gson gson = new Gson();
         String responseBody = gson.toJson(countries);
 
-        res.type("application/json");
+        res.type(DataTypeEnum.JSON.toString());
         res.status(200);
 
         return responseBody;
@@ -54,29 +67,33 @@ public class CountriesController {
      * @return The response body
      */
     public static String edit(Request req, Response res) {
-        System.out.print("here");
         CountryDAO countryDAO = DAOFactory.getCountryDAO();
         JsonParser parser = new JsonParser();
-        String name;
+        CountriesEnum name;
         boolean valid;
 
         try {
             JsonObject body = parser.parse(req.body()).getAsJsonObject();
-            name = body.get("name").getAsString();
-            valid = body.get("valid").getAsBoolean();
-        } catch (Exception e) {
-            e.printStackTrace();
+            JsonElement country = body.get(KeyEnum.NAME.toString());
+            JsonElement validCountry = body.get(KeyEnum.VALID.toString());
+            if (country == null || validCountry == null) {
+                throw new IllegalArgumentException("required fields missing from body.");
+            }
+            name = CountriesEnum.valueOf(country.getAsString());
+            valid = validCountry.getAsBoolean();
+
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage(), e);
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
         try {
-            countryDAO.update(CountriesEnum.valueOf(name), valid);
+            countryDAO.update(name, valid);
             res.status(200);
             return "Country Updated";
-        }
-        catch (Exception e) {
-            res.status(400);
-            return "Bad Request";
+        } catch (SQLException e) {
+            res.status(500);
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
     }
 

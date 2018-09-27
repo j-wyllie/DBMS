@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -7,6 +13,8 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
@@ -19,7 +27,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+
 <?import odms.controller.DateTimePicker?>
 
 <AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.profile.ProfileEdit">
@@ -52,524 +60,660 @@
                                         <RowConstraints maxHeight="224.0" minHeight="10.0" prefHeight="208.0" vgrow="SOMETIMES" />
                                         <RowConstraints maxHeight="229.0" minHeight="10.0" prefHeight="143.0" vgrow="SOMETIMES" />
                                     </rowConstraints>
-                                    <TilePane prefHeight="344.0" prefWidth="422.0" style="-fx-background-color: #e3e3e5;" GridPane.rowSpan="2">
-                                        <GridPane.margin>
-                                            <Insets bottom="20.0" left="20.0" right="10.0" top="20.0" />
-                                        </GridPane.margin>
-                                        <GridPane focusTraversable="true" prefHeight="378.0" prefWidth="422.0">
-                                            <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="109.0" minWidth="10.0" prefWidth="107.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="161.0" minWidth="10.0" prefWidth="130.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                            </columnConstraints>
-                                            <rowConstraints>
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="36.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="48.0" minHeight="10.0" prefHeight="37.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="54.0" minHeight="10.0" prefHeight="42.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="52.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="61.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="50.0" minHeight="13.0" prefHeight="40.0" />
-                                                <RowConstraints maxHeight="47.0" minHeight="10.0" prefHeight="42.0" />
-                                                <RowConstraints maxHeight="50.0" minHeight="13.0" prefHeight="40.0" />
-                                                <RowConstraints maxHeight="47.0" minHeight="10.0" prefHeight="42.0" />
-                                                <RowConstraints maxHeight="47.0" minHeight="10.0" prefHeight="42.0" />
-                                                <RowConstraints maxHeight="47.0" minHeight="10.0" prefHeight="42.0" />
-                                            </rowConstraints>
-                                            <TilePane.margin>
-                                                <Insets top="60.0" />
-                                            </TilePane.margin>
-                                            <ImageView fitHeight="28.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" />
-                                                </GridPane.margin>
-                                                <Image url="@../icons/phone.png" />
-                                            </ImageView>
-                                            <Label prefHeight="69.0" prefWidth="207.0" styleClass="detail-text-header" stylesheets="@../styles/Profile.css" text="CONTACT" GridPane.columnSpan="3">
-                                                <GridPane.margin>
-                                                    <Insets left="60.0" />
-                                                </GridPane.margin>
-                                                <font>
-                                                    <Font name="Arial Bold" size="25.0" />
-                                                </font>
-                                            </Label>
-                                            <Label prefHeight="58.0" prefWidth="401.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Phone : " GridPane.columnSpan="2" GridPane.rowIndex="1">
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" right="70.0" />
-                                                </GridPane.margin>
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                            </Label>
-                                            <Label layoutX="30.0" layoutY="99.0" prefHeight="55.0" prefWidth="401.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Email :" GridPane.columnSpan="2" GridPane.rowIndex="2">
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" right="70.0" />
-                                                </GridPane.margin>
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                            </Label>
-                                            <Label layoutX="30.0" layoutY="167.0" prefHeight="56.0" prefWidth="401.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Address : " GridPane.columnSpan="2" GridPane.rowIndex="3">
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" right="50.0" />
-                                                </GridPane.margin>
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                            </Label>
-                                            <Label layoutX="30.0" layoutY="235.0" prefHeight="57.0" prefWidth="401.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Region : " GridPane.columnSpan="2" GridPane.rowIndex="4">
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" right="70.0" />
-                                                </GridPane.margin>
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                            </Label>
-                                            <TextField fx:id="phoneField" onKeyTyped="#editTrueKey" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
-                                                <GridPane.margin>
-                                                    <Insets left="30.0" right="50.0" />
-                                                </GridPane.margin>
-                                            </TextField>
-                                            <TextField fx:id="emailField" layoutX="140.0" layoutY="67.0" onKeyTyped="#editTrueKey" promptText="example@example.com" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
-                                                <GridPane.margin>
-                                                    <Insets left="30.0" right="50.0" />
-                                                </GridPane.margin>
-                                            </TextField>
-                                            <TextField fx:id="addressField" layoutX="140.0" layoutY="118.0" onKeyTyped="#editTrueKey" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
-                                                <GridPane.margin>
-                                                    <Insets left="30.0" right="50.0" />
-                                                </GridPane.margin>
-                                            </TextField>
-                                            <Label prefHeight="50.0" prefWidth="108.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Country : " GridPane.columnSpan="2" GridPane.rowIndex="5">
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" right="50.0" />
-                                                </GridPane.margin>
-                                            </Label>
-                                            <ComboBox fx:id="comboCountry" maxWidth="1.7976931348623157E308" onAction="#refreshRegionSelection" prefHeight="25.0" prefWidth="210.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
-                                                <opaqueInsets>
-                                                    <Insets />
-                                                </opaqueInsets>
-                                                <GridPane.margin>
-                                                    <Insets left="30.0" right="50.0" />
-                                                </GridPane.margin>
-                                            </ComboBox>
-                                            <ComboBox fx:id="comboCountryOfDeath" maxWidth="1.7976931348623157E308" onAction="#refreshRegionOfDeathSelection" prefHeight="25.0" prefWidth="210.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="10">
-                                                <opaqueInsets>
-                                                    <Insets />
-                                                </opaqueInsets>
-                                                <GridPane.margin>
-                                                    <Insets left="30.0" right="50.0" />
-                                                </GridPane.margin>
-                                            </ComboBox>
-                                            <ComboBox fx:id="comboRegion" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
-                                                <opaqueInsets>
-                                                    <Insets />
-                                                </opaqueInsets>
-                                                <GridPane.margin>
-                                                    <Insets left="30.0" right="50.0" />
-                                                </GridPane.margin>
-                                            </ComboBox>
-                                            <ComboBox fx:id="comboRegionOfDeath" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="9">
-                                                <opaqueInsets>
-                                                    <Insets />
-                                                </opaqueInsets>
-                                                <GridPane.margin>
-                                                    <Insets left="30.0" right="50.0" />
-                                                </GridPane.margin>
-                                            </ComboBox>
-                                            <TextField fx:id="regionField" onKeyTyped="#editTrueKey" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
-                                                <GridPane.margin>
-                                                    <Insets left="30.0" right="50.0" />
-                                                </GridPane.margin>
-                                            </TextField>
-                                            <TextField fx:id="regionOfDeathField" onKeyTyped="#editTrueKey" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="9">
-                                                <GridPane.margin>
-                                                    <Insets left="30.0" right="50.0" />
-                                                </GridPane.margin>
-                                            </TextField>
-                                            <Label prefHeight="30.0" prefWidth="94.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="City :" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" />
-                                                </GridPane.margin>
-                                            </Label>
-                                            <TextField fx:id="cityField" prefHeight="25.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
-                                                <GridPane.margin>
-                                                    <Insets left="30.0" right="50.0" />
-                                                </GridPane.margin>
-                                            </TextField>
-                                            <TextField fx:id="cityOfDeathField" prefHeight="25.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="11">
-                                                <GridPane.margin>
-                                                    <Insets left="30.0" right="50.0" />
-                                                </GridPane.margin>
-                                            </TextField>
-                                            <Label prefHeight="57.0" prefWidth="401.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Photo :" GridPane.columnSpan="2" GridPane.rowIndex="7">
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" right="70.0" />
-                                                </GridPane.margin>
-                                            </Label>
-                                            <Button mnemonicParsing="false" onAction="#handleChooseImageClicked" text="Choose Photo" GridPane.columnIndex="1" GridPane.rowIndex="7">
-                                                <GridPane.margin>
-                                                    <Insets left="30.0" />
-                                                </GridPane.margin>
-                                            </Button>
-                                            <Label fx:id="pictureLabel" text="No Photo Selected" textFill="#0048ff" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="RIGHT" GridPane.rowIndex="7" GridPane.valignment="CENTER">
-                                                <GridPane.margin>
-                                                    <Insets left="135.0" right="20.0" />
-                                                </GridPane.margin>
-                                            </Label>
-                                            <Button fx:id="removePhotoBtn" mnemonicParsing="false" onAction="#handleRemoveImageClicked" text="Remove Photo" visible="false" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER">
-                                                <GridPane.margin>
-                                                    <Insets right="50.0" />
-                                                </GridPane.margin>
-                                            </Button>
-                                            <Label layoutX="30.0" layoutY="238.0" prefHeight="37.0" prefWidth="118.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Region :" GridPane.columnSpan="2147483647" GridPane.rowIndex="9">
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" />
-                                                </GridPane.margin>
-                                            </Label>
-                                            <Label layoutX="10.0" layoutY="275.0" prefHeight="57.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Country :" GridPane.columnSpan="2" GridPane.rowIndex="10">
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" />
-                                                </GridPane.margin>
-                                            </Label>
-                                            <Label layoutX="10.0" layoutY="312.0" prefHeight="35.0" prefWidth="67.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="City :" GridPane.rowIndex="11">
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" />
-                                                </GridPane.margin>
-                                            </Label>
-                                            <Label layoutX="30.0" layoutY="186.0" prefHeight="30.0" prefWidth="152.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Death details :" GridPane.columnSpan="2" GridPane.rowIndex="8">
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" />
-                                                </GridPane.margin>
-                                            </Label>
-                                        </GridPane>
-                                    </TilePane>
-                                    <TilePane layoutX="30.0" layoutY="30.0" prefHeight="492.0" prefWidth="724.0" style="-fx-background-color: #e3e3e5;" GridPane.columnIndex="1" GridPane.rowSpan="3">
-                                        <GridPane.margin>
-                                            <Insets bottom="30.0" left="10.0" right="20.0" top="20.0" />
-                                        </GridPane.margin>
-                                        <children>
-                                        <GridPane focusTraversable="true" prefHeight="451.0" prefWidth="720.0">
-                                            <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                            </columnConstraints>
-                                            <rowConstraints>
-                                                <RowConstraints maxHeight="54.0" minHeight="10.0" prefHeight="53.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="46.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
-                                            </rowConstraints>
-                                            <children>
-                                            <ImageView fitHeight="26.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                                <image>
-                                                    <Image url="@../icons/list.png" />
-                                                </image>
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" />
-                                                </GridPane.margin>
-                                            </ImageView>
-                                            <Label prefHeight="74.0" prefWidth="207.0" styleClass="detail-text-header" stylesheets="@../styles/Profile.css" text="DETAILS" GridPane.columnSpan="2">
-                                                <font>
-                                                    <Font name="Arial Bold" size="25.0" />
-                                                </font>
-                                                <GridPane.margin>
-                                                    <Insets left="60.0" />
-                                                </GridPane.margin>
-                                            </Label>
-                                            <Label layoutX="30.0" layoutY="235.0" prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Given names : " GridPane.columnSpan="3" GridPane.rowIndex="1">
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" />
-                                                </GridPane.margin>
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                            </Label>
-                                            <TextField fx:id="givenNamesField" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
-                                                <GridPane.margin>
-                                                    <Insets right="20.0" />
-                                                </GridPane.margin>
-                                            </TextField>
-                                            <Label layoutX="30.0" layoutY="99.0" prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Surnames : " GridPane.columnSpan="3" GridPane.rowIndex="2">
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" />
-                                                </GridPane.margin>
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                            </Label>
-                                            <TextField fx:id="lastNamesField" layoutX="210.0" layoutY="68.0" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
-                                                <GridPane.margin>
-                                                    <Insets right="20.0" />
-                                                </GridPane.margin>
-                                            </TextField>
-                                            <Label layoutX="30.0" layoutY="110.0" prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Preferred Name :" GridPane.columnSpan="3" GridPane.rowIndex="3">
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" />
-                                                </GridPane.margin>
-                                            </Label>
-                                            <TextField fx:id="preferredNameField" layoutX="230.0" layoutY="115.0" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
-                                                <GridPane.margin>
-                                                    <Insets right="20.0" />
-                                                </GridPane.margin>
-                                            </TextField>
-                                            <Label layoutX="30.0" layoutY="132.0" prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="NHI : " GridPane.columnSpan="3" GridPane.rowIndex="4">
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" />
-                                                </GridPane.margin>
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                            </Label>
-                                            <TextField fx:id="nhiField" layoutX="210.0" layoutY="115.0" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
-                                                <GridPane.margin>
-                                                    <Insets right="20.0" />
-                                                </GridPane.margin>
-                                            </TextField>
-                                            <Label prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Date of birth : " GridPane.columnSpan="3" GridPane.rowIndex="5">
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" />
-                                                </GridPane.margin>
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                            </Label>
-                                            <DatePicker fx:id="dobDatePicker" prefHeight="25.0" prefWidth="520.0" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
-                                                <GridPane.margin>
-                                                    <Insets right="20.0" />
-                                                </GridPane.margin>
-                                            </DatePicker>
-                                            <Label layoutX="30.0" layoutY="158.0" prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Date of death : " GridPane.columnSpan="3" GridPane.rowIndex="6">
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" />
-                                                </GridPane.margin>
-                                            </Label>
-                                            <DateTimePicker fx:id="dodDateTimePicker" prefHeight="25.0" prefWidth="527.0" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
-                                                <GridPane.margin>
-                                                    <Insets right="20.0" />
-                                                </GridPane.margin>
-                                            </DateTimePicker>
-                                            <Label layoutX="30.0" layoutY="99.0" prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Gender : " GridPane.columnSpan="3" GridPane.rowIndex="7">
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" />
-                                                </GridPane.margin>
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                            </Label>
-                                            <ComboBox fx:id="comboGender" layoutX="230.0" layoutY="320.0" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="7">
-                                                <opaqueInsets>
-                                                    <Insets />
-                                                </opaqueInsets>
-                                            </ComboBox>
-                                            <Label layoutX="30.0" layoutY="270.0" prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Preferred Gender :" GridPane.columnSpan="3" GridPane.rowIndex="8">
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" />
-                                                </GridPane.margin>
-                                                <font>
-                                                    <Font size="15.0" />
-                                                </font>
-                                            </Label>
-                                            <ComboBox fx:id="comboGenderPref" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="8">
-                                                <opaqueInsets>
-                                                    <Insets />
-                                                </opaqueInsets>
-                                            </ComboBox>
-                                            <Label layoutX="30.0" layoutY="167.0" prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Height : " GridPane.columnSpan="3" GridPane.rowIndex="9">
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" />
-                                                </GridPane.margin>
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                            </Label>
-                                            <TextField fx:id="heightField" layoutX="210.0" layoutY="306.0" promptText="cm" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="9">
-                                                <GridPane.margin>
-                                                    <Insets right="20.0" />
-                                                </GridPane.margin>
-                                            </TextField>
-                                            <Label layoutX="30.0" layoutY="235.0" prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Weight : " GridPane.columnSpan="3" GridPane.rowIndex="10">
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" />
-                                                </GridPane.margin>
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                            </Label>
-                                            <TextField fx:id="weightField" layoutX="210.0" layoutY="358.0" promptText="kg" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="10">
-                                                <GridPane.margin>
-                                                    <Insets right="20.0" />
-                                                </GridPane.margin>
-                                            </TextField>
-                                            </children>
-                                        </GridPane>
-                                        </children>
-                                    </TilePane>
-                                    <ToolBar maxWidth="256.0" prefHeight="66.0" prefWidth="250.0" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
-                                        <GridPane.margin>
-                                            <Insets bottom="30.0" left="20.0" />
-                                        </GridPane.margin>
-                                        <Button layoutX="64.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleSaveButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/tick.png); -fx-background-size: stretch;" />
-                                        <Button layoutX="122.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleCancelButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/icon.png); -fx-background-size: stretch;" />
-                                    </ToolBar>
+                                   <children>
+                                       <TilePane prefHeight="344.0" prefWidth="422.0" style="-fx-background-color: #e3e3e5;" GridPane.rowSpan="2">
+                                           <GridPane.margin>
+                                               <Insets bottom="20.0" left="20.0" right="10.0" top="20.0" />
+                                           </GridPane.margin>
+                                          <children>
+                                              <GridPane focusTraversable="true" prefHeight="378.0" prefWidth="422.0">
+                                                  <columnConstraints>
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="109.0" minWidth="10.0" prefWidth="107.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="161.0" minWidth="10.0" prefWidth="130.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                  </columnConstraints>
+                                                  <rowConstraints>
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="36.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="48.0" minHeight="10.0" prefHeight="37.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="54.0" minHeight="10.0" prefHeight="42.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="52.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="61.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="50.0" minHeight="13.0" prefHeight="40.0" />
+                                                      <RowConstraints maxHeight="47.0" minHeight="10.0" prefHeight="42.0" />
+                                                      <RowConstraints maxHeight="50.0" minHeight="13.0" prefHeight="40.0" />
+                                                      <RowConstraints maxHeight="47.0" minHeight="10.0" prefHeight="42.0" />
+                                                      <RowConstraints maxHeight="47.0" minHeight="10.0" prefHeight="42.0" />
+                                                      <RowConstraints maxHeight="47.0" minHeight="10.0" prefHeight="42.0" />
+                                                  </rowConstraints>
+                                                  <TilePane.margin>
+                                                      <Insets top="60.0" />
+                                                  </TilePane.margin>
+                                                 <children>
+                                                     <ImageView fitHeight="28.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                                                         <GridPane.margin>
+                                                             <Insets left="20.0" />
+                                                         </GridPane.margin>
+                                                        <image>
+                                                            <Image url="@../icons/phone.png" />
+                                                        </image>
+                                                     </ImageView>
+                                                     <Label prefHeight="69.0" prefWidth="207.0" styleClass="detail-text-header" stylesheets="@../styles/Profile.css" text="CONTACT" GridPane.columnSpan="3">
+                                                         <GridPane.margin>
+                                                             <Insets left="60.0" />
+                                                         </GridPane.margin>
+                                                         <font>
+                                                             <Font name="Arial Bold" size="25.0" />
+                                                         </font>
+                                                     </Label>
+                                                     <Label prefHeight="58.0" prefWidth="401.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Phone : " GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                         <GridPane.margin>
+                                                             <Insets left="20.0" right="70.0" />
+                                                         </GridPane.margin>
+                                                         <font>
+                                                             <Font size="22.0" />
+                                                         </font>
+                                                     </Label>
+                                                     <Label layoutX="30.0" layoutY="99.0" prefHeight="55.0" prefWidth="401.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Email :" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                         <GridPane.margin>
+                                                             <Insets left="20.0" right="70.0" />
+                                                         </GridPane.margin>
+                                                         <font>
+                                                             <Font size="22.0" />
+                                                         </font>
+                                                     </Label>
+                                                     <Label layoutX="30.0" layoutY="167.0" prefHeight="56.0" prefWidth="401.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Address : " GridPane.columnSpan="2" GridPane.rowIndex="3">
+                                                         <GridPane.margin>
+                                                             <Insets left="20.0" right="50.0" />
+                                                         </GridPane.margin>
+                                                         <font>
+                                                             <Font size="22.0" />
+                                                         </font>
+                                                     </Label>
+                                                     <Label layoutX="30.0" layoutY="235.0" prefHeight="57.0" prefWidth="401.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Region : " GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                                         <GridPane.margin>
+                                                             <Insets left="20.0" right="70.0" />
+                                                         </GridPane.margin>
+                                                         <font>
+                                                             <Font size="22.0" />
+                                                         </font>
+                                                     </Label>
+                                                     <TextField fx:id="phoneField" onKeyTyped="#editTrueKey" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                                                         <GridPane.margin>
+                                                             <Insets left="30.0" right="50.0" />
+                                                         </GridPane.margin>
+                                                     </TextField>
+                                                     <TextField fx:id="emailField" layoutX="140.0" layoutY="67.0" onKeyTyped="#editTrueKey" promptText="example@example.com" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+                                                         <GridPane.margin>
+                                                             <Insets left="30.0" right="50.0" />
+                                                         </GridPane.margin>
+                                                     </TextField>
+                                                     <TextField fx:id="addressField" layoutX="140.0" layoutY="118.0" onKeyTyped="#editTrueKey" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+                                                         <GridPane.margin>
+                                                             <Insets left="30.0" right="50.0" />
+                                                         </GridPane.margin>
+                                                     </TextField>
+                                                     <Label prefHeight="50.0" prefWidth="108.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Country : " GridPane.columnSpan="2" GridPane.rowIndex="5">
+                                                         <font>
+                                                             <Font size="22.0" />
+                                                         </font>
+                                                         <GridPane.margin>
+                                                             <Insets left="20.0" right="50.0" />
+                                                         </GridPane.margin>
+                                                     </Label>
+                                                     <ComboBox fx:id="comboCountry" maxWidth="1.7976931348623157E308" onAction="#refreshRegionSelection" prefHeight="25.0" prefWidth="210.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+                                                         <opaqueInsets>
+                                                             <Insets />
+                                                         </opaqueInsets>
+                                                         <GridPane.margin>
+                                                             <Insets left="30.0" right="50.0" />
+                                                         </GridPane.margin>
+                                                     </ComboBox>
+                                                     <ComboBox fx:id="comboCountryOfDeath" maxWidth="1.7976931348623157E308" onAction="#refreshRegionOfDeathSelection" prefHeight="25.0" prefWidth="210.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="10">
+                                                         <opaqueInsets>
+                                                             <Insets />
+                                                         </opaqueInsets>
+                                                         <GridPane.margin>
+                                                             <Insets left="30.0" right="50.0" />
+                                                         </GridPane.margin>
+                                                     </ComboBox>
+                                                     <ComboBox fx:id="comboRegion" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+                                                         <opaqueInsets>
+                                                             <Insets />
+                                                         </opaqueInsets>
+                                                         <GridPane.margin>
+                                                             <Insets left="30.0" right="50.0" />
+                                                         </GridPane.margin>
+                                                     </ComboBox>
+                                                     <ComboBox fx:id="comboRegionOfDeath" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="9">
+                                                         <opaqueInsets>
+                                                             <Insets />
+                                                         </opaqueInsets>
+                                                         <GridPane.margin>
+                                                             <Insets left="30.0" right="50.0" />
+                                                         </GridPane.margin>
+                                                     </ComboBox>
+                                                     <TextField fx:id="regionField" onKeyTyped="#editTrueKey" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+                                                         <GridPane.margin>
+                                                             <Insets left="30.0" right="50.0" />
+                                                         </GridPane.margin>
+                                                     </TextField>
+                                                     <TextField fx:id="regionOfDeathField" onKeyTyped="#editTrueKey" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="9">
+                                                         <GridPane.margin>
+                                                             <Insets left="30.0" right="50.0" />
+                                                         </GridPane.margin>
+                                                     </TextField>
+                                                     <Label prefHeight="30.0" prefWidth="94.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="City :" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
+                                                         <font>
+                                                             <Font size="22.0" />
+                                                         </font>
+                                                         <GridPane.margin>
+                                                             <Insets left="20.0" />
+                                                         </GridPane.margin>
+                                                     </Label>
+                                                     <TextField fx:id="cityField" prefHeight="25.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
+                                                         <GridPane.margin>
+                                                             <Insets left="30.0" right="50.0" />
+                                                         </GridPane.margin>
+                                                     </TextField>
+                                                     <TextField fx:id="cityOfDeathField" prefHeight="25.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="11">
+                                                         <GridPane.margin>
+                                                             <Insets left="30.0" right="50.0" />
+                                                         </GridPane.margin>
+                                                     </TextField>
+                                                     <Label prefHeight="57.0" prefWidth="401.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Photo :" GridPane.columnSpan="2" GridPane.rowIndex="7">
+                                                         <font>
+                                                             <Font size="22.0" />
+                                                         </font>
+                                                         <GridPane.margin>
+                                                             <Insets left="20.0" right="70.0" />
+                                                         </GridPane.margin>
+                                                     </Label>
+                                                     <Button mnemonicParsing="false" onAction="#handleChooseImageClicked" text="Choose Photo" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                                                         <GridPane.margin>
+                                                             <Insets left="30.0" />
+                                                         </GridPane.margin>
+                                                     </Button>
+                                                     <Label fx:id="pictureLabel" text="No Photo Selected" textFill="#0048ff" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="RIGHT" GridPane.rowIndex="7" GridPane.valignment="CENTER">
+                                                         <GridPane.margin>
+                                                             <Insets left="135.0" right="20.0" />
+                                                         </GridPane.margin>
+                                                     </Label>
+                                                     <Button fx:id="removePhotoBtn" mnemonicParsing="false" onAction="#handleRemoveImageClicked" text="Remove Photo" visible="false" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER">
+                                                         <GridPane.margin>
+                                                             <Insets right="50.0" />
+                                                         </GridPane.margin>
+                                                     </Button>
+                                                     <Label layoutX="30.0" layoutY="238.0" prefHeight="37.0" prefWidth="118.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Region :" GridPane.columnSpan="2147483647" GridPane.rowIndex="9">
+                                                         <font>
+                                                             <Font size="22.0" />
+                                                         </font>
+                                                         <GridPane.margin>
+                                                             <Insets left="20.0" />
+                                                         </GridPane.margin>
+                                                     </Label>
+                                                     <Label layoutX="10.0" layoutY="275.0" prefHeight="57.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Country :" GridPane.columnSpan="2" GridPane.rowIndex="10">
+                                                         <font>
+                                                             <Font size="22.0" />
+                                                         </font>
+                                                         <GridPane.margin>
+                                                             <Insets left="20.0" />
+                                                         </GridPane.margin>
+                                                     </Label>
+                                                     <Label layoutX="10.0" layoutY="312.0" prefHeight="35.0" prefWidth="67.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="City :" GridPane.rowIndex="11">
+                                                         <font>
+                                                             <Font size="22.0" />
+                                                         </font>
+                                                         <GridPane.margin>
+                                                             <Insets left="20.0" />
+                                                         </GridPane.margin>
+                                                     </Label>
+                                                     <Label layoutX="30.0" layoutY="186.0" prefHeight="30.0" prefWidth="152.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Death details :" GridPane.columnSpan="2" GridPane.rowIndex="8">
+                                                         <font>
+                                                             <Font size="22.0" />
+                                                         </font>
+                                                         <GridPane.margin>
+                                                             <Insets left="20.0" />
+                                                         </GridPane.margin>
+                                                     </Label>
+                                                 </children>
+                                              </GridPane>
+                                          </children>
+                                       </TilePane>
+                                       <TilePane layoutX="30.0" layoutY="30.0" prefHeight="492.0" prefWidth="724.0" style="-fx-background-color: #e3e3e5;" GridPane.columnIndex="1" GridPane.rowSpan="3">
+                                           <GridPane.margin>
+                                               <Insets bottom="30.0" left="10.0" right="20.0" top="20.0" />
+                                           </GridPane.margin>
+                                           <children>
+                                           <GridPane focusTraversable="true" prefHeight="451.0" prefWidth="720.0">
+                                               <columnConstraints>
+                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                               </columnConstraints>
+                                               <rowConstraints>
+                                                   <RowConstraints maxHeight="54.0" minHeight="10.0" prefHeight="53.0" vgrow="SOMETIMES" />
+                                                   <RowConstraints maxHeight="46.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+                                                   <RowConstraints minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+                                                   <RowConstraints minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+                                                   <RowConstraints minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+                                                   <RowConstraints minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+                                                   <RowConstraints minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+                                                   <RowConstraints minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+                                                   <RowConstraints minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+                                                   <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+                                                   <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+                                               </rowConstraints>
+                                               <children>
+                                               <ImageView fitHeight="26.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                       <Image url="@../icons/list.png" />
+                                                   </image>
+                                                   <GridPane.margin>
+                                                       <Insets left="20.0" />
+                                                   </GridPane.margin>
+                                               </ImageView>
+                                               <Label prefHeight="74.0" prefWidth="207.0" styleClass="detail-text-header" stylesheets="@../styles/Profile.css" text="DETAILS" GridPane.columnSpan="2">
+                                                   <font>
+                                                       <Font name="Arial Bold" size="25.0" />
+                                                   </font>
+                                                   <GridPane.margin>
+                                                       <Insets left="60.0" />
+                                                   </GridPane.margin>
+                                               </Label>
+                                               <Label layoutX="30.0" layoutY="235.0" prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Given names : " GridPane.columnSpan="3" GridPane.rowIndex="1">
+                                                   <GridPane.margin>
+                                                       <Insets left="20.0" />
+                                                   </GridPane.margin>
+                                                   <font>
+                                                       <Font size="22.0" />
+                                                   </font>
+                                               </Label>
+                                               <TextField fx:id="givenNamesField" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                                                   <GridPane.margin>
+                                                       <Insets right="20.0" />
+                                                   </GridPane.margin>
+                                               </TextField>
+                                               <Label layoutX="30.0" layoutY="99.0" prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Surnames : " GridPane.columnSpan="3" GridPane.rowIndex="2">
+                                                   <GridPane.margin>
+                                                       <Insets left="20.0" />
+                                                   </GridPane.margin>
+                                                   <font>
+                                                       <Font size="22.0" />
+                                                   </font>
+                                               </Label>
+                                               <TextField fx:id="lastNamesField" layoutX="210.0" layoutY="68.0" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+                                                   <GridPane.margin>
+                                                       <Insets right="20.0" />
+                                                   </GridPane.margin>
+                                               </TextField>
+                                               <Label layoutX="30.0" layoutY="110.0" prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Preferred Name :" GridPane.columnSpan="3" GridPane.rowIndex="3">
+                                                   <font>
+                                                       <Font size="22.0" />
+                                                   </font>
+                                                   <GridPane.margin>
+                                                       <Insets left="20.0" />
+                                                   </GridPane.margin>
+                                               </Label>
+                                               <TextField fx:id="preferredNameField" layoutX="230.0" layoutY="115.0" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+                                                   <GridPane.margin>
+                                                       <Insets right="20.0" />
+                                                   </GridPane.margin>
+                                               </TextField>
+                                               <Label layoutX="30.0" layoutY="132.0" prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="NHI : " GridPane.columnSpan="3" GridPane.rowIndex="4">
+                                                   <GridPane.margin>
+                                                       <Insets left="20.0" />
+                                                   </GridPane.margin>
+                                                   <font>
+                                                       <Font size="22.0" />
+                                                   </font>
+                                               </Label>
+                                               <TextField fx:id="nhiField" layoutX="210.0" layoutY="115.0" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+                                                   <GridPane.margin>
+                                                       <Insets right="20.0" />
+                                                   </GridPane.margin>
+                                               </TextField>
+                                               <Label prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Date of birth : " GridPane.columnSpan="3" GridPane.rowIndex="5">
+                                                   <GridPane.margin>
+                                                       <Insets left="20.0" />
+                                                   </GridPane.margin>
+                                                   <font>
+                                                       <Font size="22.0" />
+                                                   </font>
+                                               </Label>
+                                               <DatePicker fx:id="dobDatePicker" prefHeight="25.0" prefWidth="520.0" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+                                                   <GridPane.margin>
+                                                       <Insets right="20.0" />
+                                                   </GridPane.margin>
+                                               </DatePicker>
+                                               <Label layoutX="30.0" layoutY="158.0" prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Date of death : " GridPane.columnSpan="3" GridPane.rowIndex="6">
+                                                   <font>
+                                                       <Font size="22.0" />
+                                                   </font>
+                                                   <GridPane.margin>
+                                                       <Insets left="20.0" />
+                                                   </GridPane.margin>
+                                               </Label>
+                                               <Label layoutX="30.0" layoutY="99.0" prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Gender : " GridPane.columnSpan="3" GridPane.rowIndex="7">
+                                                   <GridPane.margin>
+                                                       <Insets left="20.0" />
+                                                   </GridPane.margin>
+                                                   <font>
+                                                       <Font size="22.0" />
+                                                   </font>
+                                               </Label>
+                                               <ComboBox fx:id="comboGender" layoutX="230.0" layoutY="320.0" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="7">
+                                                   <opaqueInsets>
+                                                       <Insets />
+                                                   </opaqueInsets>
+                                               </ComboBox>
+                                               <Label layoutX="30.0" layoutY="270.0" prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Preferred Gender :" GridPane.columnSpan="3" GridPane.rowIndex="8">
+                                                   <GridPane.margin>
+                                                       <Insets left="20.0" />
+                                                   </GridPane.margin>
+                                                   <font>
+                                                       <Font size="15.0" />
+                                                   </font>
+                                               </Label>
+                                               <ComboBox fx:id="comboGenderPref" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="8">
+                                                   <opaqueInsets>
+                                                       <Insets />
+                                                   </opaqueInsets>
+                                               </ComboBox>
+                                               <Label layoutX="30.0" layoutY="167.0" prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Height : " GridPane.columnSpan="3" GridPane.rowIndex="9">
+                                                   <GridPane.margin>
+                                                       <Insets left="20.0" />
+                                                   </GridPane.margin>
+                                                   <font>
+                                                       <Font size="22.0" />
+                                                   </font>
+                                               </Label>
+                                               <TextField fx:id="heightField" layoutX="210.0" layoutY="306.0" promptText="cm" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="9">
+                                                   <GridPane.margin>
+                                                       <Insets right="20.0" />
+                                                   </GridPane.margin>
+                                               </TextField>
+                                               <Label layoutX="30.0" layoutY="235.0" prefHeight="33.0" prefWidth="700.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Weight : " GridPane.columnSpan="3" GridPane.rowIndex="10">
+                                                   <GridPane.margin>
+                                                       <Insets left="20.0" />
+                                                   </GridPane.margin>
+                                                   <font>
+                                                       <Font size="22.0" />
+                                                   </font>
+                                               </Label>
+                                               <TextField fx:id="weightField" layoutX="210.0" layoutY="358.0" promptText="kg" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="10">
+                                                   <GridPane.margin>
+                                                       <Insets right="20.0" />
+                                                   </GridPane.margin>
+                                               </TextField>
+                                                <SplitPane fx:id="dodPane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.columnSpan="5" GridPane.rowIndex="6">
+                                                   <items>
+                                                  <DateTimePicker fx:id="dodDateTimePicker" prefHeight="26.0" prefWidth="433.0" />
+                                                </items>
+                                                </SplitPane>
+                                               </children>
+                                           </GridPane>
+                                           </children>
+                                       </TilePane>
+                                       <ToolBar maxWidth="256.0" prefHeight="66.0" prefWidth="250.0" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+                                           <GridPane.margin>
+                                               <Insets bottom="30.0" left="20.0" />
+                                           </GridPane.margin>
+                                          <items>
+                                              <Button layoutX="64.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleSaveButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/tick.png); -fx-background-size: stretch;" />
+                                              <Button layoutX="122.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleCancelButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/icon.png); -fx-background-size: stretch;" />
+                                          </items>
+                                       </ToolBar>
+                                   </children>
                                 </GridPane>
                                 </children>
                             </AnchorPane>
                         </content>
                     </Tab>
                         <Tab closable="false" text="Medical">
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                <GridPane layoutX="-1.0" layoutY="-3.0" prefHeight="132.0" prefWidth="260.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
-                                    <columnConstraints>
-                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                    </columnConstraints>
-                                    <rowConstraints>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    </rowConstraints>
-                                    <TilePane prefHeight="492.0" prefWidth="724.0" style="-fx-background-color: #e3e3e5;" GridPane.columnSpan="2147483647" GridPane.rowSpan="2147483647">
-                                        <GridPane.margin>
-                                            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                        </GridPane.margin>
-                                        <GridPane prefHeight="477.0" prefWidth="1166.0">
-                                            <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="148.0" minWidth="10.0" prefWidth="148.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="546.0" minWidth="10.0" prefWidth="176.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="546.0" minWidth="10.0" prefWidth="176.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="327.0" minWidth="10.0" prefWidth="160.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="296.0" minWidth="10.0" prefWidth="172.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="310.0" minWidth="10.0" prefWidth="172.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="238.0" minWidth="10.0" prefWidth="150.0" />
+                           <content>
+                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                  <children>
+                                      <GridPane layoutX="-1.0" layoutY="-3.0" prefHeight="132.0" prefWidth="260.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
+                                          <columnConstraints>
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          </columnConstraints>
+                                          <rowConstraints>
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          </rowConstraints>
+                                         <children>
+                                             <TilePane prefHeight="492.0" prefWidth="724.0" style="-fx-background-color: #e3e3e5;" GridPane.columnSpan="2147483647" GridPane.rowSpan="2147483647">
+                                                 <GridPane.margin>
+                                                     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                                 </GridPane.margin>
+                                                <children>
+                                                    <GridPane prefHeight="477.0" prefWidth="1166.0">
+                                                        <columnConstraints>
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="148.0" minWidth="10.0" prefWidth="148.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="546.0" minWidth="10.0" prefWidth="176.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="546.0" minWidth="10.0" prefWidth="200.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="296.0" minWidth="10.0" prefWidth="200.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="238.0" minWidth="10.0" prefWidth="200.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="188.0" minWidth="10.0" prefWidth="188.0" />
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="188.0" minWidth="10.0" prefWidth="188.0" />
-                                            </columnConstraints>
-                                            <rowConstraints>
-                                                <RowConstraints maxHeight="54.0" minHeight="10.0" prefHeight="53.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="46.0" minHeight="10.0" prefHeight="44.0" vgrow="SOMETIMES" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="188.0" minWidth="10.0" prefWidth="188.0" />
+                                                        </columnConstraints>
+                                                        <rowConstraints>
+                                                            <RowConstraints maxHeight="54.0" minHeight="10.0" prefHeight="53.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="46.0" minHeight="10.0" prefHeight="44.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="78.0" minHeight="10.0" prefHeight="78.0" vgrow="SOMETIMES" />
-                                            </rowConstraints>
-                                            <ImageView fitHeight="26.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" />
-                                                </GridPane.margin>
-                                                <Image url="@../icons/list.png" />
-                                            </ImageView>
-                                            <Label prefHeight="48.0" prefWidth="1170.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Blood Pressure : " GridPane.columnSpan="2" GridPane.rowIndex="4">
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" />
-                                                </GridPane.margin>
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                            </Label>
-                                            <Label layoutX="30.0" layoutY="235.0" prefHeight="46.0" prefWidth="1179.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Blood Type : " GridPane.columnSpan="2" GridPane.rowIndex="1">
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" />
-                                                </GridPane.margin>
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                            </Label>
-                                            <Label prefHeight="74.0" prefWidth="207.0" styleClass="detail-text-header" stylesheets="@../styles/Profile.css" text="DETAILS" GridPane.columnSpan="2">
-                                                <font>
-                                                    <Font name="Arial Bold" size="25.0" />
-                                                </font>
-                                                <GridPane.margin>
-                                                    <Insets left="60.0" />
-                                                </GridPane.margin>
-                                            </Label>
-                                            <Label layoutX="30.0" layoutY="99.0" prefHeight="48.0" prefWidth="1173.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Smoker : " GridPane.columnSpan="2" GridPane.rowIndex="2">
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" />
-                                                </GridPane.margin>
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                            </Label>
-                                            <Label layoutX="30.0" layoutY="132.0" prefHeight="48.0" prefWidth="1150.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Alcohol Consumption : " GridPane.columnSpan="2" GridPane.rowIndex="3">
-                                                <GridPane.margin>
-                                                    <Insets left="20.0" />
-                                                </GridPane.margin>
-                                                <font>
-                                                    <Font size="22.0" />
-                                                </font>
-                                            </Label>
-                                            <ToolBar maxWidth="353.0" prefHeight="66.0" prefWidth="286.0" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="9">
-                                                <GridPane.margin>
-                                                    <Insets bottom="10.0" left="70.0" right="10.0" />
-                                                </GridPane.margin>
-                                                <Button layoutX="64.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleSaveButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/tick.png); -fx-background-size: stretch;" />
-                                                <Button layoutX="66.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleCancelButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/icon.png); -fx-background-size: stretch;" />
-                                            </ToolBar>
-                                            <TextField fx:id="bloodTypeField" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
-                                                <GridPane.margin>
-                                                    <Insets left="120.0" right="100.0" />
-                                                </GridPane.margin>
-                                            </TextField>
-                                            <TextField fx:id="alcoholConsumptionField" layoutX="278.0" layoutY="115.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
-                                                <GridPane.margin>
-                                                    <Insets left="120.0" right="100.0" />
-                                                </GridPane.margin>
-                                            </TextField>
-                                            <TextField fx:id="bloodPressureField" layoutX="278.0" layoutY="163.0" onKeyTyped="#editTrueKey" promptText="systolic/diastolic" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
-                                                <GridPane.margin>
-                                                    <Insets left="120.0" right="100.0" />
-                                                </GridPane.margin>
-                                            </TextField>
-                                            <CheckBox fx:id="isSmokerCheckBox" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                                        </GridPane>
-                                    </TilePane>
-                                </GridPane>
-                            </AnchorPane>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                                                        </rowConstraints>
+                                                       <children>
+                                                           <ImageView fitHeight="26.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                                               <GridPane.margin>
+                                                                   <Insets left="20.0" />
+                                                               </GridPane.margin>
+                                                              <image>
+                                                                  <Image url="@../icons/list.png" />
+                                                              </image>
+                                                           </ImageView>
+                                                           <Label prefHeight="48.0" prefWidth="1170.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Blood Pressure : " GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                                               <GridPane.margin>
+                                                                   <Insets left="20.0" />
+                                                               </GridPane.margin>
+                                                               <font>
+                                                                   <Font size="22.0" />
+                                                               </font>
+                                                           </Label>
+                                                           <Label layoutX="30.0" layoutY="235.0" prefHeight="46.0" prefWidth="1179.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Blood Type : " GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                               <GridPane.margin>
+                                                                   <Insets left="20.0" />
+                                                               </GridPane.margin>
+                                                               <font>
+                                                                   <Font size="22.0" />
+                                                               </font>
+                                                           </Label>
+                                                           <Label prefHeight="74.0" prefWidth="207.0" styleClass="detail-text-header" stylesheets="@../styles/Profile.css" text="DETAILS" GridPane.columnSpan="2">
+                                                               <font>
+                                                                   <Font name="Arial Bold" size="25.0" />
+                                                               </font>
+                                                               <GridPane.margin>
+                                                                   <Insets left="60.0" />
+                                                               </GridPane.margin>
+                                                           </Label>
+                                                           <Label layoutX="30.0" layoutY="99.0" prefHeight="48.0" prefWidth="1173.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Smoker : " GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                               <GridPane.margin>
+                                                                   <Insets left="20.0" />
+                                                               </GridPane.margin>
+                                                               <font>
+                                                                   <Font size="22.0" />
+                                                               </font>
+                                                           </Label>
+                                                           <Label layoutX="30.0" layoutY="132.0" prefHeight="48.0" prefWidth="1150.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Alcohol Consumption : " GridPane.columnSpan="2" GridPane.rowIndex="3">
+                                                               <GridPane.margin>
+                                                                   <Insets left="20.0" />
+                                                               </GridPane.margin>
+                                                               <font>
+                                                                   <Font size="22.0" />
+                                                               </font>
+                                                           </Label>
+                                                           <ToolBar maxWidth="353.0" prefHeight="66.0" prefWidth="286.0" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="12">
+                                                               <GridPane.margin>
+                                                                   <Insets bottom="10.0" left="70.0" right="10.0" />
+                                                               </GridPane.margin>
+                                                              <items>
+                                                                  <Button layoutX="64.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleSaveButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/tick.png); -fx-background-size: stretch;" />
+                                                                  <Button layoutX="66.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleCancelButtonClicked" prefHeight="50.0" prefWidth="50.0" style="-fx-background-image: url(icons/icon.png); -fx-background-size: stretch;" />
+                                                              </items>
+                                                           </ToolBar>
+                                                           <TextField fx:id="bloodTypeField" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                                                               <GridPane.margin>
+                                                                   <Insets left="120.0" right="100.0" />
+                                                               </GridPane.margin>
+                                                           </TextField>
+                                                           <TextField fx:id="alcoholConsumptionField" layoutX="278.0" layoutY="115.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+                                                               <GridPane.margin>
+                                                                   <Insets left="120.0" right="100.0" />
+                                                               </GridPane.margin>
+                                                           </TextField>
+                                                           <TextField fx:id="bloodPressureField" layoutX="278.0" layoutY="163.0" onKeyTyped="#editTrueKey" promptText="systolic/diastolic" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+                                                               <GridPane.margin>
+                                                                   <Insets left="120.0" right="100.0" />
+                                                               </GridPane.margin>
+                                                           </TextField>
+                                                           <CheckBox fx:id="isSmokerCheckBox" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                                            <Label prefHeight="24.0" prefWidth="171.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="HLA Type:" GridPane.columnSpan="2" GridPane.rowIndex="5">
+                                                                <GridPane.margin>
+                                                                    <Insets left="20.0" />
+                                                                </GridPane.margin>
+                                                                <font>
+                                                                    <Font size="22.0" />
+                                                                </font>
+                                                            </Label>
+                                                           <Label styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Group X" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5">
+                                                               <GridPane.margin>
+                                                                   <Insets />
+                                                               </GridPane.margin>
+                                                               <font>
+                                                                   <Font size="22.0" />
+                                                               </font>
+                                                           </Label>
+                                                           <TextField fx:id="hlaXAField" prefHeight="26.0" prefWidth="67.0" text="A" GridPane.columnIndex="2" GridPane.rowIndex="6">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                                </TextField>
+                                                           <TextField fx:id="hlaXBField" text="B" GridPane.columnIndex="2" GridPane.rowIndex="7">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                                </TextField>
+                                                           <TextField fx:id="hlaXCField" text="C" GridPane.columnIndex="2" GridPane.rowIndex="8">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                                </TextField>
+                                                           <TextField fx:id="hlaXDPField" text="DP" GridPane.columnIndex="2" GridPane.rowIndex="9">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                                </TextField>
+                                                           <TextField fx:id="hlaXDQField" text="DQ" GridPane.columnIndex="2" GridPane.rowIndex="10">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                                </TextField>
+                                                           <TextField fx:id="hlaXDRField" text="DR" GridPane.columnIndex="2" GridPane.rowIndex="11">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                                </TextField>
+                                                           <Label styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Group Y" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5">
+                                                               <GridPane.margin>
+                                                                   <Insets />
+                                                               </GridPane.margin>
+                                                               <font>
+                                                                   <Font size="22.0" />
+                                                               </font>
+                                                           </Label>
+                                                           <TextField fx:id="hlaYAField" text="A" GridPane.columnIndex="3" GridPane.rowIndex="6">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                                </TextField>
+                                                           <TextField fx:id="hlaYBField" text="B" GridPane.columnIndex="3" GridPane.rowIndex="7">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                                </TextField>
+                                                           <TextField fx:id="hlaYCField" text="C" GridPane.columnIndex="3" GridPane.rowIndex="8">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                                </TextField>
+                                                           <TextField fx:id="hlaYDPField" text="DP" GridPane.columnIndex="3" GridPane.rowIndex="9">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                                </TextField>
+                                                           <TextField fx:id="hlaYDQField" text="DQ" GridPane.columnIndex="3" GridPane.rowIndex="10">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                                </TextField>
+                                                           <TextField fx:id="hlaYDRField" text="DR" GridPane.columnIndex="3" GridPane.rowIndex="11">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                                </TextField>
+                                                <ListView fx:id="secondaryHlaListView" onKeyPressed="#handleSecondaryHlaListViewKeyPressed" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="7" GridPane.rowSpan="5">
+                                                   <GridPane.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" />
+                                                   </GridPane.margin></ListView>
+                                                <TextField fx:id="secondaryHlaField" onKeyPressed="#handleSecondaryHlaFieldKeyPressed" promptText="e.g. W435" prefHeight="26.0" prefWidth="92.0" GridPane.columnIndex="4" GridPane.halignment="LEFT" GridPane.rowIndex="6">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" right="65.0" />
+                                                   </GridPane.margin></TextField>
+                                                <Label layoutX="458.0" layoutY="201.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Secondary" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="5">
+                                                   <font>
+                                                      <Font size="22.0" />
+                                                   </font>
+                                                   <GridPane.margin>
+                                                      <Insets />
+                                                   </GridPane.margin>
+                                                   <opaqueInsets>
+                                                      <Insets />
+                                                   </opaqueInsets>
+                                                </Label>
+                                                <Button fx:id="addHlaBtn" mnemonicParsing="false" onMouseClicked="#handleAddHlaButtonClicked" prefHeight="25.0" prefWidth="60.0" text="Add" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
+                                                   <GridPane.margin>
+                                                      <Insets right="5.0" />
+                                                   </GridPane.margin>
+                                                </Button>
+                                                       </children>
+                                                    </GridPane>
+                                                </children>
+                                             </TilePane>
+                                         </children>
+                                      </GridPane>
+                                  </children>
+                               </AnchorPane>
+                           </content>
                         </Tab>
                     </tabs>
                 </TabPane>
@@ -596,6 +740,14 @@
                             </GridPane.margin>
                         </Label>
                         <Label fx:id="donorStatusLabel" prefHeight="40.0" prefWidth="1141.0" styleClass="banner-text" stylesheets="@../styles/Profile.css" text="Donor Status: " textFill="WHITE" GridPane.rowIndex="2">
+                            <font>
+                                <Font size="28.0" />
+                            </font>
+                            <GridPane.margin>
+                                <Insets bottom="10.0" left="40.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label fx:id="receiverStatusLabel" layoutX="60.0" layoutY="96.0" prefHeight="40.0" prefWidth="1141.0" styleClass="banner-text" stylesheets="@../styles/Profile.css" text="Receiver Status: " textFill="WHITE" GridPane.rowIndex="3">
                             <font>
                                 <Font size="28.0" />
                             </font>

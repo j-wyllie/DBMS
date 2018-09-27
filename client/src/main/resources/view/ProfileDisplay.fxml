@@ -55,6 +55,10 @@
                 <!--<fx:include fx:id="profileProceduresTab" source="ProfileProceduresTab.fxml"-->
                     <!--GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>-->
             </Tab>
+                     <Tab fx:id="tabSocialFeed" onSelectionChanged="#onTabSocialFeedSelected" text="Social Feed">
+                      <!--<fx:include fx:id="profileProceduresTab" source="ProfileProceduresTab.fxml"-->
+                      <!--GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>-->
+                     </Tab>
                  </tabs>
               </TabPane>
               <GridPane stylesheets="@../styles/Common.css" GridPane.columnSpan="2">

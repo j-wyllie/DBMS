@@ -1,15 +1,14 @@
 package odms.controller.profile;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
+import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.history.History;
 import odms.commons.model.profile.Profile;
 import odms.controller.CommonController;
 import odms.controller.database.DAOFactory;
 import odms.controller.history.CurrentHistory;
-import odms.commons.model.enums.OrganEnum;
 import odms.view.profile.OrganRemove;
 
 public class OrganRemoval extends CommonController {
@@ -55,8 +54,6 @@ public class OrganRemoval extends CommonController {
      * @param organs a set of organs to be removed
      */
     public void removeOrgansRequired(Set<OrganEnum> organs, Profile p) {
-        //todo fix generate update info into simpler solution
-        //generateUpdateInfo("organsReceiving");
         for (OrganEnum organ : organs) {
             DAOFactory.getOrganDao().removeRequired(p, organ);
             p.getOrgansRequired().remove(organ);
