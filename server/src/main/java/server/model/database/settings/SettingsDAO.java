@@ -46,7 +46,6 @@ public interface SettingsDAO {
      * @param id of the user.
      * @param userType type of user.
      * @return the locale setting.
-     * @throws SQLException error.
      */
     String getNumberFormat(int id, UserType userType);
 
