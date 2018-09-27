@@ -21,6 +21,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 <?import odms.controller.DateTimePicker?>
+<?import javafx.scene.control.ListView?>
 <AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.profile.ProfileEdit">
     <children>
         <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
@@ -530,6 +531,106 @@
                                                    </GridPane.margin>
                                                </TextField>
                                                <CheckBox fx:id="isSmokerCheckBox" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                               <Label styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Group X" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5">
+                                                   <GridPane.margin>
+                                                       <Insets />
+                                                   </GridPane.margin>
+                                                   <font>
+                                                       <Font size="22.0" />
+                                                   </font>
+                                               </Label>
+                                               <TextField fx:id="hlaXAField" prefHeight="26.0" prefWidth="67.0" text="A" GridPane.columnIndex="2" GridPane.rowIndex="6">
+                                                   <GridPane.margin>
+                                                       <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                               </TextField>
+                                               <TextField fx:id="hlaXBField" text="B" GridPane.columnIndex="2" GridPane.rowIndex="7">
+                                                   <GridPane.margin>
+                                                       <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                               </TextField>
+                                               <TextField fx:id="hlaXCField" text="C" GridPane.columnIndex="2" GridPane.rowIndex="8">
+                                                   <GridPane.margin>
+                                                       <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                               </TextField>
+                                               <TextField fx:id="hlaXDPField" text="DP" GridPane.columnIndex="2" GridPane.rowIndex="9">
+                                                   <GridPane.margin>
+                                                       <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                               </TextField>
+                                               <TextField fx:id="hlaXDQField" text="DQ" GridPane.columnIndex="2" GridPane.rowIndex="10">
+                                                   <GridPane.margin>
+                                                       <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                               </TextField>
+                                               <TextField fx:id="hlaXDRField" text="DR" GridPane.columnIndex="2" GridPane.rowIndex="11">
+                                                   <GridPane.margin>
+                                                       <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                               </TextField>
+                                               <Label styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Group Y" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5">
+                                                   <GridPane.margin>
+                                                       <Insets />
+                                                   </GridPane.margin>
+                                                   <font>
+                                                       <Font size="22.0" />
+                                                   </font>
+                                               </Label>
+                                               <TextField fx:id="hlaYAField" text="A" GridPane.columnIndex="3" GridPane.rowIndex="6">
+                                                   <GridPane.margin>
+                                                       <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                               </TextField>
+                                               <TextField fx:id="hlaYBField" text="B" GridPane.columnIndex="3" GridPane.rowIndex="7">
+                                                   <GridPane.margin>
+                                                       <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                               </TextField>
+                                               <TextField fx:id="hlaYCField" text="C" GridPane.columnIndex="3" GridPane.rowIndex="8">
+                                                   <GridPane.margin>
+                                                       <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                               </TextField>
+                                               <TextField fx:id="hlaYDPField" text="DP" GridPane.columnIndex="3" GridPane.rowIndex="9">
+                                                   <GridPane.margin>
+                                                       <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                               </TextField>
+                                               <TextField fx:id="hlaYDQField" text="DQ" GridPane.columnIndex="3" GridPane.rowIndex="10">
+                                                   <GridPane.margin>
+                                                       <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                               </TextField>
+                                               <TextField fx:id="hlaYDRField" text="DR" GridPane.columnIndex="3" GridPane.rowIndex="11">
+                                                   <GridPane.margin>
+                                                       <Insets left="5.0" right="5.0" />
+                                                   </GridPane.margin>
+                                               </TextField>
+                                               <ListView fx:id="secondaryHlaListView" onKeyPressed="#handleSecondaryHlaListViewKeyPressed" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="7" GridPane.rowSpan="5">
+                                                   <GridPane.margin>
+                                                       <Insets bottom="5.0" left="5.0" right="5.0" />
+                                                   </GridPane.margin></ListView>
+                                               <TextField fx:id="secondaryHlaField" onKeyPressed="#handleSecondaryHlaFieldKeyPressed" promptText="e.g. W435" prefHeight="26.0" prefWidth="92.0" GridPane.columnIndex="4" GridPane.halignment="LEFT" GridPane.rowIndex="6">
+                                                   <GridPane.margin>
+                                                       <Insets left="5.0" right="65.0" />
+                                                   </GridPane.margin></TextField>
+                                               <Label layoutX="458.0" layoutY="201.0" styleClass="detail-text" stylesheets="@../styles/Profile.css" text="Secondary" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="5">
+                                                   <font>
+                                                       <Font size="22.0" />
+                                                   </font>
+                                                   <GridPane.margin>
+                                                       <Insets />
+                                                   </GridPane.margin>
+                                                   <opaqueInsets>
+                                                       <Insets />
+                                                   </opaqueInsets>
+                                               </Label>
+                                               <Button fx:id="addHlaBtn" mnemonicParsing="false" onMouseClicked="#handleAddHlaButtonClicked" prefHeight="25.0" prefWidth="60.0" text="Add" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
+                                                   <GridPane.margin>
+                                                       <Insets right="5.0" />
+                                                   </GridPane.margin>
+                                               </Button>
                                            </children>
                                         </GridPane>
                                   </children>
