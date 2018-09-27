@@ -44,12 +44,12 @@ public class HttpHospitalDAO implements HospitalDAO {
             log.error(e.getMessage(), e);
         }
         List<Hospital> hospitals = new ArrayList<>();
-        if (response.getStatus() == 200) {
+        if (response != null && response.getStatus() == 200) {
             JsonArray results = parser.parse(response.getBody()).getAsJsonArray();
             for (JsonElement result : results) {
                 hospitals.add(gson.fromJson(result, Hospital.class));
             }
-        } else if (response.getStatus() == 500) {
+        } else if (response != null && response.getStatus() == 500) {
             throw new SQLException(response.getBody());
         }
         return hospitals;
@@ -74,9 +74,9 @@ public class HttpHospitalDAO implements HospitalDAO {
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
-        if (response.getStatus() == 200) {
+        if (response != null && response.getStatus() == 200) {
             return parser.fromJson(response.getBody(), Hospital.class);
-        } else if (response.getStatus() == 500) {
+        } else if (response != null && response.getStatus() == 500) {
             throw new SQLException(response.getBody());
         }
         return null;
@@ -101,9 +101,9 @@ public class HttpHospitalDAO implements HospitalDAO {
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
-        if (response.getStatus() == 200) {
+        if (response != null && response.getStatus() == 200) {
             return parser.fromJson(response.getBody(), Hospital.class);
-        } else if (response.getStatus() == 500) {
+        } else if (response != null && response.getStatus() == 500) {
             throw new SQLException(response.getBody());
         }
         return null;
@@ -128,7 +128,7 @@ public class HttpHospitalDAO implements HospitalDAO {
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
-        if (response.getStatus() == 500) {
+        if (response != null && response.getStatus() == 500) {
             throw new SQLException(response.getBody());
         }
     }
@@ -154,7 +154,7 @@ public class HttpHospitalDAO implements HospitalDAO {
             log.error(e.getMessage(), e);
         }
 
-        if (response.getStatus() == 500) {
+        if (response != null && response.getStatus() == 500) {
             throw new SQLException(response.getBody());
         }
     }
@@ -178,7 +178,7 @@ public class HttpHospitalDAO implements HospitalDAO {
             log.error(e.getMessage(), e);
         }
 
-        if (response.getStatus() == 500) {
+        if (response != null && response.getStatus() == 500) {
             throw new SQLException(response.getBody());
         }
     }
