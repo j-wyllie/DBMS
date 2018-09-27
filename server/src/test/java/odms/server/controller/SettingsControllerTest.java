@@ -1,6 +1,7 @@
 package odms.server.controller;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -14,14 +15,23 @@ import odms.commons.model.enums.CountriesEnum;
 import odms.server.CommonTestUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import server.controller.SettingsController;
 import server.model.database.DAOFactory;
+import server.model.database.PasswordUtilities;
 import server.model.database.settings.SettingsDAO;
 import server.model.enums.KeyEnum;
 import server.model.enums.ResponseMsgEnum;
 import spark.Request;
 import spark.Response;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(PasswordUtilities.class)
+@PowerMockIgnore("javax.management.*")
 public class SettingsControllerTest extends CommonTestUtils {
 
     // Data access object variables.
@@ -40,6 +50,9 @@ public class SettingsControllerTest extends CommonTestUtils {
 
     @Before
     public void setup() throws SQLException {
+        PowerMockito.stub(
+                PowerMockito.method(PasswordUtilities.class, "getSaltedHash")
+        ).toReturn("test");
         requestA = mock(Request.class);
         when(requestA.body()).thenReturn(gson.toJson(new HashMap<>()));
         responseA = mock(Response.class);
@@ -91,7 +104,7 @@ public class SettingsControllerTest extends CommonTestUtils {
         // Check NZ validity is false.
         when(requestA.queryParams(KeyEnum.VALID.toString())).thenReturn(String.valueOf(false));
         testResult = gson.fromJson(SettingsController.getAllCountries(requestA, responseA), List.class);
-        assertTrue(testResult.contains(CountriesEnum.NZ.getName()));
+        assertFalse(testResult.contains(CountriesEnum.NZ.getName()));
     }
 
     @Test

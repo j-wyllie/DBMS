@@ -41,7 +41,6 @@ public class AvailableOrgansTest {
     @Test
     public void testGetWaitTimeRawInvalid() {
         int waittime = Math.toIntExact(AvailableOrgans.getWaitTimeRaw(OrganEnum.BONE, profile1.getOrgansRequired(), profile1));
-        System.out.println(waittime);
         assert(waittime == -1);
     }
 

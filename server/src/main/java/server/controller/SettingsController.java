@@ -40,7 +40,7 @@ public class SettingsController {
         List<String> countries;
 
         // This query is optional so only assign it if it exists
-        if (req.queryMap().hasKey(KeyEnum.VALID.toString())) {
+        if (req.queryParams(KeyEnum.VALID.toString()) != null) {
             valid = Boolean.valueOf(req.queryParams(KeyEnum.VALID.toString()));
         }
 

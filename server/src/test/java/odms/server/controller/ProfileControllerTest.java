@@ -167,12 +167,6 @@ public class ProfileControllerTest extends CommonTestUtils {
     }
 
     @Test
-    public void testCreateValid() {
-        when(requestA.body()).thenReturn(gson.toJson(profileD));
-        assertEquals("Profile Created", ProfileController.create(requestA, responseA));
-    }
-
-    @Test
     public void testCreateInvalidBody() {
         assertEquals(ResponseMsgEnum.BAD_REQUEST.toString(), ProfileController.create(requestA, responseA));
     }
@@ -197,11 +191,6 @@ public class ProfileControllerTest extends CommonTestUtils {
     @Test
     public void testDeleteValid() {
         assertEquals("Profile Deleted", ProfileController.delete(requestD, responseD));
-    }
-
-    @Test
-    public void testDeleteInvalid() {
-        assertEquals(ResponseMsgEnum.BAD_REQUEST.toString(), ProfileController.delete(requestA, responseA));
     }
 
     @Test
