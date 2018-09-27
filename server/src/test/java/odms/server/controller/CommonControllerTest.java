@@ -1,6 +1,13 @@
 package odms.server.controller;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.google.gson.JsonParser;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
@@ -26,16 +33,6 @@ import server.model.enums.KeyEnum;
 import server.model.enums.ResponseMsgEnum;
 import spark.Request;
 import spark.Response;
-
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({PasswordUtilities.class, MySqlUserDAO.class, MySqlProfileDAO.class})

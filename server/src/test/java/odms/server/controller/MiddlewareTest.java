@@ -4,10 +4,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Map;
-
 import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
@@ -21,7 +21,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.sonar.api.server.authentication.UnauthorizedException;
 import server.controller.Middleware;
 import server.model.database.DAOFactory;
 import server.model.database.PasswordUtilities;
@@ -68,7 +67,6 @@ public class MiddlewareTest extends CommonTestUtils {
 
     @Before
     public void setup() throws SQLException, UserNotFoundException {
-
         PowerMockito.stub(
                 PowerMockito.method(PasswordUtilities.class, "getSaltedHash")
         ).toReturn("test");

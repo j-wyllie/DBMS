@@ -149,7 +149,8 @@ public class MySqlUserDAO implements UserDAO {
         return user;
     }
 
-    /**
+    /**        stubCheck(false);
+
      * Adds a new user to the database.
      *
      * @param user to add.

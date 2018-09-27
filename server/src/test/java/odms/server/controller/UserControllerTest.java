@@ -1,7 +1,13 @@
 package odms.server.controller;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
+import java.sql.SQLException;
+import java.util.List;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
@@ -9,20 +15,23 @@ import odms.server.CommonTestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import server.controller.UserController;
 import server.model.database.DAOFactory;
+import server.model.database.PasswordUtilities;
 import server.model.database.user.UserDAO;
 import server.model.enums.KeyEnum;
 import server.model.enums.ResponseMsgEnum;
 import spark.Request;
 import spark.Response;
-import java.sql.SQLException;
-import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(PasswordUtilities.class)
+@PowerMockIgnore("javax.management.*")
 public class UserControllerTest extends CommonTestUtils {
 
     // Data access objects required.
@@ -43,13 +52,16 @@ public class UserControllerTest extends CommonTestUtils {
     private Gson gson = new Gson();
     JsonParser parser = new JsonParser();
 
-
     @Before
     public void setup() throws SQLException, UserNotFoundException {
+        PowerMockito.stub(
+                PowerMockito.method(PasswordUtilities.class, "getSaltedHash")
+        ).toReturn("test$test");
+
         // Default admin.
         userA = new User(UserType.ADMIN, "admin", "Canterbury");
         userA.setUsername("admin");
-        userA.setPassword("admin");
+        userA.setPassword("test");
         userA.setDefault(true);
         userDAO.add(userA);
         userA = userDAO.get(userA.getUsername());
@@ -139,6 +151,7 @@ public class UserControllerTest extends CommonTestUtils {
 
     @Test
     public void testCheckCredentialsValid() {
+        stubCheck(true);
         when(requestA.queryParams("username")).thenReturn(userA.getUsername());
         when(requestA.queryParams("password")).thenReturn("admin");
         int id = parser.parse(UserController
@@ -155,11 +168,11 @@ public class UserControllerTest extends CommonTestUtils {
 
     @Test
     public void testCheckCredentialsUnauthorized() {
+        stubCheck(false);
         when(requestA.queryParams("username")).thenReturn(userA.getUsername());
         when(requestA.queryParams("password")).thenReturn("invalid");
         assertEquals("Unauthorized", UserController.checkCredentials(requestA, responseA));
     }
-
 
     @After
     public void tearDown() throws SQLException {
@@ -167,5 +180,11 @@ public class UserControllerTest extends CommonTestUtils {
         for (User user : userDAO.getAll()) {
             userDAO.remove(user);
         }
+    }
+
+    private void stubCheck(Boolean result) {
+        PowerMockito.stub(
+                PowerMockito.method(PasswordUtilities.class, "check")
+        ).toReturn(result);
     }
 }

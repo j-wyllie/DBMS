@@ -328,7 +328,7 @@ public class ProfileController {
      */
     public static String hasPassword(Request req, Response res) {
         ProfileDAO database = DAOFactory.getProfileDao();
-        Boolean hasPassword = false;
+        Boolean hasPassword;
         try {
             if (req.queryParams("nhi") != null) {
                 hasPassword = database.hasPassword(req.queryParams("nhi"));

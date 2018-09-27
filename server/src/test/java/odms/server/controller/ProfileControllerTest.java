@@ -11,8 +11,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import server.controller.ProfileController;
 import server.model.database.DAOFactory;
+import server.model.database.PasswordUtilities;
 import server.model.database.organ.OrganDAO;
 import server.model.database.profile.ProfileDAO;
 import server.model.enums.KeyEnum;
@@ -30,6 +36,9 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(PasswordUtilities.class)
+@PowerMockIgnore("javax.management.*")
 public class ProfileControllerTest extends CommonTestUtils {
 
     // Data access object variables.
@@ -61,10 +70,12 @@ public class ProfileControllerTest extends CommonTestUtils {
     JsonParser parser = new JsonParser();
     private static final String KEY_SEARCH = "searchString";
 
-
-
     @Before
-    public void setup() throws SQLException, UserNotFoundException, OrganConflictException {
+    public void setup() throws SQLException, OrganConflictException {
+        PowerMockito.stub(
+                PowerMockito.method(PasswordUtilities.class, "getSaltedHash")
+        ).toReturn("test");
+
         profileA = new Profile("Alice", "Smith",
                 genericDate, "LPO7236");
         profileA.setUsername("LPO7236");
@@ -75,7 +86,7 @@ public class ProfileControllerTest extends CommonTestUtils {
         profileB = new Profile("Bob", "Smith",
                 genericDate, "LPO3647");
         profileB.setUsername("bobs");
-        profileB.setPassword("12345");
+        profileB.setPassword("test");
         profileB.setDateOfDeath(LocalDateTime.now().minusDays(1));
         profileDAO.add(profileB);
         profileB = profileDAO.get(profileB.getNhi());
@@ -84,17 +95,16 @@ public class ProfileControllerTest extends CommonTestUtils {
         profileC = new Profile("Nick", "Currie",
                 genericDate, "LPO3557");
         profileC.setUsername("LPO3557");
-        profileC.setPassword("12345");
+        profileC.setPassword("test");
         profileC.setDateOfDeath(LocalDateTime.now().minusDays(1));
         profileDAO.add(profileC);
-        profileDAO.savePassword(profileC.getNhi(), profileC.getPassword());
         profileC = profileDAO.get(profileC.getNhi());
         organDAO.addDonating(profileC, OrganEnum.LIVER);
 
         profileD = new Profile("Cassidy", "Slater",
                 genericDate, "LPO3227");
         profileD.setUsername("LPO3227");
-        profileD.setPassword("12345");
+        profileD.setPassword("test");
 
         requestA = mock(Request.class);
         responseA = mock(Response.class);
@@ -145,6 +155,7 @@ public class ProfileControllerTest extends CommonTestUtils {
         List<String> testResult = gson.fromJson(ProfileController.getDead(requestA, responseA), List.class);
         assertEquals(1, testResult.size());
     }
+
     @Test
     public void testGetValid() {
         assertEquals(profileC.getId(), gson.fromJson(ProfileController.get(requestB, responseB), Profile.class).getId());
@@ -199,24 +210,8 @@ public class ProfileControllerTest extends CommonTestUtils {
     }
 
     @Test
-    public void testHasPasswordValid() {
-        when(requestA.queryParams("nhi")).thenReturn(String.valueOf(profileC.getNhi()));
-        assertTrue(Boolean.valueOf(ProfileController.hasPassword(requestA, responseA)));
-    }
-
-    @Test
     public void testHasPasswordInvalid() {
         assertEquals(ResponseMsgEnum.BAD_REQUEST.toString(), ProfileController.hasPassword(requestA, responseA));
-    }
-
-    @Test
-    public void testCheckCredentialsValid() {
-        when(requestC.queryParams("password")).thenReturn("12345");
-        int id = parser.parse(ProfileController
-                .checkCredentials(requestC, responseC))
-                .getAsJsonObject().get(KeyEnum.ID.toString())
-                .getAsInt();
-        assertEquals(String.valueOf(profileC.getId()), String.valueOf(id));
     }
 
     @Test
@@ -227,21 +222,15 @@ public class ProfileControllerTest extends CommonTestUtils {
     @Test
     public void testCheckCredentialsInvalidUsername() {
         when(requestA.queryParams("username")).thenReturn("nick");
-        when(requestA.queryParams("password")).thenReturn("12345");
+        when(requestA.queryParams("password")).thenReturn("test");
         assertEquals("Profile not found", ProfileController.checkCredentials(requestA, responseA));
     }
 
     @Test
     public void testCheckCredentialsUnauthorized() {
+        stubCheck(false);
         when(requestC.queryParams("password")).thenReturn("invalid");
         assertEquals("Unauthorized", ProfileController.checkCredentials(requestC, responseC));
-    }
-
-    @Test
-    public void testSavePasswordValid() {
-        when(requestA.queryParams("username")).thenReturn(profileA.getNhi());
-        when(requestA.queryParams("password")).thenReturn("valid");
-        assertEquals("Password Set", ProfileController.savePassword(requestA, responseA));
     }
 
     @Test
@@ -255,5 +244,11 @@ public class ProfileControllerTest extends CommonTestUtils {
         for (Profile profile : profileDAO.getAll()) {
             profileDAO.remove(profile);
         }
+    }
+
+    private void stubCheck(Boolean result) {
+        PowerMockito.stub(
+                PowerMockito.method(PasswordUtilities.class, "check")
+        ).toReturn(result);
     }
 }
