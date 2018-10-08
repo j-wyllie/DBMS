@@ -17,7 +17,7 @@ import odms.commons.model.user.User;
 @Slf4j
 public class Request {
     private static final Integer PORT = 8080;
-    private static final String DOMAIN = "sengstudent@csse-s302g2";
+    private static final String DOMAIN = "csse-s302g2";
     private static final String URL = "http://" + DOMAIN + ":" + PORT + "/api/v1/";
 
     private static final String TYPE_CONTENT = "Content-Type";

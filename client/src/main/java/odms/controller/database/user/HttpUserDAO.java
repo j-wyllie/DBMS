@@ -21,9 +21,9 @@ import java.util.Map;
 @Slf4j
 public class HttpUserDAO implements UserDAO {
 
-    private static final String USERS_ALL = "http://sengstudent@csse-s302g2:8080/api/v1/users/all";
-    private static final String USERS = "http://sengstudent@csse-s302g2:8080/api/v1/users";
-    private static final String USERS_LOGIN = "http://sengstudent@csse-s302g2:8080/api/v1/login";
+    private static final String USERS_ALL = "http://csse-s302g2:8080/api/v1/users/all";
+    private static final String USERS = "http://csse-s302g2:8080/api/v1/users";
+    private static final String USERS_LOGIN = "http://csse-s302g2:8080/api/v1/login";
 
     @Override
     public List<User> getAll() {

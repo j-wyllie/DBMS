@@ -22,8 +22,8 @@ import org.sonar.api.internal.google.gson.JsonParser;
 public class HttpHospitalDAO implements HospitalDAO {
 
     private static final Integer PORTNUMBER = 8080;
-    private static final String URL_ALL = "http://sengstudent@csse-s302g2:%s/api/v1/hospitals/all";
-    private static final String URL = "http://sengstudent@csse-s302g2:%s/api/v1/hospitals";
+    private static final String URL_ALL = "http://csse-s302g2:%s/api/v1/hospitals/all";
+    private static final String URL = "http://csse-s302g2:%s/api/v1/hospitals";
 
     /**
      * Get all hospitals in database.

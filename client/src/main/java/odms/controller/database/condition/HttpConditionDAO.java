@@ -20,7 +20,7 @@ public class HttpConditionDAO implements ConditionDAO {
 
     @Override
     public List<Condition> getAll(Profile profile, boolean chronic) {
-        String url = String.format("http://sengstudent@csse-s302g2:8080/api/v1/profiles/%s/conditions", profile.getId());
+        String url = String.format("http://csse-s302g2:8080/api/v1/profiles/%s/conditions", profile.getId());
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("chronic", chronic);
         return getArrayRequest(url, queryParams);
@@ -29,7 +29,7 @@ public class HttpConditionDAO implements ConditionDAO {
     @Override
     public void add(Profile profile, Condition condition) {
         Gson gson = new Gson();
-        String url = String.format("http://sengstudent@csse-s302g2:8080/api/v1/profiles/%s/conditions", profile.getId());
+        String url = String.format("http://csse-s302g2:8080/api/v1/profiles/%s/conditions", profile.getId());
         Map<String, Object> queryParams = new HashMap<>();
 
         String body = gson.toJson(condition);
@@ -43,7 +43,7 @@ public class HttpConditionDAO implements ConditionDAO {
 
     @Override
     public void remove(Condition condition) {
-        String url = String.format("http://sengstudent@csse-s302g2:8080/api/v1/conditions/%s", condition.getId());
+        String url = String.format("http://csse-s302g2:8080/api/v1/conditions/%s", condition.getId());
         Map<String, Object> queryParams = new HashMap<>();
         Request request = new Request(url, queryParams);
         try {
@@ -56,7 +56,7 @@ public class HttpConditionDAO implements ConditionDAO {
     @Override
     public void update(Condition condition) {
         Gson gson = new Gson();
-        String url = String.format("http://sengstudent@csse-s302g2:8080/api/v1/conditions/%s", condition.getId());
+        String url = String.format("http://csse-s302g2:8080/api/v1/conditions/%s", condition.getId());
 
         String body = gson.toJson(condition);
         Request request = new Request(url, new HashMap<>(), body);

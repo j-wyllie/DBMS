@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 public final class Email {
 
     private static final String FROM = "HumanFarm@uclive.ac.nz";
-    private static final String HOST = "sengstudent@csse-s302g2";
+    private static final String HOST = "csse-s302g2";
     private static final String SERVER = "mail.smtp.host";
 
     private static Properties properties = System.getProperties();

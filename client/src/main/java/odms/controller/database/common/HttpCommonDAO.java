@@ -30,7 +30,7 @@ public class HttpCommonDAO implements CommonDAO {
     @Override
     public void setup() throws InitializationException {
         Response response = null;
-        String url = "http://sengstudent@csse-s302g2:8080/api/v1/setup";
+        String url = "http://csse-s302g2:8080/api/v1/setup";
 
         Request request = new Request(url, new HashMap<>(), "{}");
         try {
@@ -49,7 +49,7 @@ public class HttpCommonDAO implements CommonDAO {
     @Override
     public void logout() {
         Response response = null;
-        String url = "http://sengstudent@csse-s302g2:8080/api/v1/logout";
+        String url = "http://csse-s302g2:8080/api/v1/logout";
 
         Request request = new Request(url, new HashMap<>(), "{}");
         try {
