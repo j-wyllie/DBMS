@@ -24,7 +24,7 @@ public class HttpOrganDAO implements OrganDAO {
 
     @Override
     public Set<OrganEnum> getDonations(Profile profile) {
-        String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
+        String url = String.format("http://sengstudent@csse-s302g2:8080/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("donated", true);
         return getSetRequest(url, queryParams);
@@ -32,7 +32,7 @@ public class HttpOrganDAO implements OrganDAO {
 
     @Override
     public Set<OrganEnum> getDonating(Profile profile) {
-        String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
+        String url = String.format("http://sengstudent@csse-s302g2:8080/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("donating", true);
         return getSetRequest(url, queryParams);
@@ -40,7 +40,7 @@ public class HttpOrganDAO implements OrganDAO {
 
     @Override
     public Set<OrganEnum> getRequired(Profile profile) {
-        String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
+        String url = String.format("http://sengstudent@csse-s302g2:8080/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("required", true);
         return getSetRequest(url, queryParams);
@@ -48,7 +48,7 @@ public class HttpOrganDAO implements OrganDAO {
 
     @Override
     public Set<OrganEnum> getReceived(Profile profile) {
-        String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
+        String url = String.format("http://sengstudent@csse-s302g2:8080/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("received", true);
         return getSetRequest(url, queryParams);
@@ -56,14 +56,14 @@ public class HttpOrganDAO implements OrganDAO {
 
     @Override
     public List<ExpiredOrgan> getExpired(Profile profile) throws SQLException {
-        String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs/expired", profile.getId());
+        String url = String.format("http://sengstudent@csse-s302g2:8080/api/v1/profiles/%s/organs/expired", profile.getId());
         Map<String, Object> queryParams = new HashMap<>();
         return getArrayRequest(url, queryParams);
     }
 
     @Override
     public void addDonation(Profile profile, OrganEnum organ) {
-        String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
+        String url = String.format("http://sengstudent@csse-s302g2:8080/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
         organInfo.put("date", organ.getDate(profile));
@@ -73,7 +73,7 @@ public class HttpOrganDAO implements OrganDAO {
 
     @Override
     public void addDonating(Profile profile, OrganEnum organ) {
-        String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
+        String url = String.format("http://sengstudent@csse-s302g2:8080/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
         organInfo.put("date", organ.getDate(profile));
@@ -83,7 +83,7 @@ public class HttpOrganDAO implements OrganDAO {
 
     @Override
     public void addRequired(Profile profile, OrganEnum organ) {
-        String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
+        String url = String.format("http://sengstudent@csse-s302g2:8080/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
         organInfo.put("date", organ.getDate(profile));
@@ -93,7 +93,7 @@ public class HttpOrganDAO implements OrganDAO {
 
     @Override
     public void addReceived(Profile profile, OrganEnum organ) {
-        String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
+        String url = String.format("http://sengstudent@csse-s302g2:8080/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
         organInfo.put("date", organ.getDate(profile));
@@ -114,7 +114,7 @@ public class HttpOrganDAO implements OrganDAO {
 
     @Override
     public void removeDonation(Profile profile, OrganEnum organ) {
-        String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
+        String url = String.format("http://sengstudent@csse-s302g2:8080/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
         organInfo.put("donated", true);
@@ -123,7 +123,7 @@ public class HttpOrganDAO implements OrganDAO {
 
     @Override
     public void removeDonating(Profile profile, OrganEnum organ) {
-        String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
+        String url = String.format("http://sengstudent@csse-s302g2:8080/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
         organInfo.put("donating", true);
@@ -132,7 +132,7 @@ public class HttpOrganDAO implements OrganDAO {
 
     @Override
     public void removeRequired(Profile profile, OrganEnum organ) {
-        String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
+        String url = String.format("http://sengstudent@csse-s302g2:8080/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
         organInfo.put("required", true);
@@ -141,7 +141,7 @@ public class HttpOrganDAO implements OrganDAO {
 
     @Override
     public void removeReceived(Profile profile, OrganEnum organ) {
-        String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs", profile.getId());
+        String url = String.format("http://sengstudent@csse-s302g2:8080/api/v1/profiles/%s/organs", profile.getId());
         Map<String, Object> organInfo = new HashMap<>();
         organInfo.put("name", organ);
         organInfo.put("received", true);
@@ -151,7 +151,7 @@ public class HttpOrganDAO implements OrganDAO {
     @Override
     public void setExpired(Profile profile, String organ, Integer expired, String note,
             Integer userId) {
-        String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs/expired", profile.getId());
+        String url = String.format("http://sengstudent@csse-s302g2:8080/api/v1/profiles/%s/organs/expired", profile.getId());
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("organ", organ.replace(" ", "+"));
         queryParams.put("expired", expired);
@@ -167,7 +167,7 @@ public class HttpOrganDAO implements OrganDAO {
 
     @Override
     public void revertExpired(Integer profileId, String organ) {
-        String url = String.format("http://localhost:6969/api/v1/profiles/%s/organs/expired", profileId);
+        String url = String.format("http://sengstudent@csse-s302g2:8080/api/v1/profiles/%s/organs/expired", profileId);
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("organ", organ.replace(" ", "+"));
         queryParams.put("expired", 0);

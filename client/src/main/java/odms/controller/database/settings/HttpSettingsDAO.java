@@ -25,8 +25,8 @@ import org.sonar.api.internal.google.gson.JsonParser;
 @Slf4j
 public class HttpSettingsDAO implements SettingsDAO {
 
-    private static final String COUNTRIES_URL = "http://localhost:6969/api/v1/settings/countries";
-    private static final String LOCALE_URL = "http://localhost:6969/api/v1/settings/locale";
+    private static final String COUNTRIES_URL = "http://sengstudent@csse-s302g2:8080/api/v1/settings/countries";
+    private static final String LOCALE_URL = "http://sengstudent@csse-s302g2:8080/api/v1/settings/locale";
 
     /**
      * Gets all countries from the database.

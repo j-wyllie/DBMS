@@ -19,8 +19,8 @@ import odms.controller.database.common.CommonDAO;
 public class GuiMain extends Application {
 
     private static final String APP_NAME = "ODMS";
-    private static final String DOMAIN = "localhost";
-    private static final Integer PORT = 6969;
+    private static final String DOMAIN = "sengstudent@csse-s302g2";
+    private static final Integer PORT = 8080;
 
 
     /**
