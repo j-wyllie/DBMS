@@ -26,7 +26,7 @@ import server.controller.*;
  */
 @Slf4j
 public class Server {
-    private static Integer port = 6969;
+    private static Integer port = 8080;
 
     /**
      * Server class should not be instantiated.

@@ -158,7 +158,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <!-- Optional URL to server. Default value is http://localhost:9000 -->
+                <!-- Optional URL to server. Default value is http://csse-s302g2:9000 -->
                 <sonar.host.url>
                     http://csse-s302g2.canterbury.ac.nz:9000/
                 </sonar.host.url>
