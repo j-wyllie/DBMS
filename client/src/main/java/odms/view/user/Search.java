@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.PauseTransition;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,30 +22,34 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Profile;
-import odms.controller.database.DAOFactory;
 import odms.commons.model.enums.OrganEnum;
+import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
-import odms.controller.database.profile.ProfileDAO;
+import odms.data.DefaultLocale;
 import odms.view.CommonView;
 import org.controlsfx.control.CheckComboBox;
 
 /**
  * Search view. Contains all GUI accessor methods for the profile search tab.
  */
+@Slf4j
 public class Search extends CommonView {
 
     // Constant that holds the number of search results displayed on a page at a time.
     private static final int PAGESIZE = 25;
     // Constant that holds the max number of search results that can be displayed.
     private static final int MAXPAGESIZE = 200;
+    // Constant that displays the start of the search result message.
+    private static final String SEARCHDISPLAY = "displaying 1 to ";
 
     private User currentUser;
     private ObservableList<String> genderStrings = FXCollections.observableArrayList();
     private ObservableList<String> typeStrings = FXCollections.observableArrayList();
     private ObservableList<String> organsStrings = FXCollections.observableArrayList();
 
-    private odms.controller.user.Search controller = new odms.controller.user.Search(this);
+    private odms.controller.user.Search controller = new odms.controller.user.Search();
 
     @FXML
     private TextField ageField;
@@ -67,7 +72,7 @@ public class Search extends CommonView {
     @FXML
     private TableColumn<Profile, String> donorReceiverColumn;
     @FXML
-    private TableColumn<Profile, Integer> ageColumn;
+    private TableColumn<Profile, String> ageColumn;
     @FXML
     private TableColumn<Profile, String> genderColumn;
     @FXML
@@ -95,13 +100,15 @@ public class Search extends CommonView {
      * double clicked a new donor window is opened. Calls the setTooltipToRow function.
      */
     @FXML
-    private void makeSearchTable() {
+    private void makeSearchTable(User currentUser) {
         searchTable.getItems().clear();
         donorObservableList = FXCollections.observableArrayList();
         searchTable.setItems(donorObservableList);
         fullNameColumn.setCellValueFactory(new PropertyValueFactory<>("fullPreferredName"));
         regionColumn.setCellValueFactory(new PropertyValueFactory<>("region"));
-        ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
+        ageColumn.setCellValueFactory(profile -> new SimpleStringProperty(
+                DefaultLocale.format(profile.getValue().getAge())
+        ));
         genderColumn.setCellValueFactory(new PropertyValueFactory<>("gender"));
         donorReceiverColumn.setCellValueFactory(p -> {
             Profile x = p.getValue();
@@ -112,7 +119,7 @@ public class Search extends CommonView {
         searchTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     searchTable.getSelectionModel().getSelectedItem() != null) {
-                createNewDonorWindow(searchTable.getSelectionModel().getSelectedItem(), parentView);
+                createNewDonorWindow(searchTable.getSelectionModel().getSelectedItem(), parentView, currentUser);
             }
         });
 
@@ -131,7 +138,7 @@ public class Search extends CommonView {
                 final Profile donor = row.getItem();
                 String donations = "";
                 if (row.isHover() && donor != null) {
-                    if (donor.getOrgansDonated().size() > 0) {
+                    if (!donor.getOrgansDonated().isEmpty()) {
                         donations = ". Donor: " + donor.getOrgansDonated().toString();
                     }
                     row.setTooltip(new Tooltip(donor.getFullName() + donations));
@@ -168,7 +175,7 @@ public class Search extends CommonView {
         buttonShowAll.setVisible(false);
         buttonShowNext.setVisible(false);
         updateTable(true, false);
-        labelCurrentOnDisplay.setText("displaying 1 to " + searchTable.getItems().size());
+        labelCurrentOnDisplay.setText(SEARCHDISPLAY + searchTable.getItems().size());
     }
 
     /**
@@ -180,7 +187,7 @@ public class Search extends CommonView {
     private void handleGetXResults(ActionEvent event) {
         updateTable(false, true);
         updateLabels();
-        labelCurrentOnDisplay.setText("displaying 1 to " + searchTable.getItems().size());
+        labelCurrentOnDisplay.setText(SEARCHDISPLAY + searchTable.getItems().size());
     }
 
     /**
@@ -195,11 +202,11 @@ public class Search extends CommonView {
             buttonShowNext.setVisible(false);
         } else {
             if (profileSearchResults.size() <= PAGESIZE) {
-                labelCurrentOnDisplay.setText("displaying 1 to " + profileSearchResults.size());
+                labelCurrentOnDisplay.setText(SEARCHDISPLAY + profileSearchResults.size());
                 buttonShowAll.setVisible(false);
                 buttonShowNext.setVisible(false);
             } else {
-                labelCurrentOnDisplay.setText("displaying 1 to " + PAGESIZE);
+                labelCurrentOnDisplay.setText(SEARCHDISPLAY + PAGESIZE);
                 if (profileSearchResults.size() > MAXPAGESIZE) {
                     labelToManyResults.setVisible(true);
                     buttonShowAll.setVisible(false);
@@ -287,25 +294,21 @@ public class Search extends CommonView {
         }
     }
 
-    public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
-    }
-
     /**
-     * Limits the characters entered in textfield to only digits and maxLength
+     * Limits the characters entered in textfield to only digits and maxLength.
      *
      * @param maxLength that can be entered in the textfield
-     * @return
+     * @return eventHandler
      */
-    private EventHandler<KeyEvent> numeric_Validation(final Integer maxLength) {
+    public static EventHandler<KeyEvent> numericValidation(final Integer maxLength) {
         return e -> {
-            TextField txt_TextField = (TextField) e.getSource();
-            if (txt_TextField.getText().length() >= maxLength) {
+            TextField txtField = (TextField) e.getSource();
+            if (txtField.getText().length() >= maxLength) {
                 e.consume();
             }
             if (e.getCharacter().matches("[0-9.]")) {
-                if ((txt_TextField.getText().contains(".") ||
-                        txt_TextField.getText().length() == 0) &&
+                if ((txtField.getText().contains(".") ||
+                        txtField.getText().length() == 0) &&
                         e.getCharacter().matches("[.]")) {
                     e.consume();
                 }
@@ -322,10 +325,11 @@ public class Search extends CommonView {
      */
     public void initialize(User currentUser, ClinicianProfile parentView) {
         this.parentView = parentView;
+        this.currentUser = currentUser;
         if (currentUser != null) {
             ageRangeField.setDisable(true);
-            ageField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
-            ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numeric_Validation(10));
+            ageField.addEventHandler(KeyEvent.KEY_TYPED, numericValidation(10));
+            ageRangeField.addEventHandler(KeyEvent.KEY_TYPED, numericValidation(10));
             genderStrings.clear();
             genderStrings.add("any");
             genderStrings.add("male");
@@ -357,11 +361,10 @@ public class Search extends CommonView {
                 }
             });
 
-            organsCombobox.addEventHandler(ComboBox.ON_HIDDEN, event -> {
-                performSearchFromFilters();
-            });
+            organsCombobox.addEventHandler(ComboBox.ON_HIDDEN, event ->
+                performSearchFromFilters());
 
-            makeSearchTable();
+            makeSearchTable(currentUser);
             setSearchTablePlaceholder();
         }
 
@@ -371,15 +374,15 @@ public class Search extends CommonView {
     /**
      * Clears the search table and sets the placeholder.
      */
-    public void setSearchTablePlaceholder() {
+    private void setSearchTablePlaceholder() {
         try {
-            makeSearchTable();
+            makeSearchTable(currentUser);
             searchTable.getItems().clear();
             String profileCount = controller.getNumberOfProfiles();
             searchTable.setPlaceholder(new Label("There are " + profileCount + " profiles"));
             labelResultCount.setText(profileCount + " results found");
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 

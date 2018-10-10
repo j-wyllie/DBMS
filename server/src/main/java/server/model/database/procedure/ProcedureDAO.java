@@ -29,7 +29,7 @@ public interface ProcedureDAO {
 
     /**
      * Update a procedure for the profile.
-     * @param procedure to update.
+     * @param procedure to updateCountries.
      */
     void update(Procedure procedure, boolean pending);
 

@@ -5,6 +5,7 @@ import static odms.controller.data.MedicationDataIO.getSuggestionList;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.SimpleStringProperty;
@@ -29,6 +30,7 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.medications.Drug;
 import odms.commons.model.profile.Profile;
 import odms.controller.profile.Medications;
@@ -37,6 +39,7 @@ import odms.view.CommonView;
 /**
  * View that contains FXML elements and input handlers for the Medications view.
  */
+@Slf4j
 public class MedicationsGeneral extends CommonView {
 
     @FXML
@@ -81,7 +84,7 @@ public class MedicationsGeneral extends CommonView {
     private Button buttonClearCache;
 
     // init controller corresponding to this view
-    private Medications controller = new Medications(this);
+    private Medications controller = new Medications();
     private Profile currentProfile;
     private Boolean isOpenedByClinician;
 
@@ -125,8 +128,7 @@ public class MedicationsGeneral extends CommonView {
     private void handleSaveMedications(ActionEvent event) throws IOException {
         if (saveChanges()) {
             //ProfileDataIO.saveData(getCurrentDatabase());
-            controller.saveDrugs();
-            //todo sort out show notification
+            controller.saveDrugs(currentProfile);
             showNotification("Medications Tab", event);
         }
     }
@@ -138,11 +140,11 @@ public class MedicationsGeneral extends CommonView {
      */
     @FXML
     private void handleViewActiveIngredients(ActionEvent event) {
-        ArrayList<String> activeIngredients = null;
+        List<String> activeIngredients = null;
         try {
-            activeIngredients = controller.viewActiveIngredients();
+            activeIngredients = controller.viewActiveIngredients(getSelectedDrug());
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             tableViewActiveIngredients
                     .setPlaceholder(new Label("There was an error getting active ingredient data"));
         }
@@ -152,7 +154,7 @@ public class MedicationsGeneral extends CommonView {
                     .setPlaceholder(new Label("There is no active ingredient for this drug"));
         } else {
             ObservableList<String> activeIngredientsList = FXCollections.observableArrayList();
-            activeIngredientsList.add("Active ingredients for " + controller.getSelectedDrug().getDrugName() + ":");
+            activeIngredientsList.add("Active ingredients for " + getSelectedDrug().getDrugName() + ":");
             activeIngredientsList.addAll(activeIngredients);
             tableViewActiveIngredients.setItems(activeIngredientsList);
             tableColumnActiveIngredients
@@ -186,8 +188,8 @@ public class MedicationsGeneral extends CommonView {
     private void handleShowInteractions(ActionEvent event) {
         try {
             tableViewDrugInteractions.getItems().clear();
-            Map<String, String> interactionsRaw = controller.getRawInteractions(currentProfile);
-            ObservableList<String> drugsList = controller.getObservableDrugsList();
+            Map<String, String> interactionsRaw = controller.getRawInteractions(currentProfile, getDrugsList());
+            ObservableList<String> drugsList = getObservableDrugsList();
             tableViewDrugInteractionsNames.setItems(drugsList);
             tableColumnDrugInteractions
                     .setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
@@ -236,7 +238,7 @@ public class MedicationsGeneral extends CommonView {
      */
     @FXML
     private void handleMoveMedicationToHistoric(ActionEvent event) {
-        controller.moveToHistory(currentProfile);
+        controller.moveToHistory(currentProfile, convertObservableToArray(getSelectedCurrentDrugs()));
         refreshMedicationsTable();
     }
 
@@ -248,7 +250,7 @@ public class MedicationsGeneral extends CommonView {
      */
     @FXML
     private void handleMoveMedicationToCurrent(ActionEvent event) {
-        controller.moveToCurrent(currentProfile);
+        controller.moveToCurrent(currentProfile, convertObservableToArray(getSelectedHistoricDrugs()));
         refreshMedicationsTable();
     }
 
@@ -259,7 +261,7 @@ public class MedicationsGeneral extends CommonView {
      */
     @FXML
     private void handleDeleteMedication(ActionEvent event) {
-        controller.deleteDrug(currentProfile, controller.getSelectedDrug());
+        controller.deleteDrug(currentProfile, getSelectedDrug());
         refreshMedicationsTable();
     }
 
@@ -314,7 +316,7 @@ public class MedicationsGeneral extends CommonView {
                     suggestionMenu.show(textFieldMedicationSearch, Side.BOTTOM, 0, 0);
                     menuItems.clear();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage(), e);
                 }
             });
             pauseTransition.playFromStart();
@@ -374,7 +376,7 @@ public class MedicationsGeneral extends CommonView {
      * selected.
      */
     public void refreshPageElements() {
-        ArrayList<Drug> drugs = controller.convertObservableToArray(
+        ArrayList<Drug> drugs = convertObservableToArray(
                 tableViewCurrentMedications.getSelectionModel().getSelectedItems()
         );
 
@@ -385,7 +387,7 @@ public class MedicationsGeneral extends CommonView {
                     drugs.add(toAdd);
                 }
             } else if (drugs.isEmpty()) {
-                drugs = controller.convertObservableToArray(
+                drugs = convertObservableToArray(
                         tableViewHistoricMedications.getSelectionModel().getSelectedItems());
             }
 
@@ -454,6 +456,63 @@ public class MedicationsGeneral extends CommonView {
         }
     }
 
+    /**
+     * Button handler to get and display drug interactions on TableView
+     * tableViewDrugInteractionsName and tableViewDrugInteractions.
+     *
+     */
+    private ArrayList<Drug> getDrugsList() {
+        ArrayList<Drug> drugs;
+        if (convertObservableToArray(
+                getSelectedCurrentDrugs()).size() == 2) {
+            drugs = convertObservableToArray(
+                    getSelectedCurrentDrugs());
+        } else {
+            if (getSelectedHistoricDrugs().size() == 2) {
+                drugs = convertObservableToArray(
+                        getSelectedHistoricDrugs());
+            } else {
+                drugs = convertObservableToArray(
+                        getSelectedCurrentDrugs());
+                drugs.add(getSelectedHistoricDrug());
+            }
+        }
+        return drugs;
+    }
 
+    public ObservableList<String> getObservableDrugsList() {
+        ArrayList<Drug> drugs = getDrugsList();
+        ObservableList<String> drugsList = FXCollections.observableArrayList();
+        drugsList.add("Interactions between:");
+        drugsList.add(drugs.get(0).getDrugName());
+        drugsList.add(drugs.get(1).getDrugName());
+        return drugsList;
+    }
 
+    /**
+     * Converts ObservableList of drugs to ArrayList of drugs.
+     *
+     * @param drugs ObservableList of drugs.
+     * @return ArrayList of drugs.
+     */
+    public ArrayList<Drug> convertObservableToArray(ObservableList<Drug> drugs) {
+        ArrayList<Drug> toReturn = new ArrayList<>();
+        for (Drug drug : drugs) {
+            if (drug != null) {
+                toReturn.add(drug);
+            }
+        }
+        return toReturn;
+    }
+
+    public Drug getSelectedDrug() {
+        Drug drug = getSelectedCurrentDrug();
+        if (drug == null) {
+            drug = getSelectedHistoricDrug();
+        }
+        if (drug == null) {
+            return null;
+        }
+        return drug;
+    }
 }

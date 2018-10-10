@@ -6,7 +6,6 @@ import java.util.List;
 import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableBooleanValue;
 
 public enum CountriesEnum {
     NZ("New Zealand"),
@@ -247,7 +246,7 @@ public enum CountriesEnum {
      */
     public static CountriesEnum getEnumByString(String name) {
         for (CountriesEnum e : CountriesEnum.values()) {
-            if (name.equals(e.name)) {
+            if (name.equalsIgnoreCase(e.name)) {
                 return e;
             }
         }
@@ -277,7 +276,8 @@ public enum CountriesEnum {
         if (CountriesEnum.toArrayList().contains(string)) {
             return string;
         } else if (getValuesAsStrings().contains(string)) {
-            return CountriesEnum.valueOf(string).getName();
+            CountriesEnum country = CountriesEnum.getEnumByString(string);
+            return country != null ? country.getName() : "New Zealand";
         } else {
             return "New Zealand";
         }

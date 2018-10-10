@@ -1,5 +1,7 @@
 package server.model.database.user;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,72 +9,68 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
 import server.model.database.DatabaseConnection;
+import server.model.database.PasswordUtilities;
 
+/**
+ * Handles all of the database queries to do with the /users endpoint.
+ */
+@Slf4j
 public class MySqlUserDAO implements UserDAO {
+
+    private static final String NOT_FOUND = "Not found";
 
     /**
      * Gets all users from the database.
      *
      * @return ArrayList of all users in the database
      */
-    @Override
-    public ArrayList<User> getAll() throws SQLException {
+    public List<User> getAll() {
         ArrayList<User> allUsers = new ArrayList<>();
-
         String query = "SELECT * FROM users;";
-        DatabaseConnection connectionInstance = DatabaseConnection.getInstance();
-        Connection conn = connectionInstance.getConnection();
-        Statement stmt = conn.createStatement();
-        try {
 
-            ResultSet allUserRows = stmt.executeQuery(query);
+        try (Connection conn = DatabaseConnection.getConnection();
+                Statement stmt = conn.createStatement()) {
 
-            while (allUserRows.next()) {
-                User user = parseUser(allUserRows);
-                allUsers.add(user);
+            try (ResultSet allUserRows = stmt.executeQuery(query)) {
+                while (allUserRows.next()) {
+                    User user = parseUser(allUserRows);
+                    allUsers.add(user);
+                }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            conn.close();
-            stmt.close();
+            log.error(e.getMessage(), e);
         }
-
         return allUsers;
     }
 
     /**
      * Gets a single user from the database by id.
-     *
      * @param userId of the user.
      * @return the specified user.
      * @throws UserNotFoundException error.
      */
-    public User get(int userId) throws UserNotFoundException, SQLException {
+    public User get(int userId) throws UserNotFoundException {
         String query = "SELECT * FROM users WHERE UserId = ?;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
         User user;
-        Connection conn = instance.getConnection();
 
-        PreparedStatement stmt = conn.prepareStatement(query);
-        try {
-
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, userId);
-            ResultSet rs = stmt.executeQuery();
+            try (ResultSet rs = stmt.executeQuery()) {
 
-            rs.next();
-            user = parseUser(rs);
+                rs.next();
+                user = parseUser(rs);
+            }
         } catch (SQLException e) {
-            throw new UserNotFoundException("Not found", userId);
-        } finally {
-            conn.close();
-            stmt.close();
+            throw new UserNotFoundException(NOT_FOUND, userId);
         }
-
         return user;
     }
 
@@ -83,28 +81,47 @@ public class MySqlUserDAO implements UserDAO {
      * @return the specified user.
      * @throws UserNotFoundException error.
      */
-    public User get(String username) throws UserNotFoundException, SQLException {
+    public User get(String username) throws UserNotFoundException {
         String query = "SELECT * FROM users WHERE Username = ?;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
-        User user;
-        Connection conn = instance.getConnection();
 
-        PreparedStatement stmt = conn.prepareStatement(query);
-        try {
-
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
-            ResultSet rs = stmt.executeQuery();
-
-            rs.next();
-            user = parseUser(rs);
+            try (ResultSet rs = stmt.executeQuery()) {
+                rs.next();
+                return parseUser(rs);
+            }
         } catch (SQLException e) {
-            throw new UserNotFoundException("Not found", username);
-        } finally {
-            conn.close();
-            stmt.close();
+            throw new UserNotFoundException(NOT_FOUND, username);
         }
+    }
 
-        return user;
+    /**
+     * Checks a user credentials when they log in for validity.
+     * @param username username credential.
+     * @param password password credential.
+     * @return true if the credentials are correct, false otherwise.
+     * @throws UserNotFoundException error.
+     */
+    @Override
+    public Boolean checkCredentials(String username, String password) throws UserNotFoundException {
+        String query = "SELECT Username, Password FROM users WHERE Username = ?;";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, username);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                rs.next();
+                return PasswordUtilities.check(password, rs.getString("Password"));
+            }
+
+        } catch (SQLException e) {
+            throw new UserNotFoundException(NOT_FOUND, username);
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
+            log.error(e.getMessage(), e);
+        }
+        return false;
     }
 
     /**
@@ -122,7 +139,8 @@ public class MySqlUserDAO implements UserDAO {
         UserType userType = UserType.valueOf(rs.getString("UserType"));
         String address = rs.getString("Address");
         String region = rs.getString("Region");
-        Boolean defaultBool = rs.getBoolean("IsDefault");
+        String country = rs.getString("Country");
+        boolean defaultBool = rs.getBoolean("IsDefault");
         LocalDateTime created = rs.getTimestamp("Created").toLocalDateTime();
         LocalDateTime updated = rs.getTimestamp("LastUpdated").toLocalDateTime();
         String imageName = rs.getString("ImageName");
@@ -137,41 +155,39 @@ public class MySqlUserDAO implements UserDAO {
                 updated,
                 imageName
         );
+        user.setCountry(country != null && !country.equals("") ? CountriesEnum.valueOf(country) : null);
         user.setDefault(defaultBool);
         return user;
     }
 
-    /**
+    /**        stubCheck(false);
+
      * Adds a new user to the database.
      *
      * @param user to add.
      */
-    @Override
     public void add(User user) throws SQLException {
         String query = "INSERT INTO users (Username, Password, Name, UserType, Address," +
-                " Region, Created, LastUpdated, IsDefault, ImageName) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = instance.getConnection();
+                " Region, Country, Created, LastUpdated, IsDefault, ImageName) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
-        PreparedStatement stmt = conn.prepareStatement(query);
-        try {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, user.getUsername());
-            stmt.setString(2, user.getPassword());
+            stmt.setString(2, PasswordUtilities.getSaltedHash(user.getPassword()));
             stmt.setString(3, user.getName());
             stmt.setString(4, user.getUserType().toString());
             stmt.setString(5, user.getWorkAddress());
             stmt.setString(6, user.getRegion());
-            stmt.setString(7, LocalDateTime.now().toString());
+            stmt.setString(7, user.getCountry() != null ? user.getCountry().toString() : null);
             stmt.setString(8, LocalDateTime.now().toString());
-            stmt.setBoolean(9, user.getDefault());
-            stmt.setString(10, user.getPictureName());
+            stmt.setString(9, LocalDateTime.now().toString());
+            stmt.setBoolean(10, user.getDefault());
+            stmt.setString(11, user.getPictureName());
             stmt.execute();
-        } catch (SQLException e) {
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
+            log.error(e.getMessage(), e);
             throw new SQLException();
-        } finally {
-            conn.close();
-            stmt.close();
         }
     }
 
@@ -181,86 +197,64 @@ public class MySqlUserDAO implements UserDAO {
      * @param username to check.
      * @return true if the username does not already exist.
      */
-    @Override
-    public boolean isUniqueUsername(String username) throws SQLException {
+    public boolean isUniqueUsername(String username) {
         String query = "SELECT Username FROM users WHERE Username = ?;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = instance.getConnection();
 
-        PreparedStatement stmt = conn.prepareStatement(query);
-        try {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
-            ResultSet result = stmt.executeQuery();
-
+            try (ResultSet result = stmt.executeQuery()) {
                 return !result.next();
             }
-        catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            conn.close();
-            stmt.close();
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
         }
         return false;
     }
-
 
     /**
      * Removes a user from the database.
      *
      * @param user to remove.
      */
-    @Override
-    public void remove(User user) throws SQLException {
+    public void remove(User user) {
         String query = "DELETE FROM users WHERE UserId = ?;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = instance.getConnection();
-
-        PreparedStatement stmt = conn.prepareStatement(query);
-        try {
-
-            stmt.setInt(1, user.getStaffID());
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, user.getId());
 
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            conn.close();
-            stmt.close();
+            log.error(e.getMessage(), e);
         }
     }
 
     /**
      * Updates a users information in the database.
      *
-     * @param user to update.
+     * @param user to updateCountries.
      */
-    @Override
-    public void update(User user) throws SQLException {
+    public void update(User user) {
         String query = "UPDATE users SET Username = ?, Password = ?, Name = ?, UserType = ?, "
-                + "Address = ?, Region = ?, LastUpdated = ?, IsDefault = ?, ImageName = ? "
+                + "Address = ?, Region = ?, Country = ?, LastUpdated = ?, IsDefault = ?, ImageName = ? "
                 + "WHERE UserId = ?;";
-        DatabaseConnection instance = DatabaseConnection.getInstance();
-        Connection conn = instance.getConnection();
 
-        PreparedStatement stmt = conn.prepareStatement(query);
-        try {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
             stmt.setString(3, user.getName());
             stmt.setString(4, user.getUserType().toString());
             stmt.setString(5, user.getWorkAddress());
             stmt.setString(6, user.getRegion());
-            stmt.setString(7, user.getLastUpdated().toString());
-            stmt.setBoolean(8, user.getDefault());
-            stmt.setString(9, user.getPictureName());
+            stmt.setString(7, user.getCountry() != null ? user.getCountry().getName() : null);
+            stmt.setString(8, user.getLastUpdated().toString());
+            stmt.setBoolean(9, user.getDefault());
             stmt.setString(10, user.getPictureName());
-            stmt.setInt(10, user.getStaffID());
+            stmt.setInt(11, user.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            conn.close();
-            stmt.close();
+            log.error(e.getMessage(), e);
         }
     }
 }

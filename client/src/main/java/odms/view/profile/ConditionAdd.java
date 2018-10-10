@@ -8,16 +8,16 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Condition;
 import odms.commons.model.profile.Profile;
-import odms.controller.database.DAOFactory;
-import odms.controller.database.condition.ConditionDAO;
 import odms.view.CommonView;
 
+@Slf4j
 public class ConditionAdd extends CommonView {
-    private static Profile searchedDonor;
-    private static ProfileMedicalHistory parent;
-    private odms.controller.profile.ConditionAdd controller = new odms.controller.profile.ConditionAdd(this);
+    private Profile searchedDonor;
+    private ProfileMedicalHistory parent;
+    private odms.controller.profile.ConditionAdd controller = new odms.controller.profile.ConditionAdd();
 
     @FXML
     private javafx.scene.control.TextField nameField;
@@ -43,12 +43,13 @@ public class ConditionAdd extends CommonView {
     @FXML
     public void handleAddButtonClicked(ActionEvent actionEvent) {
         try {
-            controller.add();
+            Condition condition = controller.parseCondition(getNameFieldText(), getDateDiagnosed(), getIsChronic(), getIsCured(),searchedDonor,getDateCured());
+            controller.add(searchedDonor, condition);
             parent.refreshConditionTable();
             Stage stage = (Stage) addButton.getScene().getWindow();
             stage.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             warningLabel.setVisible(true);
         }
     }
@@ -79,6 +80,7 @@ public class ConditionAdd extends CommonView {
         dateCuredDatePicker.setDisable(true);
     }
 
+    @FXML
     public void setup(ProfileMedicalHistory view, Profile p) {
         parent = view;
         searchedDonor = p;
@@ -88,23 +90,23 @@ public class ConditionAdd extends CommonView {
         return searchedDonor;
     }
 
-    public String getNameFieldText() {
+    private String getNameFieldText() {
         return nameField.getText();
     }
 
-    public LocalDate getDateDiagnosed() {
+    private LocalDate getDateDiagnosed() {
         return dateDiagnosedDatePicker.getValue();
     }
 
-    public Boolean getIsCured() {
+    private Boolean getIsCured() {
         return curedCheckBox.isSelected();
     }
 
-    public Boolean getIsChronic() {
+    private Boolean getIsChronic() {
         return chronicCheckBox.isSelected();
     }
 
-    public LocalDate getDateCured() {
+    private LocalDate getDateCured() {
         return dateCuredDatePicker.getValue();
     }
 

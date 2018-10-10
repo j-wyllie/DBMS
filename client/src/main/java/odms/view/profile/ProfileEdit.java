@@ -12,6 +12,8 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,29 +24,45 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.enums.NewZealandRegionsEnum;
+import odms.commons.model.profile.HLAType;
 import odms.commons.model.profile.Profile;
+import odms.commons.model.user.User;
 import odms.controller.AlertController;
 import odms.controller.DateTimePicker;
+import odms.controller.HlaController;
 import odms.controller.database.DAOFactory;
-import odms.controller.database.country.CountryDAO;
+import odms.controller.database.settings.SettingsDAO;
+import odms.controller.database.hla.HLADAO;
 import odms.view.CommonView;
 
 /**
  * profile edit window.
  */
+@Slf4j
 public class ProfileEdit extends CommonView {
 
     private static final String MAINCOUNTRY = "New Zealand";
+    private static final String ANY_DIGIT = "//d*";
+    private static final String NOT_ANY_DIGIT = "[^\\d]";
 
     @FXML
     private Label donorFullNameLabel;
 
     @FXML
     private Label donorStatusLabel;
+
+    @FXML
+    private Label receiverStatusLabel;
 
     @FXML
     private TextField givenNamesField;
@@ -60,6 +78,9 @@ public class ProfileEdit extends CommonView {
 
     @FXML
     private DateTimePicker dodDateTimePicker;
+
+    @FXML
+    private SplitPane dodPane;
 
     @FXML
     private TextField heightField;
@@ -125,6 +146,51 @@ public class ProfileEdit extends CommonView {
     private TextField cityField;
 
     @FXML
+    private TextField hlaXAField;
+
+    @FXML
+    private TextField hlaXBField;
+
+    @FXML
+    private TextField hlaXCField;
+
+    @FXML
+    private TextField hlaXDPField;
+
+    @FXML
+    private TextField hlaXDQField;
+
+    @FXML
+    private TextField hlaXDRField;
+
+    @FXML
+    private TextField hlaYAField;
+
+    @FXML
+    private TextField hlaYBField;
+
+    @FXML
+    private TextField hlaYCField;
+
+    @FXML
+    private TextField hlaYDPField;
+
+    @FXML
+    private TextField hlaYDQField;
+
+    @FXML
+    private TextField hlaYDRField;
+
+    @FXML
+    private TextField secondaryHlaField;
+
+    @FXML
+    private Button addHlaBtn;
+
+    @FXML
+    private ListView secondaryHlaListView = new ListView<String>();
+
+    @FXML
     private Button removePhotoBtn;
 
     private Profile currentProfile;
@@ -132,29 +198,33 @@ public class ProfileEdit extends CommonView {
             new odms.controller.profile.ProfileEdit(
                     this
             );
+    private HlaController hlaController = new HlaController();
+
     private Boolean isOpenedByClinician;
 
     private File chosenFile;
     private Boolean removePhoto = false;
+    private User currentUser;
 
-    /**
-     * Button handler to undo last action.
-     *
-     * @param event clicking on the undo button.
-     */
+
     @FXML
-    private void handleUndoButtonClicked(ActionEvent event) {
-        controller.undo();
+    private void handleAddHlaButtonClicked() {
+        controller.handelSecondaryHlaEntered();
     }
 
-    /**
-     * Button handler to redo last undo action.
-     *
-     * @param event clicking on the redo button.
-     */
     @FXML
-    private void handleRedoButtonClicked(ActionEvent event) {
-        controller.redo();
+    private void handleSecondaryHlaFieldKeyPressed(KeyEvent code) {
+        if (code.getCode() == KeyCode.ENTER) {
+            controller.handelSecondaryHlaEntered();
+        }
+    }
+
+    @FXML
+    private void handleSecondaryHlaListViewKeyPressed(KeyEvent code) {
+        if (code.getCode() == KeyCode.DELETE) {
+            List<String> hlasToRemove = secondaryHlaListView.getSelectionModel().getSelectedItems();
+            controller.handelSecondaryHlaDeleted(hlasToRemove);
+        }
     }
 
     /**
@@ -204,7 +274,7 @@ public class ProfileEdit extends CommonView {
         Scene scene = new Scene(fxmlLoader.load());
 
         Display v = fxmlLoader.getController();
-        v.initialize(currentProfile, isOpenedByClinician, null);
+        v.initialize(currentProfile, isOpenedByClinician, null, currentUser);
         Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         appStage.setScene(scene);
         appStage.show();
@@ -302,8 +372,9 @@ public class ProfileEdit extends CommonView {
      * @param isOpenedByClinician Boolean, true if the window was opened by a clinician.
      */
     @FXML
-    public void initialize(Profile p, Boolean isOpenedByClinician) {
+    public void initialize(Profile p, Boolean isOpenedByClinician, User currentUser) {
         this.isOpenedByClinician = isOpenedByClinician;
+        this.currentUser = currentUser;
         this.currentProfile = p;
         this.controller.setCurrentProfile(currentProfile);
         this.controller.setIsClinician(isOpenedByClinician);
@@ -321,6 +392,19 @@ public class ProfileEdit extends CommonView {
             if (currentProfile.getDateOfDeath() == null) {
                 deathDetailsSetDisable(true);
                 clearDodField();
+            }
+            try {
+                if(controller.getManuallyExpiredOrgans()) {
+                    disableItems();
+                    dodPane.hoverProperty().addListener(observable -> {
+                        if (dodPane.isHover()) {
+                            dodPane.setTooltip(new Tooltip("Profile has manually expired organ(s)."));
+                        }
+                    });
+
+                }
+            } catch (SQLException e) {
+                log.error(e.getMessage(), e);
             }
         }
     }
@@ -345,8 +429,18 @@ public class ProfileEdit extends CommonView {
 
         donorStatusLabel.setText("Donor Status: Unregistered");
 
-        if (currentProfile.getDonor() != null && currentProfile.getDonor()) {
+        if (!currentProfile.getOrgansDonated().isEmpty() || !currentProfile.getOrgansDonating()
+                .isEmpty()) {
             donorStatusLabel.setText("Donor Status: Registered");
+        }
+        if (currentProfile.getOrgansRequired().isEmpty()) {
+            currentProfile.setReceiver(false);
+        } else {
+            currentProfile.setReceiver(true);
+        }
+
+        if (!currentProfile.getOrgansReceived().isEmpty() || !currentProfile.getOrgansRequired().isEmpty()) {
+            receiverStatusLabel.setText("Receiver Status: Registered");
         }
         if (currentProfile.getGivenNames() != null) {
             givenNamesField.setText(currentProfile.getGivenNames());
@@ -401,6 +495,62 @@ public class ProfileEdit extends CommonView {
             alcoholConsumptionField.setText(currentProfile.getAlcoholConsumption());
         }
 
+        // HLA text setters
+        HLADAO hladao = DAOFactory.getHlaDAO();
+        HLAType hlaType = hladao.get(currentProfile.getId());
+
+        if (hlaType.getGroupX().get("A") != null) {
+            hlaXAField.setText("A" + String.valueOf(hlaType.getGroupX().get("A")));
+        }
+
+        if (hlaType.getGroupX().get("B") != null) {
+            hlaXBField.setText("B" + String.valueOf(hlaType.getGroupX().get("B")));
+        }
+
+        if (hlaType.getGroupX().get("C") != null) {
+            hlaXCField.setText("C" + String.valueOf(hlaType.getGroupX().get("C")));
+        }
+
+        if (hlaType.getGroupX().get("DP") != null) {
+            hlaXDPField.setText("DP" + String.valueOf(hlaType.getGroupX().get("DP")));
+        }
+
+        if (hlaType.getGroupX().get("DQ") != null) {
+            hlaXDQField.setText("DQ" + String.valueOf(hlaType.getGroupX().get("DQ")));
+        }
+
+        if (hlaType.getGroupX().get("DR") != null) {
+            hlaXDRField.setText("DR" + String.valueOf(hlaType.getGroupX().get("DR")));
+        }
+
+        if (hlaType.getGroupY().get("A") != null) {
+            hlaYAField.setText("A" + String.valueOf(hlaType.getGroupY().get("A")));
+        }
+
+        if (hlaType.getGroupY().get("B") != null) {
+            hlaYBField.setText("B" + String.valueOf(hlaType.getGroupY().get("B")));
+        }
+
+        if (hlaType.getGroupY().get("C") != null) {
+            hlaYCField.setText("C" + String.valueOf(hlaType.getGroupY().get("C")));
+        }
+
+        if (hlaType.getGroupY().get("DP") != null) {
+            hlaYDPField.setText("DP" + String.valueOf(hlaType.getGroupY().get("DP")));
+        }
+
+        if (hlaType.getGroupY().get("DQ") != null) {
+            hlaYDQField.setText("DQ" + String.valueOf(hlaType.getGroupY().get("DQ")));
+        }
+
+        if (hlaType.getGroupY().get("DR") != null) {
+            hlaYDRField.setText("DR" + String.valueOf(hlaType.getGroupY().get("DR")));
+        }
+
+        List<String> secondaryAntigenList = hlaController.getSecondaryHLAs(currentProfile.getId());
+        ObservableList<String> secondaryAntigens = FXCollections.observableArrayList(secondaryAntigenList);
+        secondaryHlaListView.setItems(secondaryAntigens);
+
         comboGender.setEditable(false);
         comboGender.getItems().addAll("Male", "Female");
         if (currentProfile.getGender() != null) {
@@ -441,20 +591,19 @@ public class ProfileEdit extends CommonView {
      */
     private void setUpLocationFields() {
         //Populating combo box values
-        CountryDAO database = DAOFactory.getCountryDAO();
+        SettingsDAO database = DAOFactory.getSettingsDAO();
 
-        List<String> validCountries = database.getAll(true);
+        List<String> validCountries = database.getAllCountries(true);
         comboCountry.getItems().addAll(validCountries);
         comboCountryOfDeath.getItems().addAll(validCountries);
 
         // City and region should be displayed same regardless
-        CountryDAO countryDAO = DAOFactory.getCountryDAO();
         if (currentProfile.getCity() != null) {
             cityField.setText(currentProfile.getCity());
         }
         if (currentProfile.getCountry() != null) {
             comboCountry.setValue(
-                    CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
+                    CountriesEnum.getValidNameFromString(currentProfile.getCountry().getName()));
         } else if (validCountries.contains(MAINCOUNTRY)) {
             comboCountry.setValue(CountriesEnum.getValidNameFromString(MAINCOUNTRY));
         }
@@ -485,11 +634,9 @@ public class ProfileEdit extends CommonView {
      * Sets the listeners for nhiField, weightField and dodDateTimePicker.
      */
     private void setListeners() {
-        String anyDigit = "//d*";
-        String notAnyDigit = "[^\\d]";
         heightField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(anyDigit)) {
-                heightField.setText(newValue.replaceAll(notAnyDigit, ""));
+            if (!newValue.matches(ANY_DIGIT)) {
+                heightField.setText(newValue.replaceAll(NOT_ANY_DIGIT, ""));
             }
         });
 
@@ -504,8 +651,87 @@ public class ProfileEdit extends CommonView {
         });
 
         weightField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(anyDigit)) {
-                weightField.setText(newValue.replaceAll(notAnyDigit, ""));
+            if (!newValue.matches(ANY_DIGIT)) {
+                weightField.setText(newValue.replaceAll(NOT_ANY_DIGIT, ""));
+            }
+        });
+
+        // hla listeners
+        hlaXAField.textProperty().addListener((observable, oldValue, newValue) -> {
+         if (!newValue.matches("A" + ANY_DIGIT)) {
+                hlaXAField.setText("A" + newValue.replaceAll(NOT_ANY_DIGIT, ""));
+            }
+        });
+
+        hlaXBField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("B" + ANY_DIGIT)) {
+                hlaXBField.setText("B" + newValue.replaceAll(NOT_ANY_DIGIT, ""));
+            }
+        });
+
+        hlaXCField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("C" + ANY_DIGIT)) {
+                hlaXCField.setText("C" + newValue.replaceAll(NOT_ANY_DIGIT, ""));
+            }
+        });
+
+        hlaXDPField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("DP" + ANY_DIGIT)) {
+                hlaXDPField.setText("DP" + newValue.replaceAll(NOT_ANY_DIGIT, ""));
+            }
+        });
+
+        hlaXDQField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("DQ" + ANY_DIGIT)) {
+                hlaXDQField.setText("DQ" + newValue.replaceAll(NOT_ANY_DIGIT, ""));
+            }
+        });
+
+        hlaXDRField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("DR" + ANY_DIGIT)) {
+                hlaXDRField.setText("DR" + newValue.replaceAll(NOT_ANY_DIGIT, ""));
+            }
+        });
+
+        hlaYAField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("A" + ANY_DIGIT)) {
+                hlaYAField.setText("A" + newValue.replaceAll(NOT_ANY_DIGIT, ""));
+            }
+        });
+
+        hlaYBField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("B" + ANY_DIGIT)) {
+                hlaYBField.setText("B" + newValue.replaceAll(NOT_ANY_DIGIT, ""));
+            }
+        });
+
+        hlaYCField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("C" + ANY_DIGIT)) {
+                hlaYCField.setText("C" + newValue.replaceAll(NOT_ANY_DIGIT, ""));
+            }
+        });
+
+        hlaYDPField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("DP" + ANY_DIGIT)) {
+                hlaYDPField.setText("DP" + newValue.replaceAll(NOT_ANY_DIGIT, ""));
+            }
+        });
+
+        hlaYDQField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("DQ" + ANY_DIGIT)) {
+                hlaYDQField.setText("DQ" + newValue.replaceAll(NOT_ANY_DIGIT, ""));
+            }
+        });
+
+        hlaYDRField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("DR" + ANY_DIGIT)) {
+                hlaYDRField.setText("DR" + newValue.replaceAll(NOT_ANY_DIGIT, ""));
+            }
+        });
+
+        secondaryHlaField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("[a-z,A-Z]*[0-9]*")) {
+                secondaryHlaField.setText(oldValue);
             }
         });
 
@@ -714,8 +940,8 @@ public class ProfileEdit extends CommonView {
         isSmokerCheckBox.setSelected(b);
     }
 
-    public String getComboCountryOfDeath() {
-        return comboCountryOfDeath.getValue().toString();
+    public CountriesEnum getComboCountryOfDeath() {
+        return CountriesEnum.valueOf(comboCountryOfDeath.getValue().toString());
     }
 
     public String getRegionOfDeathField() {
@@ -734,12 +960,40 @@ public class ProfileEdit extends CommonView {
         return comboCountry;
     }
 
-    public String getCityOfDeathField() {
-        return cityOfDeathField.getText();
-    }
+    public String getCityOfDeathField() { return cityOfDeathField.getText(); }
 
     public String getCityField() {
         return cityField.getText();
     }
+
+    public String getHLAXAField() { return hlaXAField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
+
+    public String getHLAXBField() { return hlaXBField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
+
+    public String getHLAXCField() { return hlaXCField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
+
+    public String getHLAXDPField() { return hlaXDPField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
+
+    public String getHLAXDQField() { return hlaXDQField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
+
+    public String getHLAXDRField() { return hlaXDRField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
+
+    public String getHLAYAField() { return hlaYAField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
+
+    public String getHLAYBField() { return hlaYBField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
+
+    public String getHLAYCField() { return hlaYCField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
+
+    public String getHLAYDPField() { return hlaYDPField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
+
+    public String getHLAYDQField() { return hlaYDQField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
+
+    public String getHLAYDRField() { return hlaYDRField.getText().replaceAll(NOT_ANY_DIGIT, ""); }
+
+    public String getSecondaryHlaField() { return secondaryHlaField.getText(); }
+
+    public void clearSecondaryHlaField() { secondaryHlaField.clear(); }
+
+    public ListView getSecondaryHlaListView() { return secondaryHlaListView; }
 
 }

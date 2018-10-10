@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
@@ -32,7 +33,7 @@ import odms.view.CommonView;
 public class ProfileMedicalHistory extends CommonView {
 
     private Profile currentProfile;
-    private ConditionGeneral controller = new ConditionGeneral(this);
+    private ConditionGeneral controller = new ConditionGeneral();
     private Boolean isOpenedByClinician;
 
     private ObservableList<Condition> curConditionsObservableList;
@@ -179,9 +180,7 @@ public class ProfileMedicalHistory extends CommonView {
 
         pastDateCuredColumn.setOnEditCommit(
                 (EventHandler<CellEditEvent<Condition, LocalDate>>) t -> {
-                    if (t.getNewValue().isBefore(
-                            t.getTableView().getItems().get(t.getTablePosition().getRow())
-                                    .getDateOfDiagnosis())
+                    if (t.getNewValue().isBefore(t.getTableView().getItems().get(t.getTablePosition().getRow()).getDateOfDiagnosis())
                             || t.getNewValue().isAfter(LocalDate.now())) {
                     } else {
                         controller.removeCondition(t.getTableView().getItems().get(
@@ -309,8 +308,8 @@ public class ProfileMedicalHistory extends CommonView {
      */
     @FXML
     private void handleAddNewCondition(ActionEvent event) throws IOException {
-        createPopup(event, "/view/AddCondition.fxml", "AddCondition");
-        ConditionAdd addConditionView = new ConditionAdd();
+        FXMLLoader loader = createPopup(event, "/view/AddCondition.fxml", "AddCondition");
+        ConditionAdd addConditionView = loader.getController();
         addConditionView.setup(this, currentProfile);
     }
 
@@ -322,7 +321,7 @@ public class ProfileMedicalHistory extends CommonView {
      */
     @FXML
     private void handleDeleteCondition(ActionEvent event) throws IOException {
-        controller.delete(currentProfile);
+        controller.delete(currentProfile, getSelectedConditions());
         refreshConditionTable();
     }
 
@@ -390,12 +389,12 @@ public class ProfileMedicalHistory extends CommonView {
      */
     @FXML
     private void refreshButtonAvailability() {
-        ArrayList<Condition> allConditions = getSelectedConditions();
+        List<Condition> allConditions = getSelectedConditions();
         hideItems();
         disableButtonsIfNoItems(allConditions);
     }
 
-    public ArrayList<Condition> getSelectedConditions() {
+    public List<Condition> getSelectedConditions() {
         ArrayList<Condition> conditions = convertConditionObservableToArray(pastConditionsTable.getSelectionModel().getSelectedItems());
         conditions.addAll(convertConditionObservableToArray(curConditionsTable.getSelectionModel().getSelectedItems()));
         return conditions;
@@ -407,7 +406,7 @@ public class ProfileMedicalHistory extends CommonView {
      * @param items to check
      */
     private void disableButtonsIfNoItems(List<?> items) {
-        if (items.size() == 0) {
+        if (items.isEmpty()) {
             deleteConditionButton.setDisable(true);
             toggleCuredButton.setDisable(true);
             toggleChronicButton.setDisable(true);

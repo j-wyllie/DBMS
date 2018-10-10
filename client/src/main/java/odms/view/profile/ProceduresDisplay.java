@@ -1,9 +1,8 @@
 package odms.view.profile;
 
-import java.io.IOException;
-import java.util.List;
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,16 +14,21 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.SortType;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
 import odms.controller.database.profile.HttpProfileDAO;
 import odms.controller.profile.ProcedureGeneral;
+import odms.data.DefaultLocale;
 import odms.view.CommonView;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Slf4j
 public class ProceduresDisplay extends CommonView {
-    //todo separate fxml files
     @FXML
     private TableView pendingProcedureTable;
 
@@ -38,10 +42,10 @@ public class ProceduresDisplay extends CommonView {
     private TableColumn previousSummaryColumn;
 
     @FXML
-    private TableColumn pendingDateColumn;
+    private TableColumn<Procedure, String> pendingDateColumn;
 
     @FXML
-    private TableColumn previousDateColumn;
+    private TableColumn<Procedure, String> previousDateColumn;
 
     @FXML
     private TableColumn pendingAffectsColumn;
@@ -107,23 +111,15 @@ public class ProceduresDisplay extends CommonView {
         pendingProcedureTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     pendingProcedureTable.getSelectionModel().getSelectedItem() != null) {
-                try {
-                    createNewProcedureWindow((Procedure) pendingProcedureTable.getSelectionModel()
-                            .getSelectedItem());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                createNewProcedureWindow((Procedure) pendingProcedureTable.getSelectionModel()
+                        .getSelectedItem());
             }
         });
         previousProcedureTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2 &&
                     previousProcedureTable.getSelectionModel().getSelectedItem() != null) {
-                try {
-                    createNewProcedureWindow((Procedure) previousProcedureTable.getSelectionModel()
-                            .getSelectedItem());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                createNewProcedureWindow((Procedure) previousProcedureTable.getSelectionModel()
+                        .getSelectedItem());
             }
         });
     }
@@ -132,7 +128,7 @@ public class ProceduresDisplay extends CommonView {
      * Creates a new edit procedure window
      */
     @FXML
-    public void createNewProcedureWindow(Procedure selectedProcedure) throws IOException {
+    public void createNewProcedureWindow(Procedure selectedProcedure) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ProcedureEdit.fxml"));
             Scene scene = new Scene(loader.load());
@@ -140,10 +136,12 @@ public class ProceduresDisplay extends CommonView {
             procedureDetailed.initialize(selectedProcedure, currentProfile, this,
                     isOpenedByClinician);
             Stage stage = new Stage();
+            stage.setTitle("Procedure");
+            stage.setResizable(false);
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -152,8 +150,6 @@ public class ProceduresDisplay extends CommonView {
      */
     @FXML
     void refreshProcedureTable() {
-        //currentProfile.set(httpProfileDAO.get(currentProfile.get().getId()));
-
         if (previousProceduresObservableList == null) {
             previousProceduresObservableList = FXCollections.observableArrayList();
         }
@@ -181,14 +177,14 @@ public class ProceduresDisplay extends CommonView {
 
         previousProcedureTable.setItems(previousProceduresObservableList);
         previousSummaryColumn.setCellValueFactory(new PropertyValueFactory("summary"));
-        previousDateColumn.setCellValueFactory(new PropertyValueFactory("date"));
+        previousDateColumn.setCellValueFactory(cdf -> new SimpleStringProperty(DefaultLocale.format(cdf.getValue().getDate())));
         previousAffectsColumn.setCellValueFactory(new PropertyValueFactory("affectsOrgansText"));
         previousProcedureTable.getColumns()
                 .setAll(previousSummaryColumn, previousDateColumn, previousAffectsColumn);
 
         pendingProcedureTable.setItems(pendingProceduresObservableList);
         pendingSummaryColumn.setCellValueFactory(new PropertyValueFactory("summary"));
-        pendingDateColumn.setCellValueFactory(new PropertyValueFactory("date"));
+        pendingDateColumn.setCellValueFactory(cdf -> new SimpleStringProperty(DefaultLocale.format(cdf.getValue().getDate())));
         pendingAffectsColumn.setCellValueFactory(new PropertyValueFactory("affectsOrgansText"));
         pendingProcedureTable.getColumns()
                 .setAll(pendingSummaryColumn, pendingDateColumn, pendingAffectsColumn);

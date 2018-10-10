@@ -1,6 +1,5 @@
 package odms.controller;
 
-import java.io.File;
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -42,19 +41,5 @@ public class CommonController {
         appStage.setTitle(title);
         appStage.centerOnScreen();
         appStage.show();
-    }
-
-    /**
-     * Button handler to undo last action.
-     */
-    public void undo() {
-        //undoController.undo(GuiMain.getCurrentDatabase());
-    }
-
-    /**
-     * Button handler to redo last undo action.
-     */
-    public void redo() {
-        //redoController.redo(GuiMain.getCurrentDatabase());
     }
 }

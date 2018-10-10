@@ -1,6 +1,5 @@
 package odms.view.user;
 
-import static odms.controller.AlertController.guiPopup;
 import static odms.controller.AlertController.profileCancelChanges;
 import static odms.controller.AlertController.saveChanges;
 
@@ -16,11 +15,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.user.User;
 import odms.controller.database.DAOFactory;
 import odms.controller.database.user.UserDAO;
 import odms.view.CommonView;
 
+@Slf4j
 public class ClinicianEdit extends CommonView {
     private User currentUser;
 
@@ -39,7 +40,7 @@ public class ClinicianEdit extends CommonView {
     private Label pictureLabel;
 
     @FXML
-    private TextField staffIdField;
+    private TextField idField;
 
     @FXML
     private TextField regionField;
@@ -96,20 +97,14 @@ public class ClinicianEdit extends CommonView {
      */
     @FXML
     private void handleSaveButtonClicked(ActionEvent event) throws IOException {
-        boolean error = false;
-
         if (saveChanges()) {
             controller.save();
-
-            if (error) {
-                guiPopup("Error. Not all fields were updated.");
-            }
 
             UserDAO database = DAOFactory.getUserDao();
             try {
                 database.update(currentUser);
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
 
             openClinicianWindow(event);
@@ -144,8 +139,8 @@ public class ClinicianEdit extends CommonView {
                 givenNamesField.setText(currentUser.getName());
             }
 
-            if (currentUser.getStaffID() != null) {
-                staffIdField.setText(currentUser.getStaffID().toString());
+            if (currentUser.getId() != null) {
+                idField.setText(currentUser.getId().toString());
             }
 
             if (currentUser.getWorkAddress() != null) {
@@ -161,7 +156,7 @@ public class ClinicianEdit extends CommonView {
                 pictureLabel.setVisible(false);
             }
         } catch (Exception e) {
-            System.out.println(e);
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -181,8 +176,8 @@ public class ClinicianEdit extends CommonView {
         return givenNamesField.getText();
     }
 
-    public String getStaffIdField() {
-        return staffIdField.getText();
+    public String getIdField() {
+        return idField.getText();
     }
 
     public String getAddressField() {

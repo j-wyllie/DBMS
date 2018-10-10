@@ -7,20 +7,20 @@ import odms.commons.model.enums.OrganEnum;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
-import odms.commons.model.enums.UserType;
-
-import java.time.format.DateTimeFormatter;
 
 public final class Print extends CommandUtils {
 
-    private Print() { throw new UnsupportedOperationException(); }
+    private Print() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Print all profiles in the database.
+     *
      * @param profiles the list of profiles to print.
      */
     public static void printAllProfiles(List<Profile> profiles) {
-        if (profiles.size() > 0) {
+        if (!profiles.isEmpty()) {
             for (Profile profile : profiles) {
                 printProfileAttributes(profile);
                 System.out.println();
@@ -32,10 +32,11 @@ public final class Print extends CommandUtils {
 
     /**
      * Print all clinicians in the database.
+     *
      * @param users to print if the are of type clinican.
      */
     public static void printAllClinicians(List<User> users) {
-        if (users.size() > 0) {
+        if (!users.isEmpty()) {
             for (User user : users) {
                 if (user.getUserType() == UserType.CLINICIAN) {
                     printUserAttributesAttributes(user);
@@ -49,10 +50,11 @@ public final class Print extends CommandUtils {
 
     /**
      * Print all users in the database.
+     *
      * @param users to print.
      */
     public static void printAllUsers(List<User> users) {
-        if (users.size() > 0) {
+        if (!users.isEmpty()) {
             for (User user : users) {
                 printUserAttributesAttributes(user);
                 System.out.println();
@@ -64,10 +66,11 @@ public final class Print extends CommandUtils {
 
     /**
      * Print all profiles with donations in the database.
+     *
      * @param profiles to print if they are donors.
      */
     public static void printDonors(List<Profile> profiles) {
-        if (profiles.size() > 0) {
+        if (!profiles.isEmpty()) {
             for (Profile profile : profiles) {
                 if (profile.getDonor()) {
                     printProfileAttributes(profile);
@@ -83,6 +86,7 @@ public final class Print extends CommandUtils {
 
     /**
      * Display and print profile details in a list.
+     *
      * @param profileList list of profiles.
      */
     public static void printProfileList(List<Profile> profileList) {
@@ -97,11 +101,12 @@ public final class Print extends CommandUtils {
 
     /**
      * Display and print profile details in a list.
+     *
      * @param userlist List of profiles.
      */
     public static void printUserList(List<User> userlist) {
         for (User user : userlist) {
-            System.out.println("Staff ID: " + user.getStaffID());
+            System.out.println("Staff ID: " + user.getId());
             System.out.println("Name: " + user.getName());
             System.out.println("user type: " + user.getUserType());
             System.out.println("Date/Time Created: " + user.getTimeOfCreation());
@@ -111,6 +116,7 @@ public final class Print extends CommandUtils {
 
     /**
      * Display and print profile donations.
+     *
      * @param profileList list of profiles.
      */
     public static void printProfileDonations(List<Profile> profileList) {
@@ -130,10 +136,11 @@ public final class Print extends CommandUtils {
     /**
      * Display and print printAllProfiles search results from profile array. If array empty, no
      * search results have been found.
+     *
      * @param profileList results from searching.
      */
     public static void printProfileSearchResults(List<Profile> profileList) {
-        if (profileList.size() > 0) {
+        if (!profileList.isEmpty()) {
             for (Profile profile : profileList) {
                 printProfileAttributes(profile);
                 System.out.println();
@@ -146,10 +153,11 @@ public final class Print extends CommandUtils {
     /**
      * Display and print printAllProfiles search results from profile array. If array empty, no
      * search results have been found.
+     *
      * @param userlist results from searching.
      */
     public static void printUserSearchResults(List<User> userlist) {
-        if (userlist.size() > 0) {
+        if (!userlist.isEmpty()) {
             for (User user : userlist) {
                 printUserAttributesAttributes(user);
                 System.out.println();
@@ -161,6 +169,7 @@ public final class Print extends CommandUtils {
 
     /**
      * Display and print the attributes of a profile.
+     *
      * @param profile to be displayed.
      */
     private static void printProfileAttributes(Profile profile) {
@@ -228,11 +237,12 @@ public final class Print extends CommandUtils {
 
     /**
      * Display and print the attributes of a profile.
+     *
      * @param user to be displayed.
      */
     private static void printUserAttributesAttributes(User user) {
         System.out.println("user type: " + user.getUserType());
-        System.out.println("ODMS Staff ID: " + user.getStaffID());
+        System.out.println("ODMS Staff ID: " + user.getId());
 
         if (user.getName() != null) {
             System.out.println("Name: " + user.getName());

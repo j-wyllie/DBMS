@@ -1,32 +1,27 @@
 package odms.controller;
 
-import java.sql.SQLException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import odms.commons.model.enums.OrganEnum;
-import odms.commons.model.profile.Profile;
-import odms.controller.database.DAOFactory;
-import odms.controller.user.UserNotFoundException;
-import odms.commons.model.user.User;
-import odms.commons.model.enums.UserType;
-
+import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
-import java.util.*;
+import java.net.Socket;
+import odms.commons.model.InitializationException;
+import odms.controller.database.DAOFactory;
+import odms.controller.database.common.CommonDAO;
 
 /**
  * Main class. GUI boots from here.
  */
+@Slf4j
 public class GuiMain extends Application {
 
-    private static final String DONOR_DATABASE = "example/example.json";
-    private static final String USER_DATABASE = "example/users.json";
     private static final String APP_NAME = "ODMS";
-    private static final String ADMIN = "admin";
+    private static final String DOMAIN = "csse-s302g2";
+    private static final Integer PORT = 8080;
 
-    private odms.controller.user.AvailableOrgans controller = new odms.controller.user.AvailableOrgans();
 
     /**
      * Loads in a default clinician if one does not exist. Opens the login screen
@@ -35,73 +30,32 @@ public class GuiMain extends Application {
      * @throws IOException file read exception for login fxml
      */
     @Override
-    public void start(Stage primaryStage) throws IOException {
-        try {
-            DAOFactory.getUserDao().get(ADMIN);
-        } catch (UserNotFoundException e) {
-            createDefaultAdmin();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            DAOFactory.getUserDao().get("0");
-        } catch (UserNotFoundException e) {
-            createDefaultClinician();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public void start(Stage primaryStage) throws IOException, InitializationException {
+        if (checkServer()) {
+            CommonDAO server = DAOFactory.getCommonDao();
+            server.setup();
+            Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
+            primaryStage.setScene(new Scene(root));
+            primaryStage.setResizable(false);
+            primaryStage.setTitle(APP_NAME);
+            primaryStage.show();
 
-        //thread that runs in the background to check if organs have expired since last launch
-        Thread checkOrgan = new Thread() {
-            public void run() {
-                try {
-                    List<Map.Entry<Profile, OrganEnum>> availableOrgans = controller
-                            .getAllOrgansAvailable();
-                    for(Map.Entry<Profile, OrganEnum> m : availableOrgans) {
-                        controller.checkOrganExpired(m.getValue(), m.getKey(), m);
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        checkOrgan.setDaemon(true);
-        checkOrgan.start();
-
-        Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
-        primaryStage.setScene(new Scene(root));
-        primaryStage.setResizable(false);
-        primaryStage.setTitle(APP_NAME);
-        primaryStage.show();
-    }
-
-    /**
-     * Creates a default admin profile in the database.
-     */
-    private static void createDefaultAdmin() {
-        try {
-            User admin = new User(UserType.ADMIN, ADMIN);
-            admin.setUsername(ADMIN);
-            admin.setPassword(ADMIN);
-            admin.setDefault(true);
-            DAOFactory.getUserDao().add(admin);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } else {
+            AlertController.guiPopup("Connection to the server could not be established.\n\n" +
+                    "Human Farm servers may be experiencing\ntechnical difficulties. " +
+                    "Please check your internet\nconnection and try again.");
         }
     }
 
     /**
-     * Creates a default clinician profile in the database.
+     * Simple check to verify if a connection to the odms server can be established.
+     * @return boolean true if server is up, false otherwise
      */
-    private static void createDefaultClinician() {
-        try {
-            User clinician = new User(UserType.CLINICIAN, "Doc");
-            clinician.setUsername("0");
-            clinician.setPassword("");
-            clinician.setDefault(true);
-            DAOFactory.getUserDao().add(clinician);
-        } catch (SQLException e) {
-            e.printStackTrace();
+    private boolean checkServer() {
+        try (Socket s = new Socket(DOMAIN, PORT)) {
+            return true;
+        } catch (IOException e) {
+            return false;
         }
     }
 
@@ -113,6 +67,4 @@ public class GuiMain extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
-
 }

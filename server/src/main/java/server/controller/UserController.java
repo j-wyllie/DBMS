@@ -2,19 +2,31 @@ package server.controller;
 
 import java.sql.SQLException;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import java.util.Map;
 import odms.commons.model.enums.UserType;
 import odms.commons.model.user.User;
 import odms.commons.model.user.UserNotFoundException;
 import org.sonar.api.internal.google.gson.Gson;
 import server.model.database.DAOFactory;
 import server.model.database.user.UserDAO;
-import spark.*;
+import server.model.enums.DataTypeEnum;
+import server.model.enums.ResponseMsgEnum;
+import spark.Request;
+import spark.Response;
 
+@Slf4j
 public class UserController {
 
     /**
+     * Prevent instantiation of static class.
+     */
+    private UserController() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
      * Gets all users stored.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body, a list of all profiles.
@@ -32,7 +44,7 @@ public class UserController {
         Gson gson = new Gson();
         String responseBody = gson.toJson(users);
 
-        res.type("application/json");
+        res.type(DataTypeEnum.JSON.toString());
         res.status(200);
 
         return responseBody;
@@ -40,7 +52,6 @@ public class UserController {
 
     /**
      * Gets a single user from storage.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -49,14 +60,14 @@ public class UserController {
         UserDAO database = DAOFactory.getUserDao();
         User user;
         try {
-            if (req.queryMap().hasKey("id")) {
+            if (req.queryParams("id") != null) {
                 user = database.get(Integer.valueOf(req.queryParams("id")));
             } else {
                 user = database.get(req.queryParams("username"));
             }
         } catch (UserNotFoundException e) {
             res.status(400);
-            return e.getMessage();
+            return "User not found";
         } catch (SQLException e) {
             res.status(500);
             return e.getMessage();
@@ -65,52 +76,47 @@ public class UserController {
         Gson gson = new Gson();
         String responseBody = gson.toJson(user);
 
-        res.type("application/json");
+        res.type(DataTypeEnum.JSON.toString());
         res.status(200);
-
         return responseBody;
     }
 
     /**
      * Creates and stores a new user.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
      */
     public static String create(Request req, Response res) {
-        Gson gson = new Gson();
         UserDAO database = DAOFactory.getUserDao();
         User newUser;
 
         try {
-            newUser = gson.fromJson(req.body(), User.class);
+            newUser = new Gson().fromJson(req.body(), User.class);
             if (!(database.isUniqueUsername(newUser.getUsername()))) {
                 throw new IllegalArgumentException("Username must be unique.");
             }
         } catch (SQLException e) {
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         } catch (IllegalArgumentException e) {
             res.status(403);
-            return "Forbidden";
+            return ResponseMsgEnum.FORBIDDEN.toString();
         }
 
-        if (!(newUser == null)) {
-            try {
-                database.add(newUser);
-            } catch (SQLException e) {
-                res.status(500);
-                return "Internal Server Error";
-            }
+        try {
+            database.add(newUser);
+        } catch (SQLException e) {
+            res.status(500);
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
+
         res.status(201);
-        return "user Created";
+        return "User Created";
     }
 
     /**
      * Edits a stored user.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
@@ -122,10 +128,10 @@ public class UserController {
 
         try {
             user = gson.fromJson(req.body(), User.class);
-            user.setStaffID(Integer.valueOf(req.params("id")));
+            user.setId(Integer.valueOf(req.params("id")));
         } catch (Exception e) {
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         try {
@@ -133,49 +139,84 @@ public class UserController {
                 database.update(user);
             } else {
                 res.status(403);
-                return "Forbidden";
+                return ResponseMsgEnum.FORBIDDEN.toString();
             }
         } catch (SQLException e) {
             res.status(500);
-            return "Internal Server Error";
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
 
         res.status(200);
-        return "user Updated";
+        return "User Updated";
     }
 
     /**
      * Deletes a user from storage.
-     *
      * @param req sent to the endpoint.
      * @param res sent back.
      * @return the response body.
      */
     public static String delete(Request req, Response res) {
-        Gson gson = new Gson();
         UserDAO database = DAOFactory.getUserDao();
-        User user = null;
+        User user;
 
         try {
             // Creating a dummy user object so that the DAO can access the id
             user = new User(UserType.CLINICIAN, "dummy", "dummy");
-            user.setStaffID(Integer.valueOf(req.params("id")));
+            user.setId(Integer.valueOf(req.params("id")));
         } catch (Exception e) {
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
-        if (!(user == null)) {
-            try {
-                database.remove(user);
-            } catch (SQLException e) {
-                res.status(500);
-                return "Internal Server Error";
-            }
+        try {
+            database.remove(user);
+        } catch (SQLException e) {
+            res.status(500);
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
         }
 
         res.status(200);
-        return "user Deleted";
+        return "User Deleted";
     }
 
+    /**
+     * Checks the credentials of a user logging in.
+     * @param req request containing the username and password.
+     * @param res response from the server.
+     * @return String containing successful user validation.
+     */
+    public static String checkCredentials(Request req, Response res) {
+        UserDAO database = DAOFactory.getUserDao();
+        Boolean valid;
+
+        String username = req.queryParams("username");
+        String password = req.queryParams("password");
+        try {
+            valid = database.checkCredentials(username, password);
+        } catch (UserNotFoundException e) {
+            res.status(404);
+            return "User not found";
+        } catch (SQLException e) {
+            res.status(500);
+            return ResponseMsgEnum.INTERNAL_SERVER_ERROR.toString();
+        }
+
+        if (valid) {
+            try {
+                User user = database.get(username);
+                Map<String, Integer> body = Middleware.authenticate(
+                        user.getId(), user.getUserType());
+                res.type(DataTypeEnum.JSON.toString());
+                res.status(200);
+                return new Gson().toJson(body);
+            } catch (Exception e) {
+                res.status(500);
+                return e.getMessage();
+            }
+        } else {
+            res.status(401);
+            return "Unauthorized";
+        }
+    }
 }

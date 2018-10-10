@@ -18,6 +18,9 @@ the following:
 This will bring you into the application which can be terminated at any time by executing the 
 `quit` command.
 
+## Wiki Home
+- [Wiki Home](https://eng-git.canterbury.ac.nz/seng302-2018/team-200/wikis/home)
+
 ## Login
 The default admin username and password are both 'admin'.
 
@@ -30,3 +33,9 @@ The default admin username and password are both 'admin'.
 
 ## Third Party Libraries
 - [Libraries](https://eng-git.canterbury.ac.nz/seng302-2018/team-200/wikis/Design-decisions/Libraries)
+
+## Design decisions
+- [Design Decisions](https://eng-git.canterbury.ac.nz/seng302-2018/team-200/wikis/Design-Decisions)
+
+## All wiki pages
+- [All wiki pages](https://eng-git.canterbury.ac.nz/seng302-2018/team-200/wikis/pages)

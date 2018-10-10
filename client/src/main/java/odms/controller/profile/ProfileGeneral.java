@@ -1,11 +1,11 @@
 package odms.controller.profile;
 
-import java.net.MalformedURLException;
 import java.time.format.DateTimeFormatter;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import odms.commons.model.enums.CountriesEnum;
 import odms.commons.model.profile.Profile;
+import odms.data.DefaultLocale;
 
 public class ProfileGeneral {
 
@@ -13,7 +13,6 @@ public class ProfileGeneral {
 
     @FXML
     private ImageView profileImage;
-
 
     public ProfileGeneral(odms.view.profile.ProfileGeneral v) {
         view = v;
@@ -35,12 +34,10 @@ public class ProfileGeneral {
             view.setNhiLabel(currentProfile.getNhi());
         }
         if (currentProfile.getDateOfBirth() != null) {
-            view.setDobLabel(currentProfile.getDateOfBirth()
-                    .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            view.setDobLabel(DefaultLocale.format(currentProfile.getDateOfBirth()));
         }
         if (currentProfile.getDateOfDeath() != null) {
-            view.setDodLabel(currentProfile.getDateOfDeath()
-                    .format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")));
+            view.setDodLabel(DefaultLocale.format(currentProfile.getDateOfDeath()));
         }
         if (currentProfile.getGender() != null) {
             view.setGenderLabel(currentProfile.getGender());
@@ -51,10 +48,10 @@ public class ProfileGeneral {
             view.setLabelGenderPreferred(currentProfile.getGender());
         }
         if (currentProfile.getHeight() != 0.0) {
-            view.setHeightLabel(currentProfile.getHeight() + "cm");
+            view.setHeightLabel(DefaultLocale.format(currentProfile.getHeight()) + "cm");
         }
         if (currentProfile.getWeight() != 0.0) {
-            view.setWeightLabel(currentProfile.getWeight() + "kg");
+            view.setWeightLabel(DefaultLocale.format(currentProfile.getWeight()) + "kg");
         }
         if (currentProfile.getPhone() != null) {
             view.setPhoneLabel(currentProfile.getPhone());
@@ -78,12 +75,12 @@ public class ProfileGeneral {
             if (currentProfile.getCountryOfDeath() == null ) {
                 if (currentProfile.getCountry() != null) {
                     currentProfile.setCountryOfDeath(currentProfile.getCountry());
-                    view.getCountryLabel().setText("country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
+                    view.getCountryLabel().setText("Country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry().getName()));
                 } else {
-                    view.getCountryLabel().setText("country of Death : ");
+                    view.getCountryLabel().setText("Country of Death : ");
                 }
             } else {
-                view.getCountryLabel().setText("country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountryOfDeath()));
+                view.getCountryLabel().setText("Country of Death : " + CountriesEnum.getValidNameFromString(currentProfile.getCountryOfDeath().getName()));
             }
 
             if (currentProfile.getCityOfDeath() == null) {
@@ -111,7 +108,7 @@ public class ProfileGeneral {
                 view.getRegionLabel().setText("Region : " + currentProfile.getRegion());
             }
             if (currentProfile.getCountry() != null) {
-                view.getCountryLabel().setText("country : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry()));
+                view.getCountryLabel().setText("Country : " + CountriesEnum.getValidNameFromString(currentProfile.getCountry().getName()));
             }
             if (currentProfile.getCity() != null) {
                 view.getCityLabel().setText("City : " + currentProfile.getCity());

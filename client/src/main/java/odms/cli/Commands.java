@@ -12,8 +12,6 @@ public enum Commands {
     PRINTALLCLINICIANS,
     PRINTALLUSERS,
     PRINTDONORS,
-    REDO,
-    UNDO,
 
     // IO Commands
     EXPORT,
@@ -34,8 +32,6 @@ public enum Commands {
     CLINICIANDONATIONS,
     CLINICIANUPDATE,
     CLINICIANEVIEW,
-
-    // user commands TODO need to replace most clinician stuff with user, works for now
 
     // Organ Commands
     ORGANADD,

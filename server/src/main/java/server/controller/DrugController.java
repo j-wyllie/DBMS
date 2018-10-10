@@ -1,15 +1,25 @@
 package server.controller;
 
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import odms.commons.model.medications.Drug;
-import odms.commons.model.profile.Profile;
 import org.sonar.api.internal.google.gson.Gson;
 import server.model.database.DAOFactory;
 import server.model.database.medication.MedicationDAO;
+import server.model.enums.DataTypeEnum;
+import server.model.enums.ResponseMsgEnum;
 import spark.Request;
 import spark.Response;
 
+@Slf4j
 public class DrugController {
+
+    /**
+     * Prevent instantiation of static class.
+     */
+    private DrugController() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Gets all drugs for a profile in persistent storage.
@@ -24,11 +34,17 @@ public class DrugController {
         boolean current;
 
         try {
-            profileId = Integer.valueOf(req.params("id"));
-            current = Boolean.valueOf(req.queryParams("current"));
-        } catch (Exception e) {
+            String id = req.params("id");
+            String tempCurrent = req.queryParams("current");
+            if (id == null || tempCurrent == null) {
+                throw new IllegalArgumentException("Required attributes missing.");
+            }
+            profileId = Integer.valueOf(id);
+            current = Boolean.valueOf(tempCurrent);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage(), e);
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         try {
@@ -41,7 +57,7 @@ public class DrugController {
         Gson gson = new Gson();
         String responseBody = gson.toJson(drugs);
 
-        res.type("application/json");
+        res.type(DataTypeEnum.JSON.toString());
         res.status(200);
 
         return responseBody;
@@ -61,12 +77,18 @@ public class DrugController {
         boolean current;
 
         try {
-            profileId = Integer.valueOf(req.params("id"));
+            String id = req.params("id");
+            String tempCurrent = req.queryParams("current");
+            if (id == null || req.body() == null || tempCurrent == null) {
+                throw new IllegalArgumentException("Required attributes missing.");
+            }
+            profileId = Integer.valueOf(id);
             newDrug = gson.fromJson(req.body(), Drug.class);
-            current = Boolean.valueOf(req.queryParams("current"));
-        } catch (Exception e) {
+            current = Boolean.valueOf(tempCurrent);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage(), e);
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
         try {
             database.add(newDrug, profileId, current);
@@ -92,11 +114,16 @@ public class DrugController {
         boolean current;
 
         try {
+            String tempCurrent = req.queryParams("current");
+            if (req.body() == null || tempCurrent == null) {
+                throw new IllegalArgumentException("Required attributes missing.");
+            }
             newDrug = gson.fromJson(req.body(), Drug.class);
-            current = Boolean.valueOf(req.queryParams("current"));
-        } catch (Exception e) {
+            current = Boolean.valueOf(tempCurrent);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage(), e);
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         try {
@@ -117,7 +144,6 @@ public class DrugController {
      * @return the response body.
      */
     public static String delete(Request req, Response res) {
-        Gson gson = new Gson();
         MedicationDAO database = DAOFactory.getMedicationDao();
         Drug newDrug;
 
@@ -125,7 +151,7 @@ public class DrugController {
             newDrug = new Drug(Integer.valueOf(req.params("id")), null);
         } catch (Exception e) {
             res.status(400);
-            return "Bad Request";
+            return ResponseMsgEnum.BAD_REQUEST.toString();
         }
 
         try {

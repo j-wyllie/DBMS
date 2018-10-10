@@ -1,17 +1,16 @@
 package odms.controller.profile;
 
+import java.time.LocalDate;
 import java.util.List;
 import javafx.fxml.FXML;
 import odms.commons.model.profile.Procedure;
 import odms.commons.model.profile.Profile;
 import odms.controller.database.DAOFactory;
-import odms.controller.database.procedure.HttpProcedureDAO;
 import odms.controller.database.procedure.ProcedureDAO;
 import odms.view.profile.ProceduresDisplay;
 
-import java.time.LocalDate;
-
 public class ProcedureGeneral {
+
     ProceduresDisplay view;
 
     public ProcedureGeneral(ProceduresDisplay v) {
@@ -41,7 +40,7 @@ public class ProcedureGeneral {
         if (procedure == null) {
             return;
         }
-        removeProcedure(procedure, view.getProfile());
+        removeProcedure(procedure);
     }
 
     /**
@@ -49,7 +48,7 @@ public class ProcedureGeneral {
      *
      * @param procedure the procedure to remove
      */
-    public void removeProcedure(Procedure procedure, Profile profile) {
+    public void removeProcedure(Procedure procedure) {
         server.remove(procedure);
     }
 

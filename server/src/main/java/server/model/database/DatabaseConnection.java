@@ -10,23 +10,21 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 import javax.sql.DataSource;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Contains methods to obtain a connection the database, as well as setting db config.
  */
+@Slf4j
 public final class DatabaseConnection {
 
+    private static final String DEFAULT_CONFIG = "/config/db.config";
+    private static final String TEST_CONFIG = "/config/db_test.config";
+    private static final String RESET_TEST_SQL = "/config/reset_test_db.sql";
+
+    private static String config = null;
     private static DataSource connectionSource;
     private static ComboPooledDataSource source;
-
-    private String DEFAULT_CONFIG = "/config/db.config";
-    private static String TEST_CONFIG = "/config/db_test.config";
-    private static String CONFIG = null;
-
-    private String RESET_SQL = "/config/reset.sql";
-    private String RESAMPLE_SQL = "/config/resample.sql";
-
-    private String RESET_TEST_SQL = "/config/reset_test_db.sql";
 
     /**
      * Constructor to create the singleton database connection class.
@@ -35,13 +33,13 @@ public final class DatabaseConnection {
         try {
             source = new ComboPooledDataSource();
 
-            if (CONFIG == null) {
-                CONFIG = DEFAULT_CONFIG;
+            if (config == null) {
+                config = DEFAULT_CONFIG;
             }
 
             // load in config file
             Properties prop = new Properties();
-            prop.load(ClassLoader.class.getResourceAsStream(CONFIG));
+            prop.load(ClassLoader.class.getResourceAsStream(config));
 
             // set config string
             String host = prop.getProperty("host");
@@ -54,23 +52,23 @@ public final class DatabaseConnection {
             try {
                 source.setDriverClass(driver);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
             source.setJdbcUrl(host + '/' + database);
             source.setUser(username);
             source.setPassword(password);
-            source.setMinPoolSize(20);
+            source.setMinPoolSize(3);
             source.setAcquireIncrement(5);
             source.setMaxPoolSize(50);
 
             connectionSource = source;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
     public static void setTestDb() {
-        CONFIG = TEST_CONFIG;
+        config = TEST_CONFIG;
         source = new ComboPooledDataSource();
 
         // load in config file
@@ -78,7 +76,7 @@ public final class DatabaseConnection {
         try {
             prop.load(ClassLoader.class.getResourceAsStream(TEST_CONFIG));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         // set config string
@@ -92,12 +90,12 @@ public final class DatabaseConnection {
         try {
             source.setDriverClass(driver);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         source.setJdbcUrl(host + '/' + database);
         source.setUser(username);
         source.setPassword(password);
-        source.setMinPoolSize(5);
+        source.setMinPoolSize(3);
         source.setAcquireIncrement(5);
         source.setMaxPoolSize(50);
         source.setMaxIdleTime(3000);
@@ -121,7 +119,7 @@ public final class DatabaseConnection {
      * @throws SQLException error.
      */
     public static Connection getConnection() throws SQLException {
-        return connectionSource.getConnection();
+        return getInstance().connectionSource.getConnection();
     }
 
     /**
@@ -130,73 +128,68 @@ public final class DatabaseConnection {
      * @param path to the file.
      */
     public static void setConfig(String path) {
-        CONFIG = path;
+        config = path;
     }
 
     /**
      * Resets the current in use database to the standard set of tables.
      */
     public void reset() {
-        executeQuery(RESET_SQL);
+        executeQuery();
     }
 
     /**
      * Resets the test database to the standard set of tables.
      */
     public void resetTestDb() {
-        executeQuery(RESET_TEST_SQL);
+        executeQuery();
     }
 
     /**
      * Resamples the current in use database with the default data.
      */
     public void resample() {
-        executeQuery(RESAMPLE_SQL);
+        executeQuery();
     }
 
     /**
      * Executes the sql statements in the file at the location passed in.
-     *
-     * @param filePath the location of the file.
      */
-    private void executeQuery(String filePath) {
-        DatabaseConnection instance = DatabaseConnection.getInstance();
-        try {
-            Connection conn = instance.getConnection();
-            parseSql(conn, RESET_TEST_SQL).executeBatch();
+    private void executeQuery() {
+        try (Connection conn = getConnection()) {
+            parseSqlAndExecute(conn);
 
         } catch (SQLException | IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
     /**
-     * Parses an SQL file into a statement. Used for reset and resample files.
+     * Parses an SQL file into a statement and execute. Used for reset and resample files.
+     *
      * @param conn Connection instance.
-     * @param filepath Path of sql file.
-     * @return Statement to be executed by statement.executeBatch() call.
      * @throws IOException If stream can't be added to.
      * @throws SQLException If statement cannot be created.
      */
-    private Statement parseSql(Connection conn, String filepath) throws IOException, SQLException {
-        InputStream inputStream = getClass().getResourceAsStream(filepath);
-        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-        Statement statement = conn.createStatement();
-        String line;
-        StringBuilder sb = new StringBuilder();
+    private void parseSqlAndExecute(Connection conn) throws IOException, SQLException {
 
-        while ((line = br.readLine()) != null) {
-            if ((line.length() != 0 && !line.startsWith("--"))) {
-                sb.append(line);
+        try (InputStream inputStream = getClass().getResourceAsStream(RESET_TEST_SQL);
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+                Statement statement = conn.createStatement()) {
+            String line;
+            StringBuilder sb = new StringBuilder();
+
+            while ((line = br.readLine()) != null) {
+                if ((line.length() != 0 && !line.startsWith("--"))) {
+                    sb.append(line);
+                }
+                if (line.trim().endsWith(";")) {
+                    statement.addBatch(sb.toString());
+                    sb = new StringBuilder();
+                }
             }
-            if (line.trim().endsWith(";")) {
-                statement.addBatch(sb.toString());
-                sb = new StringBuilder();
-            }
+            statement.executeBatch();
         }
-
-        br.close();
-        return statement;
     }
 
     /**

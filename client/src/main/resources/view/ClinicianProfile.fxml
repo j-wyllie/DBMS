@@ -5,15 +5,17 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
-
-<AnchorPane fx:id="clinicianAp" prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8.0.151" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.user.ClinicianProfile">
+<AnchorPane fx:id="clinicianAp" prefHeight="700.0" prefWidth="1200.0" style="-:: #1fa98c;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="odms.view.user.ClinicianProfile">
    <children>
        <GridPane prefHeight="800.0" prefWidth="1200.0" style="-:: #1fa98c;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-1.0">
            <columnConstraints>
@@ -23,26 +25,31 @@
            <rowConstraints>
                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="150.0" valignment="CENTER" vgrow="NEVER" />
                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+               <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-Infinity" vgrow="ALWAYS" />
+            <RowConstraints minHeight="-Infinity" vgrow="NEVER" />
                <RowConstraints />
            </rowConstraints>
           <children>
 
-           <TabPane prefHeight="200.0" prefWidth="1202.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="3">
-                     <Tab fx:id="generalTab" onSelectionChanged="#handleGeneralTabClicked" text="General" />
-                     <Tab fx:id="consoleTab" onSelectionChanged="#handleConsoleTabClicked" text="Console" />
-                     <Tab fx:id="dataManagementTab" onSelectionChanged="#handleTabDataManagementClicked" text="Data Management" />
-                     <Tab fx:id="searchTab" onSelectionChanged="#handleSearchTabClicked" text="Search">
-            </Tab>
-                              <Tab fx:id="transplantTab" onSelectionChanged="#handleTransplantWaitingListTabClicked" text="Transplant Waiting List" />
-            <Tab onSelectionChanged="#handleViewUsersTabClicked" text="View Users" fx:id="listUsersTab"/>
-               <Tab fx:id="availableOrgansTab" onSelectionChanged="#handleTabAvailableClicked" text="Available Organs" />
+           <TabPane prefHeight="200.0" prefWidth="1202.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
+   <tabs>
+                  <Tab fx:id="generalTab" onSelectionChanged="#handleGeneralTabClicked" text="General" />
+                  <Tab fx:id="consoleTab" onSelectionChanged="#handleConsoleTabClicked" text="Console" />
+                  <Tab fx:id="searchTab" onSelectionChanged="#handleSearchTabClicked" text="Search" />
+                  <Tab fx:id="socialFeedTab" onSelectionChanged="#handleSocialFeedTabClicked" text="Social Feed" />
+                  <Tab fx:id="organMapTab" onSelectionChanged="#handleTabOrganMapClicked" text="Organ Map" />
+                  <Tab fx:id="transplantTab" onSelectionChanged="#handleTransplantWaitingListTabClicked" text="Transplant Waiting List" />
+               <Tab fx:id="listUsersTab" onSelectionChanged="#handleViewUsersTabClicked" text="View Users" />
+                  <Tab fx:id="availableOrgansTab" onSelectionChanged="#handleTabAvailableClicked" text="Available Organs" />
+       <Tab fx:id="hospitalMapTab" onSelectionChanged="#handleTabHospitalMapClicked" text="Hospital Map" />
+
+   </tabs>
         </TabPane>
               <GridPane fx:id="bannerPane" styleClass="banner-clinician" stylesheets="@../styles/Common.css" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                   <columnConstraints>
                       <ColumnConstraints halignment="LEFT" hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="135.0" />
                       <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="-Infinity" />
-                      <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" prefWidth="45.0" />
+                      <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" prefWidth="40.0" />
                   </columnConstraints>
                   <rowConstraints>
                       <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-Infinity" vgrow="ALWAYS" />
@@ -70,13 +77,10 @@
                         <Insets />
                     </GridPane.margin>
                 </Label>
-                <Button fx:id="logoutButton" layoutX="1135.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleLogoutButtonClicked" prefHeight="45.0" prefWidth="45.0" style="-fx-background-image: url(icons/logout.png);" styleClass="button-clinician-logout" stylesheets="@../styles/Common.css" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.rowSpan="2" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
+                <Button fx:id="logoutButton" layoutX="1135.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleLogoutButtonClicked" prefHeight="40.0" prefWidth="40.0" styleClass="button-clinician-logout" stylesheets="@../styles/Common.css" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.rowSpan="2" GridPane.valignment="TOP" GridPane.vgrow="NEVER">
                     <GridPane.margin>
                         <Insets />
                     </GridPane.margin>
-                    <padding>
-                        <Insets right="15.0" />
-                    </padding>
                 </Button>
             </children>
             <GridPane.margin>
@@ -86,6 +90,20 @@
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
             </padding>
         </GridPane>
+            <ToolBar GridPane.rowIndex="3">
+              <items>
+                  <Pane HBox.hgrow="ALWAYS" />
+                  <Button fx:id="editClinicianButton" mnemonicParsing="false" onAction="#handleEditButtonClicked" prefHeight="40.0" prefWidth="40.0" styleClass="button-edit" stylesheets="@../styles/Common.css" />
+                  <Button fx:id="importBtn" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleImportButtonAction" prefHeight="40.0" prefWidth="40.0" styleClass="button-import" stylesheets="@../styles/User.css" />
+                <Button mnemonicParsing="false" onAction="#handleSettingsButtonAction" prefHeight="40.0" prefWidth="40.0" styleClass="button-settings" stylesheets="@../styles/User.css" />
+              </items>
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </ToolBar>
           </children>
        </GridPane>
    </children>
