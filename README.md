@@ -21,6 +21,9 @@ This will bring you into the application which can be terminated at any time by 
 ## Wiki Home
 - [Wiki Home](https://eng-git.canterbury.ac.nz/seng302-2018/team-200/wikis/home)
 
+## Login
+The default admin username and password are both 'admin'.
+
 ## Usage Links
 - [User Manual](https://eng-git.canterbury.ac.nz/seng302-2018/team-200/wikis/Command-Line)
 
