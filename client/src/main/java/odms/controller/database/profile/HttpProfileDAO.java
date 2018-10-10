@@ -29,13 +29,13 @@ public class HttpProfileDAO implements ProfileDAO {
 
     private static final String SEARCHSTRING = "searchString";
     private static final String USERNAME_STRING = "username";
-    private static final String RECEIVER_URL = "http://localhost:6969/api/v1/profiles/receivers";
-    private static final String PROFILES_URL = "http://localhost:6969/api/v1/profiles";
+    private static final String RECEIVER_URL = "http://csse-s302g2:8080/api/v1/profiles/receivers";
+    private static final String PROFILES_URL = "http://csse-s302g2:8080/api/v1/profiles";
 
 
     @Override
     public List<Profile> getAll() {
-        String url = "http://localhost:6969/api/v1/profiles/all";
+        String url = "http://csse-s302g2:8080/api/v1/profiles/all";
         Map<String, Object> queryParams = new HashMap<>();
         return getArrayRequest(url, queryParams);
     }
@@ -60,7 +60,7 @@ public class HttpProfileDAO implements ProfileDAO {
     public void add(Profile profile) throws NHIConflictException, SQLException {
         JsonParser parser = new JsonParser();
         Gson gson = new Gson();
-        String url = "http://localhost:6969/api/v1/setup/create";
+        String url = "http://csse-s302g2:8080/api/v1/setup/create";
         Map<String, Object> queryParams = new HashMap<>();
         Response response = null;
 
@@ -111,7 +111,7 @@ public class HttpProfileDAO implements ProfileDAO {
 
     @Override
     public void removeByNhi(Profile profile) {
-        String url = "http://localhost:6969/api/v1/profiles/" + profile.getNhi();
+        String url = "http://csse-s302g2:8080/api/v1/profiles/" + profile.getNhi();
         Request request = new Request(url, new HashMap<>());
         try {
             request.delete();
@@ -136,7 +136,7 @@ public class HttpProfileDAO implements ProfileDAO {
     @Override
     public List<Profile> search(String searchString, int ageSearchInt, int ageRangeSearchInt,
             String region, String gender, String type, Set<OrganEnum> organs) {
-        String url = "http://localhost:6969/api/v1/profiles/all";
+        String url = "http://csse-s302g2:8080/api/v1/profiles/all";
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put(SEARCHSTRING, searchString.replace(' ', '+'));
@@ -153,7 +153,7 @@ public class HttpProfileDAO implements ProfileDAO {
     @Override
     public Integer size() {
         JsonParser parser = new JsonParser();
-        String url = "http://localhost:6969/api/v1/profiles/count";
+        String url = "http://csse-s302g2:8080/api/v1/profiles/count";
         Map<String, Object> queryParams = new HashMap<>();
         Request request = new Request(url, queryParams);
         Response response = null;
@@ -200,14 +200,14 @@ public class HttpProfileDAO implements ProfileDAO {
 
     @Override
     public List<Profile> getDead() throws SQLException {
-        String url = "http://localhost:6969/api/v1/profiles/dead";
+        String url = "http://csse-s302g2:8080/api/v1/profiles/dead";
         Map<String, Object> queryParams = new HashMap<>();
         return getArrayRequest(url, queryParams);
     }
 
     @Override
     public List<Profile> getDeadFiltered(String searchString) throws SQLException {
-        String url = "http://localhost:6969/api/v1/profiles/dead";
+        String url = "http://csse-s302g2:8080/api/v1/profiles/dead";
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put(SEARCHSTRING, searchString);
         return getArrayRequest(url, queryParams);
@@ -277,7 +277,7 @@ public class HttpProfileDAO implements ProfileDAO {
     @Override
     public Boolean hasPassword(String nhi) {
         Response response = null;
-        String url = "http://localhost:6969/api/v1/setup/password";
+        String url = "http://csse-s302g2:8080/api/v1/setup/password";
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("nhi", nhi);
@@ -296,7 +296,7 @@ public class HttpProfileDAO implements ProfileDAO {
     @Override
     public Boolean checkCredentials(String username, String password) {
         JsonParser parser = new JsonParser();
-        String url = "http://localhost:6969/api/v1/login";
+        String url = "http://csse-s302g2:8080/api/v1/login";
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put(USERNAME_STRING, username);
         queryParams.put("password", password);
@@ -329,7 +329,7 @@ public class HttpProfileDAO implements ProfileDAO {
 
     @Override
     public Boolean savePassword(String username, String password) {
-        String url = "http://localhost:6969/api/v1/setup/password";
+        String url = "http://csse-s302g2:8080/api/v1/setup/password";
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put(USERNAME_STRING, username);
         queryParams.put("password", password);
@@ -359,7 +359,7 @@ public class HttpProfileDAO implements ProfileDAO {
      */
     @Override
     public void updateBloodDonation(int profileId, int points) {
-        String url = "http://localhost:6969/api/v1/profiles/" + profileId + "/blood-donation";
+        String url = "http://csse-s302g2:8080/api/v1/profiles/" + profileId + "/blood-donation";
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("points", points);
 

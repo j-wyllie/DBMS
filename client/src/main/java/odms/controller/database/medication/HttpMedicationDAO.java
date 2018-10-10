@@ -20,7 +20,7 @@ public class HttpMedicationDAO implements MedicationDAO {
 
     @Override
     public List<Drug> getAll(Profile profile, Boolean current) {
-        String url = String.format("http://localhost:6969/api/v1/profiles/%s/drugs", profile.getId());
+        String url = String.format("http://csse-s302g2:8080/api/v1/profiles/%s/drugs", profile.getId());
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("current", current);
         return getArrayRequest(url, queryParams);
@@ -29,7 +29,7 @@ public class HttpMedicationDAO implements MedicationDAO {
     @Override
     public void add(Drug drug, Profile profile, Boolean current) {
         Gson gson = new Gson();
-        String url = String.format("http://localhost:6969/api/v1/profiles/%s/drugs", profile.getId());
+        String url = String.format("http://csse-s302g2:8080/api/v1/profiles/%s/drugs", profile.getId());
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("current", current);
 
@@ -44,7 +44,7 @@ public class HttpMedicationDAO implements MedicationDAO {
 
     @Override
     public void remove(Drug drug) {
-        String url = String.format("http://localhost:6969/api/v1/drugs/%s", drug.getId());
+        String url = String.format("http://csse-s302g2:8080/api/v1/drugs/%s", drug.getId());
         Map<String, Object> queryParams = new HashMap<>();
         Request request = new Request(url, queryParams);
         try {
@@ -57,7 +57,7 @@ public class HttpMedicationDAO implements MedicationDAO {
     @Override
     public void update(Drug drug, Boolean current) {
         Gson gson = new Gson();
-        String url = String.format("http://localhost:6969/api/v1/drugs/%s", drug.getId());
+        String url = String.format("http://csse-s302g2:8080/api/v1/drugs/%s", drug.getId());
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("current", current);
 
