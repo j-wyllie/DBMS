@@ -342,7 +342,7 @@ public class ClinicianProfile extends CommonView {
 
         if (image == null || !image.exists()) {
             image = new File(
-                    getClass().getResource("/profile_images/default.png").getFile()
+                    "client/src/main/resources/profile_images/default.png"
             );
         }
         profileImage.setImage(new Image(image.toURI().toURL().toString()));
