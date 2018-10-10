@@ -941,7 +941,7 @@ public class ProfileEdit extends CommonView {
     }
 
     public CountriesEnum getComboCountryOfDeath() {
-        return CountriesEnum.valueOf(comboCountryOfDeath.getValue().toString());
+        return CountriesEnum.getEnumByString(comboCountryOfDeath.getValue().toString());
     }
 
     public String getRegionOfDeathField() {
