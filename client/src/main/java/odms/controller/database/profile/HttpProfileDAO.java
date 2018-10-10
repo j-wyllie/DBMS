@@ -100,7 +100,7 @@ public class HttpProfileDAO implements ProfileDAO {
 
     @Override
     public void remove(Profile profile) {
-        String url = PROFILES_URL + profile.getId();
+        String url = PROFILES_URL + "/" + profile.getId();
         Request request = new Request(url, new HashMap<>());
         try {
             request.delete();
@@ -123,7 +123,7 @@ public class HttpProfileDAO implements ProfileDAO {
     @Override
     public void update(Profile profile) {
         Gson gson = new Gson();
-        String url = PROFILES_URL + profile.getId();
+        String url = PROFILES_URL + "/" + profile.getId();
         String body = gson.toJson(profile);
         Request request = new Request(url, new HashMap<>(), body);
         try {
