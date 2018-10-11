@@ -203,7 +203,7 @@ public class Server {
 
             // countries api endpoints.
             path("/settings", () -> {
-                before("/*", Middleware::isAdminAuthenticated);
+                before("/*", Middleware::isAuthenticated);
 
                 // countries api endpoints.
                 get("/countries", SettingsController::getAllCountries);
@@ -228,6 +228,9 @@ public class Server {
 
             // hla api endpoints
             path("/hla", () -> {
+                before("/*", Middleware::isAuthenticated);
+                before("", Middleware::isAuthenticated);
+
                 // id references profile
                 path("/:id", () -> {
                     get("", HLAController::get);
