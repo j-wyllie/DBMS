@@ -10,7 +10,11 @@ import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
 import com.lynden.gmapsfx.javascript.object.Marker;
 import com.lynden.gmapsfx.javascript.object.MarkerOptions;
 import com.lynden.gmapsfx.util.MarkerImageFactory;
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,6 +29,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
@@ -34,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 import netscape.javascript.JSObject;
 import odms.commons.model.profile.Profile;
 import odms.commons.model.user.User;
+import odms.controller.data.ImageDataIO;
 import odms.view.CommonView;
 import org.controlsfx.control.PopOver;
 
@@ -442,8 +448,14 @@ public class OrganMap extends CommonView implements MapComponentInitializedListe
      */
     private void formatMarkerImage(String mapMarker, LatLong donorLocation,
             MarkerOptions markerOptions) {
-        String markerImage = MarkerImageFactory.createMarkerImage(this.getClass()
-                .getResource(mapMarker).toString(), "png");
+
+
+        String markerImage = null;
+        this.getClass()
+                .getResource(mapMarker).toString();
+        String path = ImageDataIO.getPath().toString().substring(0, ImageDataIO.getPath().toString().length() - 15);
+        markerImage = MarkerImageFactory
+                .createMarkerImage("file:" + path + mapMarker, "png");
         markerImage = markerImage.replace("(", "");
         markerImage = markerImage.replace(")", "");
         markerOptions.position(donorLocation).icon(markerImage);
