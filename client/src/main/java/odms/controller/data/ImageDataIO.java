@@ -146,7 +146,7 @@ public final class ImageDataIO {
      *
      * @return path object.
      */
-    private static File getPath() {
+    public static File getPath() {
         try {
             createWorkingDir();
         } catch (IOException e) {

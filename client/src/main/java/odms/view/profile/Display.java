@@ -276,7 +276,7 @@ public class Display extends CommonView {
 
         if (image == null || !image.exists()) {
             image = new File(
-                    "client/src/main/resources/profile_images/default.png"
+                    ImageDataIO.getPath() + "/default.png"
             );
         }
 
