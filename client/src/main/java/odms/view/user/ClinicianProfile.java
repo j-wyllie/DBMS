@@ -340,9 +340,13 @@ public class ClinicianProfile extends CommonView {
     private void setProfileImage() throws MalformedURLException {
         File image = ImageDataIO.getImagePath(currentUser.getPictureName());
 
+        String defaultImage = ImageDataIO.getPath() + "/default.png";
+
+        System.out.println(defaultImage);
+        System.out.println(image);
+
         if (image == null || !image.exists()) {
-            image = new File(
-                    ImageDataIO.getPath() + "/default.png"
+            image = new File(defaultImage
             );
         }
         profileImage.setImage(new Image(image.toURI().toURL().toString()));
