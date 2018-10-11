@@ -341,14 +341,13 @@ public class ClinicianProfile extends CommonView {
         File image = ImageDataIO.getImagePath(currentUser.getPictureName());
 
         String defaultImage = ImageDataIO.getPath() + "/default.png";
-
-        System.out.println(defaultImage);
-        System.out.println(image);
+        String defaultImageFormatted = defaultImage.replace("target/client/", "");
 
         if (image == null || !image.exists()) {
-            image = new File(defaultImage
+            image = new File(defaultImageFormatted
             );
         }
+
         profileImage.setImage(new Image(image.toURI().toURL().toString()));
     }
 

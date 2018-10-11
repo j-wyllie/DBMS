@@ -274,12 +274,14 @@ public class Display extends CommonView {
     private void setProfileImage() throws MalformedURLException {
         File image = ImageDataIO.getImagePath(currentProfile.getPictureName());
 
+        String defaultImage = ImageDataIO.getPath() + "/default.png";
+        String defaultImageFormatted = defaultImage.replace("target/client/", "");
+
         if (image == null || !image.exists()) {
             image = new File(
-                    ImageDataIO.getPath() + "/default.png"
+                    defaultImageFormatted
             );
         }
-
 
         profileImage.setImage(new Image(image.toURI().toURL().toString()));
     }
