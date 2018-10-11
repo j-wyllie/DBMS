@@ -150,6 +150,15 @@ public class OrganDisplay extends CommonView {
             viewAsProfileSetup();
         }
 
+        if (!expiredButton.isVisible()) {
+            RowConstraints zeroHeight = new RowConstraints();
+            zeroHeight.setPrefHeight(0);
+            // Expired button row in fxml is row 3.
+            organGridPane.getRowConstraints().set(3, zeroHeight);
+        } else {
+            listViewDonating.setMouseTransparent(false);
+        }
+
         populateOrganLists();
     }
 
@@ -174,15 +183,6 @@ public class OrganDisplay extends CommonView {
         receivingButton.setVisible(false);
         donatedButton.setVisible(false);
         expiredButton.setVisible(false);
-
-        if (currentProfile.getDateOfDeath() == null) {
-            RowConstraints zeroHeight = new RowConstraints();
-            zeroHeight.setPrefHeight(0);
-            // Expired button row in fxml is row 3.
-            organGridPane.getRowConstraints().set(3, zeroHeight);
-        } else {
-            listViewDonating.setMouseTransparent(false);
-        }
     }
 
     /**
