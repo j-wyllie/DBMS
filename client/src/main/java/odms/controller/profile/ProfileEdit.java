@@ -55,14 +55,17 @@ public class ProfileEdit extends CommonController {
     @FXML
     public void save() throws SQLException, IOException, IllegalArgumentException {
         // History Generation
-        History action = new History(
-                "profile",
-                currentProfile.getId(),
-                "update",
-                "previous " + currentProfile.getAttributesSummary(),
-                -1,
-                null
-        );
+        History action = null;
+        if (currentProfile.getId() != null) {
+            action = new History(
+                    "profile",
+                    currentProfile.getId(),
+                    "update",
+                    "previous " + currentProfile.getAttributesSummary(),
+                    -1,
+                    null
+            );
+        }
 
         saveDeathDetails();
 
@@ -100,10 +103,12 @@ public class ProfileEdit extends CommonController {
         server.update(currentProfile);
 
         // history Changes
-        action.setHistoryData(
-                action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
-        action.setHistoryTimestamp(LocalDateTime.now());
-        CurrentHistory.updateHistory(action);
+        if (action != null) {
+            action.setHistoryData(
+                    action.getHistoryData() + " new " + currentProfile.getAttributesSummary());
+            action.setHistoryTimestamp(LocalDateTime.now());
+            CurrentHistory.updateHistory(action);
+        }
     }
 
     /**

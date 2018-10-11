@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ImageDataIOTest {
@@ -82,6 +83,7 @@ public class ImageDataIOTest {
         this.deleteTestImages();
     }
 
+    @Ignore
     @Test
     public void testDeleteAndSaveImageWithValidFile() throws IOException {
         copyTestImagesToImages();
@@ -110,6 +112,7 @@ public class ImageDataIOTest {
         }
     }
 
+    @Ignore
     @Test
     public void testDeleteImage() throws IOException {
         copyTestImagesToImages();

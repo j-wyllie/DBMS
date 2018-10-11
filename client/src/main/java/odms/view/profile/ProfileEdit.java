@@ -291,8 +291,8 @@ public class ProfileEdit extends CommonView {
         this.chosenFile = chooseImage(pictureLabel, stage);
         if (this.chosenFile != null) {
             this.pictureLabel.setVisible(true);
-            this.removePhotoBtn.setVisible(false);
             this.removePhoto = false;
+            if ( this.removePhotoBtn != null) { this.removePhotoBtn.setVisible(false); }
         }
     }
 
