@@ -451,9 +451,10 @@ public class OrganMap extends CommonView implements MapComponentInitializedListe
 
 
         String markerImage = null;
-        this.getClass()
-                .getResource(mapMarker).toString();
+
         String path = ImageDataIO.getPath().toString().substring(0, ImageDataIO.getPath().toString().length() - 15);
+        System.out.println("file:" + path + mapMarker);
+
         markerImage = MarkerImageFactory
                 .createMarkerImage("file:" + path + mapMarker, "png");
         markerImage = markerImage.replace("(", "");
