@@ -68,7 +68,7 @@ public class SocialFeedTab extends CommonView {
     private void getTweets() {
         try {
             URL url = new URL(
-                    "https://api.twitter.com/1.1/search/tweets.json?q=%23humanfarm&" +
+                    "https://api.twitter.com/1.1/search/tweets.json?q=%23team200odms&" +
                             "result_type=recent");
             URL url2 = new URL(
                     "https://api.twitter.com/oauth2/token");
